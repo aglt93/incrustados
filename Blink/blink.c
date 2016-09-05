@@ -20,8 +20,8 @@ void main(void)
    while(1)
    {
 	   // - Wait for events
-	   //__wfe();
-	   MAP_GPIO_clearInterruptFlag(GPIO_PORT_P3, GPIO_PIN5);
+	   __wfe();
+	   //MAP_GPIO_clearInterruptFlag(GPIO_PORT_P3, GPIO_PIN5);
 /*
 	   if(MAP_GPIO_getInputPinValue(GPIO_PORT_P3,GPIO_PIN5) == 0) {
 		   P1->OUT = BIT0;
@@ -57,13 +57,10 @@ void TA0_0_ISR(void)
 }
 
 void PORT3_PIN5_ISR(void) {
-	uint32_t status = MAP_GPIO_getEnabledInterruptStatus(GPIO_PORT_P3);
-	MAP_GPIO_clearInterruptFlag(GPIO_PORT_P3, status);
 
-
-	/* Handles S1 button press */
-	if (status & GPIO_PIN3) {
-		MAP_GPIO_toggleOutputOnPin(GPIO_PORT_P1,GPIO_PIN0);
+	if( GPIO_getInterruptStatus(main_BUTTON_PORT, main_BUTTON_PIN) ) {
+		GPIO_clearInterruptFlag(main_BUTTON_PORT, main_BUTTON_PIN);
+		GPIO_toggleOutputOnPin(GPIO_PORT_P1,GPIO_PIN0);
 	}
 
 }
@@ -105,10 +102,11 @@ void Setup(void)
 	__disable_irq();
 
 	/* Confinguring P1.1 & P1.4 as an input and enabling interrupts */
+	GPIO_setAsInputPinWithPullUpResistor(main_BUTTON_PORT, main_BUTTON_PIN);
+	GPIO_interruptEdgeSelect(main_BUTTON_PORT, main_BUTTON_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
+	GPIO_registerInterrupt(main_BUTTON_PORT, PORT3_PIN5_ISR);
+	GPIO_enableInterrupt(main_BUTTON_PORT, main_BUTTON_PIN);
 
-	MAP_GPIO_clearInterruptFlag(GPIO_PORT_P3, GPIO_PIN5);
-	MAP_GPIO_enableInterrupt(GPIO_PORT_P3, GPIO_PIN5);
-	MAP_GPIO_interruptEdgeSelect(GPIO_PORT_P3, GPIO_PIN5, GPIO_HIGH_TO_LOW_TRANSITION);
 /*
 	TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__2 | TIMER_A_CTL_IE;
 	NVIC_SetPriority(TA0_N_IRQn,1);

@@ -10,6 +10,8 @@
 
 #define NO_ERR 0
 #define TIMERA0_COUNT 46
+#define main_BUTTON_PORT GPIO_PORT_P3
+#define main_BUTTON_PIN GPIO_PIN5
 
 void Setup(void);
 
