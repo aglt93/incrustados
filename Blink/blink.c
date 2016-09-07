@@ -9,6 +9,10 @@
 #include "msp.h"
 #include "blink.h"
 #include <driverlib.h>
+#include <HAL_I2C.h>
+#include <HAL_OPT3001.h>
+
+float lux;
 
 // ***********************************
 // Main loop
@@ -19,18 +23,22 @@ void main(void)
     Setup();
    while(1)
    {
-	   // - Wait for events
-	   __wfe();
-	   //MAP_GPIO_clearInterruptFlag(GPIO_PORT_P3, GPIO_PIN5);
-/*
-	   if(MAP_GPIO_getInputPinValue(GPIO_PORT_P3,GPIO_PIN5) == 0) {
-		   P1->OUT = BIT0;
+	   lux = OPT3001_getLux();
+
+	   if (lux > 50) {
+		   MAP_GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN6);
+		   GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN4);
+		   GPIO_setOutputHighOnPin(GPIO_PORT_P5,GPIO_PIN6);
 	   }
 
 	   else {
-		   P1->OUT = 0U;
+		   MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN6);
+		   GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN4);
+		   GPIO_setOutputLowOnPin(GPIO_PORT_P5,GPIO_PIN6);
 	   }
-*/
+	   // - Wait for events
+	   //__wfe();
+
    }
 }
 
@@ -40,6 +48,7 @@ void main(void)
 // **********************************
 void TA0_0_ISR(void)
 {
+	/*
 	TIMER_A0->CTL ^= TIMER_A_CTL_IFG;
 	// - Divide the clock further, to achieve human readable times.
 	if(g_TimerCount == TIMERA0_COUNT)
@@ -53,6 +62,7 @@ void TA0_0_ISR(void)
 	{
 		g_TimerCount++;
 	}
+	*/
 	return;
 }
 
@@ -61,6 +71,7 @@ void PORT3_PIN5_ISR(void) {
 	if( GPIO_getInterruptStatus(main_BUTTON_PORT, main_BUTTON_PIN) ) {
 		GPIO_clearInterruptFlag(main_BUTTON_PORT, main_BUTTON_PIN);
 		GPIO_toggleOutputOnPin(GPIO_PORT_P1,GPIO_PIN0);
+		GPIO_toggleOutputOnPin(GPIO_PORT_P2,GPIO_PIN6);
 	}
 
 }
@@ -84,11 +95,13 @@ void Setup(void)
 	//         PORT CONFIG
 	// ****************************
 	// - P1.0 is connected to the Red LED
-	//P1->DIR |= BIT0;
+	MAP_GPIO_setAsOutputPin(GPIO_PORT_P2,GPIO_PIN6);
+	MAP_GPIO_setAsOutputPin(GPIO_PORT_P2,GPIO_PIN4);
+	MAP_GPIO_setAsOutputPin(GPIO_PORT_P5,GPIO_PIN6);
 	MAP_GPIO_setAsOutputPin(GPIO_PORT_P1,GPIO_PIN0);
 	MAP_GPIO_setAsPeripheralModuleFunctionInputPin(
-	            GPIO_PORT_P3,
-	            GPIO_PIN5,
+	            main_BUTTON_PORT,
+	            main_BUTTON_PIN,
 	            GPIO_PRIMARY_MODULE_FUNCTION);
 
 	// ****************************
@@ -107,13 +120,17 @@ void Setup(void)
 	GPIO_registerInterrupt(main_BUTTON_PORT, PORT3_PIN5_ISR);
 	GPIO_enableInterrupt(main_BUTTON_PORT, main_BUTTON_PIN);
 
-/*
-	TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__2 | TIMER_A_CTL_IE;
-	NVIC_SetPriority(TA0_N_IRQn,1);
-	NVIC_EnableIRQ(TA0_N_IRQn);
-	TIMER_A0->CCR[0] = 0xFFFF;
-	TIMER_A0->CTL |=  TIMER_A_CTL_MC__UP;
-	*/
 	__enable_irq();
+
+    /* Initialize I2C communication */
+    Init_I2C_GPIO();
+    I2C_init();
+
+    /* Initialize OPT3001 digital ambient light sensor */
+    OPT3001_init();
+
+    __delay_cycles(100000);
+
+
 	return;
 }

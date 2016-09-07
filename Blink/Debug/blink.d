@@ -44,6 +44,8 @@ blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/timer32.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/timer_a.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/uart.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/wdt_a.h
+blink.obj: /home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_I2C.h
+blink.obj: /home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_OPT3001.h
 
 ../blink.c: 
 /home/aglt93/ti/ccsv6/ccs_base/arm/include/msp.h: 
@@ -89,3 +91,5 @@ blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/wdt_a.h
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/timer_a.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/uart.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/wdt_a.h: 
+/home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_I2C.h: 
+/home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_OPT3001.h: 
