@@ -11,68 +11,77 @@
 #include <driverlib.h>
 #include <HAL_I2C.h>
 #include <HAL_OPT3001.h>
+#include <stdbool.h>
 
-float lux;
+// Float to store the lux value from the sensor.
+//float g_lux;
+bool g_checkLightSensorBool = false;
 
 // ***********************************
 // Main loop
 // ***********************************
-volatile uint16_t	g_TimerCount =0;
 void main(void)
 {
-    Setup();
-   while(1)
-   {
-	   lux = OPT3001_getLux();
-
-	   if (lux > 50) {
-		   MAP_GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN6);
-		   GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN4);
-		   GPIO_setOutputHighOnPin(GPIO_PORT_P5,GPIO_PIN6);
-	   }
-
-	   else {
-		   MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN6);
-		   GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN4);
-		   GPIO_setOutputLowOnPin(GPIO_PORT_P5,GPIO_PIN6);
-	   }
+   Setup();
+   while(1) {
 	   // - Wait for events
-	   //__wfe();
+	   __wfe();
+
+	   if(g_checkLightSensorBool){
+		   checkLightSensor();
+	   }
+
+
 
    }
 }
 
-// **********************************
-// Interrupt service routine for
-// Timer A0
-// **********************************
-void TA0_0_ISR(void)
-{
-	/*
-	TIMER_A0->CTL ^= TIMER_A_CTL_IFG;
-	// - Divide the clock further, to achieve human readable times.
-	if(g_TimerCount == TIMERA0_COUNT)
-	{
-		// - Toggle P1.0
-		MAP_GPIO_toggleOutputOnPin(GPIO_PORT_P1,GPIO_PIN0);
-		g_TimerCount = 0U;
+void checkLightSensor(void) {
 
+	float g_lux = 55;//OPT3001_getLux();
+
+	if (g_lux < 50) {
+	   GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN6);
+	   GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN4);
+	   GPIO_setOutputHighOnPin(GPIO_PORT_P5,GPIO_PIN6);
 	}
-	else
-	{
-		g_TimerCount++;
+
+	else {
+	   GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN6);
+	   GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN4);
+	   GPIO_setOutputLowOnPin(GPIO_PORT_P5,GPIO_PIN6);
 	}
-	*/
-	return;
+
 }
 
-void PORT3_PIN5_ISR(void) {
 
-	if( GPIO_getInterruptStatus(main_BUTTON_PORT, main_BUTTON_PIN) ) {
+// **********************************
+// Interrupt service routine for
+// PORT3
+// **********************************
+void PORT3_ISR(void) {
+
+	// ISR for PIN5
+	if(GPIO_getInterruptStatus(main_BUTTON_PORT, main_BUTTON_PIN)) {
+		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(main_BUTTON_PORT, main_BUTTON_PIN);
 		GPIO_toggleOutputOnPin(GPIO_PORT_P1,GPIO_PIN0);
 		GPIO_toggleOutputOnPin(GPIO_PORT_P2,GPIO_PIN6);
+
 	}
+
+}
+
+void T32_ISR(void) {
+
+	MAP_Timer32_clearInterruptFlag(TIMER32_BASE);
+	MAP_GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+	//
+	//MAP_Timer32_setCount(TIMER32_BASE,11720);
+	//MAP_Timer32_enableInterrupt(TIMER32_BASE);
+	//MAP_Timer32_startTimer(TIMER32_BASE, true);
+
+	g_checkLightSensorBool = true;
 
 }
 
@@ -87,41 +96,45 @@ void Setup(void)
 	// ****************************
 	//         DEVICE CONFIG
 	// ****************************
-	// - Disable WDT
-	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
-
+	/* Halting the Watchdog */
+	MAP_WDT_A_holdTimer();
 
 	// ****************************
 	//         PORT CONFIG
 	// ****************************
-	// - P1.0 is connected to the Red LED
+	// Set RGB LEDs as outputs
 	MAP_GPIO_setAsOutputPin(GPIO_PORT_P2,GPIO_PIN6);
 	MAP_GPIO_setAsOutputPin(GPIO_PORT_P2,GPIO_PIN4);
 	MAP_GPIO_setAsOutputPin(GPIO_PORT_P5,GPIO_PIN6);
 	MAP_GPIO_setAsOutputPin(GPIO_PORT_P1,GPIO_PIN0);
+	// Initial value of LEDs on low.
+	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN6);
+	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN4);
+	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P5,GPIO_PIN6);
+	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P1,GPIO_PIN0);
+	//
+	GPIO_setAsInputPinWithPullUpResistor(main_BUTTON_PORT, main_BUTTON_PIN);
+	/*
 	MAP_GPIO_setAsPeripheralModuleFunctionInputPin(
 	            main_BUTTON_PORT,
 	            main_BUTTON_PIN,
 	            GPIO_PRIMARY_MODULE_FUNCTION);
-
+	*/
 	// ****************************
-	//       TIMER CONFIG
+	//      INTERRUPT CONFIG
 	// ****************************
-	// - Disable all interrupts
-	// - Configure Timer A0 with SMCLK, Division by 8, Enable the interrupt
-	// - Enable the interrupt in the NVIC
-	// - Start the timer in UP mode.
-	// - Re-enable interrupts
-	__disable_irq();
+	// Disable IRQ interruptions before configuring interruptions.
 
-	/* Confinguring P1.1 & P1.4 as an input and enabling interrupts */
-	GPIO_setAsInputPinWithPullUpResistor(main_BUTTON_PORT, main_BUTTON_PIN);
+	//__disable_irq();
+
+	/* Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition */
+/*
 	GPIO_interruptEdgeSelect(main_BUTTON_PORT, main_BUTTON_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
-	GPIO_registerInterrupt(main_BUTTON_PORT, PORT3_PIN5_ISR);
+	GPIO_registerInterrupt(main_BUTTON_PORT, PORT3_ISR);
 	GPIO_enableInterrupt(main_BUTTON_PORT, main_BUTTON_PIN);
 
 	__enable_irq();
-
+*/
     /* Initialize I2C communication */
     Init_I2C_GPIO();
     I2C_init();
@@ -129,8 +142,15 @@ void Setup(void)
     /* Initialize OPT3001 digital ambient light sensor */
     OPT3001_init();
 
+    // Delay in order to make stable the sensor.
     __delay_cycles(100000);
 
+    MAP_Timer32_initModule(TIMER32_BASE, TIMER32_PRESCALER_256, TIMER32_32BIT,
+    	            TIMER32_PERIODIC_MODE);
+    MAP_Interrupt_enableInterrupt(INT_T32_INT1);
+    MAP_Timer32_setCount(TIMER32_BASE,11720);
+	MAP_Timer32_enableInterrupt(TIMER32_BASE);
+	MAP_Timer32_startTimer(TIMER32_BASE, true);
 
 	return;
 }

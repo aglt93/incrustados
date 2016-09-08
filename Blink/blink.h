@@ -14,5 +14,6 @@
 #define main_BUTTON_PIN GPIO_PIN5
 
 void Setup(void);
+void checkLightSensor(void);
 
 #endif /* BLINK_H_ */
