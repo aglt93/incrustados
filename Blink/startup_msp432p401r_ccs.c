@@ -56,7 +56,7 @@ extern unsigned long __STACK_END;
 
 /* External declarations for the interrupt handlers used by the application. */
 /* To be added by user */
-extern void PORT3_ISR(void);
+extern void BUTTON_ISR(void);
 extern void T32_ISR(void);
 
 /* Interrupt vector table.  Note that the proper constructs must be placed on this to */
@@ -120,7 +120,7 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* DMA_INT0 ISR              */
     defaultISR,                             /* PORT1 ISR                 */
     defaultISR,                             /* PORT2 ISR                 */
-	PORT3_ISR,                              /* PORT3 ISR                 */
+	BUTTON_ISR,                             /* PORT3 ISR                 */
     defaultISR,                             /* PORT4 ISR                 */
     defaultISR,                             /* PORT5 ISR                 */
     defaultISR,                             /* PORT6 ISR                 */

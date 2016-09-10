@@ -6,85 +6,211 @@
 *
 ******************************************************************************/
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 #include "msp.h"
 #include "blink.h"
 #include <driverlib.h>
 #include <HAL_I2C.h>
 #include <HAL_OPT3001.h>
 #include <stdbool.h>
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-// Float to store the lux value from the sensor.
-//float g_lux;
-bool g_checkLightSensorBool = false;
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Global Variables Definition.
+bool g_checkLightSensorBool;
+bool g_bCallBlink3;
+bool g_bBlink3Done;
+bool g_bCallSubrutines;
+//
+int g_iSecCount;
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // ***********************************
 // Main loop
 // ***********************************
-void main(void)
-{
-   Setup();
-   while(1) {
-	   // - Wait for events
-	   __wfe();
+void main(void) {
 
-	   if(g_checkLightSensorBool){
-		   checkLightSensor();
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	Setup();
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	while (!g_bBlink3Done) {
+
+	   if(g_bCallBlink3) {
+
+		   Blink3();
+
 	   }
 
+	   __wfe();
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////
 
 
-   }
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// Until the system is ready the user can turn on the night lamp manually.
+	GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
+	GPIO_enableInterrupt(BUTTON_PORT, BUTTON_PIN);
+
+	g_bCallSubrutines = true;
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	while(1) {
+
+	   if (g_bCallSubrutines) {
+
+		   CallSubrutines();
+
+	   }
+
+	   __wfe();
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////
 }
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-void checkLightSensor(void) {
 
-	float g_lux = 55;//OPT3001_getLux();
+//////////////////////////////////////////////////////////////////////////////////////////////
+void Blink3(void) {
 
-	if (g_lux < 50) {
-	   GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN6);
-	   GPIO_setOutputHighOnPin(GPIO_PORT_P2,GPIO_PIN4);
-	   GPIO_setOutputHighOnPin(GPIO_PORT_P5,GPIO_PIN6);
+	g_bCallBlink3 = false;
+
+	switch (g_iSecCount) {
+
+		case 0:
+			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			break;
+
+		case 1:
+			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			break;
+
+		case 2:
+			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			break;
+
+		case 3:
+			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			break;
+
+		case 4:
+			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			break;
+
+		case 5:
+			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			break;
+
+		case 6:
+			g_bBlink3Done = true;
+			break;
+
+		default:
+			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			g_bBlink3Done = true;
+			break;
 	}
 
-	else {
-	   GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN6);
-	   GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN4);
-	   GPIO_setOutputLowOnPin(GPIO_PORT_P5,GPIO_PIN6);
+	return;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+float SenseLight (void) {
+
+	return OPT3001_getLux();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+void CallSubrutines (void) {
+
+	float l_fLux;
+
+	g_bCallSubrutines = false;
+
+	l_fLux = SenseLight();
+
+	if (l_fLux < LUX_LIMIT) {
+
+		g_iSecCount = 0;
+		GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+
+	}
+
+	else if (g_iSecCount == SEC_COUNT_LIMIT) {
+
+		GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+
+	}
+
+	return;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+// WORK IN PROGRESS
+//////////////////////////////////////////////////////////////////////////////////////////////
+void SetLamp(int i_iState) {
+
+	switch (i_iState) {
+
+
+
+
 	}
 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
 // Interrupt service routine for
 // PORT3
 // **********************************
-void PORT3_ISR(void) {
+void BUTTON_ISR(void) {
 
 	// ISR for PIN5
-	if(GPIO_getInterruptStatus(main_BUTTON_PORT, main_BUTTON_PIN)) {
+	if(GPIO_getInterruptStatus(BUTTON_PORT, BUTTON_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
-		GPIO_clearInterruptFlag(main_BUTTON_PORT, main_BUTTON_PIN);
-		GPIO_toggleOutputOnPin(GPIO_PORT_P1,GPIO_PIN0);
-		GPIO_toggleOutputOnPin(GPIO_PORT_P2,GPIO_PIN6);
+		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
+		GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
+		g_iSecCount = 0;
 	}
 
 }
+//////////////////////////////////////////////////////////////////////////////////////////////
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// **********************************
+// Interrupt service routine for
+// TIMER32
+// **********************************
 void T32_ISR(void) {
 
 	MAP_Timer32_clearInterruptFlag(TIMER32_BASE);
-	MAP_GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
 	//
-	//MAP_Timer32_setCount(TIMER32_BASE,11720);
-	//MAP_Timer32_enableInterrupt(TIMER32_BASE);
-	//MAP_Timer32_startTimer(TIMER32_BASE, true);
-
-	g_checkLightSensorBool = true;
+	g_iSecCount++;
+	g_bCallSubrutines = true;
+	g_bCallBlink3 = true;
+	//
+	MAP_Timer32_setCount(TIMER32_BASE,T32_SEC_COUNT);
+	MAP_Timer32_enableInterrupt(TIMER32_BASE);
+	MAP_Timer32_startTimer(TIMER32_BASE, true);
 
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 // **********************************
 // Setup function for the application
@@ -99,42 +225,37 @@ void Setup(void)
 	/* Halting the Watchdog */
 	MAP_WDT_A_holdTimer();
 
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// ****************************
+	//     INIT GLOBAL VARIABLES
+	// ****************************
+	g_checkLightSensorBool = false;
+	g_bCallBlink3 = true;
+	g_bBlink3Done = false;
+	g_bCallSubrutines = false;
+	g_iSecCount = 0;
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
 	// ****************************
 	//         PORT CONFIG
 	// ****************************
 	// Set RGB LEDs as outputs
-	MAP_GPIO_setAsOutputPin(GPIO_PORT_P2,GPIO_PIN6);
-	MAP_GPIO_setAsOutputPin(GPIO_PORT_P2,GPIO_PIN4);
-	MAP_GPIO_setAsOutputPin(GPIO_PORT_P5,GPIO_PIN6);
-	MAP_GPIO_setAsOutputPin(GPIO_PORT_P1,GPIO_PIN0);
+	GPIO_setAsOutputPin(RGB_RED_PORT,RGB_RED_PIN);
+	GPIO_setAsOutputPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+	GPIO_setAsOutputPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+	GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
 	// Initial value of LEDs on low.
-	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN6);
-	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P2,GPIO_PIN4);
-	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P5,GPIO_PIN6);
-	MAP_GPIO_setOutputLowOnPin(GPIO_PORT_P1,GPIO_PIN0);
+	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+	GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+	GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
 	//
-	GPIO_setAsInputPinWithPullUpResistor(main_BUTTON_PORT, main_BUTTON_PIN);
-	/*
-	MAP_GPIO_setAsPeripheralModuleFunctionInputPin(
-	            main_BUTTON_PORT,
-	            main_BUTTON_PIN,
-	            GPIO_PRIMARY_MODULE_FUNCTION);
-	*/
-	// ****************************
-	//      INTERRUPT CONFIG
-	// ****************************
-	// Disable IRQ interruptions before configuring interruptions.
+	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
+	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	//__disable_irq();
 
-	/* Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition */
-/*
-	GPIO_interruptEdgeSelect(main_BUTTON_PORT, main_BUTTON_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
-	GPIO_registerInterrupt(main_BUTTON_PORT, PORT3_ISR);
-	GPIO_enableInterrupt(main_BUTTON_PORT, main_BUTTON_PIN);
-
-	__enable_irq();
-*/
+	//////////////////////////////////////////////////////////////////////////////////////////////
     /* Initialize I2C communication */
     Init_I2C_GPIO();
     I2C_init();
@@ -148,9 +269,25 @@ void Setup(void)
     MAP_Timer32_initModule(TIMER32_BASE, TIMER32_PRESCALER_256, TIMER32_32BIT,
     	            TIMER32_PERIODIC_MODE);
     MAP_Interrupt_enableInterrupt(INT_T32_INT1);
-    MAP_Timer32_setCount(TIMER32_BASE,11720);
+    MAP_Timer32_setCount(TIMER32_BASE,T32_SEC_COUNT);
 	MAP_Timer32_enableInterrupt(TIMER32_BASE);
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// ****************************
+	//      INTERRUPT CONFIG
+	// ****************************
+	// Disable IRQ interruptions before configuring interruptions.
+	__disable_irq();
+	/* Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition */
+	GPIO_interruptEdgeSelect(BUTTON_PORT, BUTTON_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
+	GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
+	__enable_irq();
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+
 	MAP_Timer32_startTimer(TIMER32_BASE, true);
+
 
 	return;
 }
