@@ -2,7 +2,7 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS
+CG_TOOL_ROOT := /opt/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -171,13 +171,13 @@ all: Blink.out
 Blink.out: $(OBJS) $(CMD_SRCS) $(LDS_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MSP432 Linker'
-	"/home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power="all" -g --gcc --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs --display_error_number --diag_warning=225 --diag_wrap=off --abi=eabi -z -m"Blink.map" --heap_size=1024 --stack_size=512 -i"/home/aglt93/ti/ccsv6/ccs_base/arm/include" -i"/home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/lib" -i"/home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include" --reread_libs --priority --warn_sections --display_error_number --diag_wrap=off --xml_link_info="Blink_linkInfo.xml" --rom_model -o "Blink.out" $(ORDERED_OBJS)
+	"/opt/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power="all" -g --gcc --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs --display_error_number --diag_warning=225 --diag_wrap=off --abi=eabi -z -m"Blink.map" --heap_size=1024 --stack_size=512 -i"/opt/ti/ccsv6/ccs_base/arm/include" -i"/opt/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/lib" -i"/opt/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include" --reread_libs --priority --warn_sections --display_error_number --diag_wrap=off --xml_link_info="Blink_linkInfo.xml" --rom_model -o "Blink.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 Blink.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: MSP432 Hex Utility'
-	"/home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/bin/armhex" --memwidth=8 --romwidth=8 -o "Blink.hex" $(EXE_OUTPUTS__QUOTED)
+	"/opt/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/bin/armhex" --memwidth=8 --romwidth=8 -o "Blink.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 
