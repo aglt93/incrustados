@@ -22,7 +22,7 @@
 bool g_checkLightSensorBool;
 bool g_bCallBlink3;
 bool g_bBlink3Done;
-bool g_bCallSubrutines;
+bool g_bSmartMode;
 //
 int g_iSecCount;
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,15 +58,15 @@ void main(void) {
 	GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 	GPIO_enableInterrupt(BUTTON_PORT, BUTTON_PIN);
 
-	g_bCallSubrutines = true;
+	g_bSmartMode = true;
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	while(1) {
 
-	   if (g_bCallSubrutines) {
+	   if (g_bSmartMode) {
 
-		   CallSubrutines();
+		   SmartMode();
 
 	   }
 
@@ -85,6 +85,7 @@ void Blink3(void) {
 	switch (g_iSecCount) {
 
 		case 0:
+			// g_fLux = SenseLight();
 			SetLamp(TURN_ON_LAMP);
 			break;
 
@@ -110,6 +111,20 @@ void Blink3(void) {
 
 		case 6:
 			g_bBlink3Done = true;
+			/*
+			if (l_fLux < LUX_LIMIT) {
+
+				g_iSecCount = 0;
+				SetLamp(TURN_ON_LAMP);
+
+			}
+
+			else if (g_iSecCount == SEC_COUNT_LIMIT) {
+
+				SetLamp(TURN_OFF_LAMP);
+
+			}
+			*/
 			break;
 
 		default:
@@ -130,13 +145,12 @@ float SenseLight (void) {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////
-void CallSubrutines (void) {
+void SmartMode (void) {
 
 	float l_fLux;
 
-	g_bCallSubrutines = false;
+	g_bSmartMode = false;
 
 	l_fLux = SenseLight();
 
@@ -204,13 +218,13 @@ void SetLamp(int i_iState) {
 
 		default:
 			#if (defined(LAMP_POWER5) || defined(LAMP_POWER10) || defined(LAMP_POWER15))
-			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
 			#endif
 			#if (defined(LAMP_POWER10) || defined(LAMP_POWER15))
-			GPIO_setOutputHighOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+			GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 			#endif
 			#ifdef LAMP_POWER15
-			GPIO_setOutputHighOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+			GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 			#endif
 
 			break;
@@ -251,7 +265,7 @@ void T32_ISR(void) {
 	MAP_Timer32_clearInterruptFlag(TIMER32_BASE);
 	//
 	g_iSecCount++;
-	g_bCallSubrutines = true;
+	g_bSmartMode = true;
 	g_bCallBlink3 = true;
 	//
 	MAP_Timer32_setCount(TIMER32_BASE,T32_SEC_COUNT);
@@ -281,7 +295,7 @@ void Setup(void)
 	g_checkLightSensorBool = false;
 	g_bCallBlink3 = true;
 	g_bBlink3Done = false;
-	g_bCallSubrutines = false;
+	g_bSmartMode = false;
 	g_iSecCount = 0;
 	//////////////////////////////////////////////////////////////////////////////////////////////
 

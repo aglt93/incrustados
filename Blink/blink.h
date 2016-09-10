@@ -8,7 +8,7 @@
 #ifndef BLINK_H_
 #define BLINK_H_
 
-#define LAMP_POWER5
+#define LAMP_POWER15
 
 #define T32_SEC_COUNT 11720
 //
@@ -32,9 +32,8 @@
 #define TOGGLE_LAMP 2
 //
 void Setup(void);
-void InitSystem(void);
 void Blink3(void);
-void CallSubrutines(void);
+void SmartMode(void);
 void SetLamp(int i_iState);
 float SenseLight(void);
 
