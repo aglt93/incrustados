@@ -1,17 +1,17 @@
 ******************************************************************************
                   TI ARM Linker Unix v15.12.1                  
 ******************************************************************************
->> Linked Sat Sep 10 16:55:57 2016
+>> Linked Sat Sep 10 17:04:32 2016
 
 OUTPUT FILE NAME:   <Blink.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 00001ce1
+ENTRY POINT SYMBOL: "_c_int00"  address: 00001d09
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  MAIN                  00000000   00040000  00001fae  0003e052  R  X
+  MAIN                  00000000   00040000  00001fd6  0003e02a  R  X
   INFO                  00200000   00004000  00000000  00004000  R  X
   SRAM_CODE             01000000   00010000  00000338  0000fcc8  RW X
   SRAM_DATA             20000000   00010000  00000338  0000fcc8  RW  
@@ -21,11 +21,11 @@ SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00001fb4   00001fb4    r-x
+00000000    00000000    00001fdc   00001fdc    r-x
   00000000    00000000    00000140   00000140    r-- .intvecs
-  00000140    00000140    00001d2a   00001d2a    r-x .text
-  00001e6c    00001e6c    000000c0   000000c0    r-- .const
-  00001f30    00001f30    00000084   00000084    r-- .cinit
+  00000140    00000140    00001d52   00001d52    r-x .text
+  00001e94    00001e94    000000c0   000000c0    r-- .const
+  00001f58    00001f58    00000084   00000084    r-- .cinit
 20000000    20000000    00000138   00000000    rw-
   20000000    20000000    000000e4   00000000    rw- .vtable
   200000e4    200000e4    0000004c   00000000    rw- .data
@@ -42,50 +42,50 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    00000140     
                   00000000    00000140     startup_msp432p401r_ccs.obj (.intvecs:retain)
 
-.text      0    00000140    00001d2a     
+.text      0    00000140    00001d52     
                   00000140    000007a8     i2c.obj (.text)
                   000008e8    00000480     gpio.obj (.text)
-                  00000d68    00000418     blink.obj (.text)
-                  00001180    000003f0     interrupt.obj (.text)
-                  00001570    00000328     system_msp432p401r.obj (.text)
-                  00001898    0000013c     HAL_OPT3001.obj (.text)
-                  000019d4    00000118     HAL_I2C.obj (.text)
-                  00001aec    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
-                  00001b88    0000007a                                   : memset_t2.obj (.text)
-                  00001c02    00000002                                   : mpu_init.obj (.text)
-                  00001c04    00000070                                   : autoinit.obj (.text)
-                  00001c74    0000006a                                   : copy_decompress_rle.obj (.text)
-                  00001cde    00000002                                   : startup.obj (.text)
-                  00001ce0    00000054                                   : boot.obj (.text)
-                  00001d34    00000054                                   : exit.obj (.text)
-                  00001d88    0000004c                                   : cpy_tbl.obj (.text)
-                  00001dd4    0000003e     cpu.obj (.text)
-                  00001e12    00000002     --HOLE-- [fill = 0]
-                  00001e14    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
-                  00001e2c    00000014                                   : _lock.obj (.text)
-                  00001e40    00000012     startup_msp432p401r_ccs.obj (.text)
-                  00001e52    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
-                  00001e60    00000006                                   : copy_decompress_rle.obj (.text:decompress:rle24)
-                  00001e66    00000004                                   : pre_init.obj (.text)
+                  00000d68    00000440     blink.obj (.text)
+                  000011a8    000003f0     interrupt.obj (.text)
+                  00001598    00000328     system_msp432p401r.obj (.text)
+                  000018c0    0000013c     HAL_OPT3001.obj (.text)
+                  000019fc    00000118     HAL_I2C.obj (.text)
+                  00001b14    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
+                  00001bb0    0000007a                                   : memset_t2.obj (.text)
+                  00001c2a    00000002                                   : mpu_init.obj (.text)
+                  00001c2c    00000070                                   : autoinit.obj (.text)
+                  00001c9c    0000006a                                   : copy_decompress_rle.obj (.text)
+                  00001d06    00000002                                   : startup.obj (.text)
+                  00001d08    00000054                                   : boot.obj (.text)
+                  00001d5c    00000054                                   : exit.obj (.text)
+                  00001db0    0000004c                                   : cpy_tbl.obj (.text)
+                  00001dfc    0000003e     cpu.obj (.text)
+                  00001e3a    00000002     --HOLE-- [fill = 0]
+                  00001e3c    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
+                  00001e54    00000014                                   : _lock.obj (.text)
+                  00001e68    00000012     startup_msp432p401r_ccs.obj (.text)
+                  00001e7a    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
+                  00001e88    00000006                                   : copy_decompress_rle.obj (.text:decompress:rle24)
+                  00001e8e    00000004                                   : pre_init.obj (.text)
 
-.const     0    00001e6c    000000c0     
-                  00001e6c    00000050     interrupt.obj (.const:g_pulRegs)
-                  00001ebc    00000020     interrupt.obj (.const:g_pulPriority)
-                  00001edc    0000001c     gpio.obj (.const:GPIO_PORT_TO_INT)
-                  00001ef8    00000014     HAL_I2C.obj (.const:i2cConfig)
-                  00001f0c    00000008     interrupt.obj (.const:g_pulDisRegs)
-                  00001f14    00000008     interrupt.obj (.const:g_pulEnRegs)
-                  00001f1c    00000008     interrupt.obj (.const:g_pulPendRegs)
-                  00001f24    00000008     interrupt.obj (.const:g_pulUnpendRegs)
+.const     0    00001e94    000000c0     
+                  00001e94    00000050     interrupt.obj (.const:g_pulRegs)
+                  00001ee4    00000020     interrupt.obj (.const:g_pulPriority)
+                  00001f04    0000001c     gpio.obj (.const:GPIO_PORT_TO_INT)
+                  00001f20    00000014     HAL_I2C.obj (.const:i2cConfig)
+                  00001f34    00000008     interrupt.obj (.const:g_pulDisRegs)
+                  00001f3c    00000008     interrupt.obj (.const:g_pulEnRegs)
+                  00001f44    00000008     interrupt.obj (.const:g_pulPendRegs)
+                  00001f4c    00000008     interrupt.obj (.const:g_pulUnpendRegs)
 
-.cinit     0    00001f30    00000084     
-                  00001f30    00000048     (.cinit..data.load) [load image, compression = rle]
-                  00001f78    00000009     (.cinit..bss.load) [load image, compression = rle]
-                  00001f81    00000007     --HOLE-- [fill = 0]
-                  00001f88    00000009     (.cinit..vtable.load) [load image, compression = rle]
-                  00001f91    00000003     --HOLE-- [fill = 0]
-                  00001f94    00000008     (__TI_handler_table)
-                  00001f9c    00000018     (__TI_cinit_table)
+.cinit     0    00001f58    00000084     
+                  00001f58    00000048     (.cinit..data.load) [load image, compression = rle]
+                  00001fa0    00000009     (.cinit..bss.load) [load image, compression = rle]
+                  00001fa9    00000007     --HOLE-- [fill = 0]
+                  00001fb0    00000009     (.cinit..vtable.load) [load image, compression = rle]
+                  00001fb9    00000003     --HOLE-- [fill = 0]
+                  00001fbc    00000008     (__TI_handler_table)
+                  00001fc4    00000018     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -117,11 +117,11 @@ MODULE SUMMARY
        Module                        code   ro data   rw data
        ------                        ----   -------   -------
     ./
-       blink.obj                     1048   0         16     
+       blink.obj                     1088   0         16     
        system_msp432p401r.obj        808    0         8      
        startup_msp432p401r_ccs.obj   18     320       0      
     +--+-----------------------------+------+---------+---------+
-       Total:                        1874   320       24     
+       Total:                        1914   320       24     
                                                              
     ./driverlib/MSP432P4xx/
        i2c.obj                       1960   0         0      
@@ -158,20 +158,20 @@ MODULE SUMMARY
        Stack:                        0      0         1024   
        Linker Generated:             0      122       0      
     +--+-----------------------------+------+---------+---------+
-       Grand Total:                  7464   634       1648   
+       Grand Total:                  7504   634       1648   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00001f9c records: 3, size/record: 8, table size: 24
-	.data: load addr=00001f30, load size=00000048 bytes, run addr=200000e4, run size=0000004c bytes, compression=rle
-	.bss: load addr=00001f78, load size=00000009 bytes, run addr=20000130, run size=00000008 bytes, compression=rle
-	.vtable: load addr=00001f88, load size=00000009 bytes, run addr=20000000, run size=000000e4 bytes, compression=rle
+__TI_cinit_table @ 00001fc4 records: 3, size/record: 8, table size: 24
+	.data: load addr=00001f58, load size=00000048 bytes, run addr=200000e4, run size=0000004c bytes, compression=rle
+	.bss: load addr=00001fa0, load size=00000009 bytes, run addr=20000130, run size=00000008 bytes, compression=rle
+	.vtable: load addr=00001fb0, load size=00000009 bytes, run addr=20000000, run size=000000e4 bytes, compression=rle
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00001f94 records: 2, size/record: 4, table size: 8
+__TI_handler_table @ 00001fbc records: 2, size/record: 4, table size: 8
 	index: 0, handler: __TI_decompress_rle24
 	index: 1, handler: __TI_decompress_none
 
@@ -180,15 +180,15 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                                       
 -------   ----                                       
-00000fcb  BUTTON_ISR                                 
+00000feb  BUTTON_ISR                                 
 00000dd5  Blink3                                     
-00001d35  C$$EXIT                                    
-00001e09  CPU_basepriGet                             
-00001dfb  CPU_basepriSet                             
-00001dd5  CPU_cpsid                                  
-00001deb  CPU_cpsie                                  
-00001de1  CPU_primask                                
-00001df7  CPU_wfi                                    
+00001d5d  C$$EXIT                                    
+00001e31  CPU_basepriGet                             
+00001e23  CPU_basepriSet                             
+00001dfd  CPU_cpsid                                  
+00001e13  CPU_cpsie                                  
+00001e09  CPU_primask                                
+00001e1f  CPU_wfi                                    
 00000c0b  GPIO_clearInterruptFlag                    
 00000bcb  GPIO_disableInterrupt                      
 00000ba9  GPIO_enableInterrupt                       
@@ -209,7 +209,7 @@ address   name
 00000a93  GPIO_setOutputLowOnPin                     
 00000ab5  GPIO_toggleOutputOnPin                     
 00000d43  GPIO_unregisterInterrupt                   
-00000f6f  GetLampState                               
+00000f8f  GetLampState                               
 000007a1  I2C_clearInterruptFlag                     
 0000078b  I2C_disableInterrupt                       
 000001f3  I2C_disableModule                          
@@ -222,7 +222,7 @@ address   name
 000007df  I2C_getMode                                
 000006db  I2C_getReceiveBufferAddressForDMA          
 000006e9  I2C_getTransmitBufferAddressForDMA         
-000019ed  I2C_init                                   
+00001a15  I2C_init                                   
 00000141  I2C_initMaster                             
 000001a3  I2C_initSlave                              
 00000297  I2C_isBusBusy                              
@@ -246,110 +246,111 @@ address   name
 000002a9  I2C_masterSendSingleByte                   
 0000030f  I2C_masterSendSingleByteWithTimeout        
 00000721  I2C_masterSendStart                        
-00001a05  I2C_read16                                 
+00001a2d  I2C_read16                                 
 000007f5  I2C_registerInterrupt                      
 0000021d  I2C_setMode                                
 00000209  I2C_setSlaveAddress                        
-00001acf  I2C_setslave                               
+00001af7  I2C_setslave                               
 00000283  I2C_slaveGetData                           
 0000026d  I2C_slavePutData                           
 000008b7  I2C_slaveSendNAK                           
 0000085b  I2C_unregisterInterrupt                    
-00001a8b  I2C_write16                                
-000019d5  Init_I2C_GPIO                              
-00001343  Interrupt_disableInterrupt                 
-00001193  Interrupt_disableMaster                    
-00001541  Interrupt_disableSleepOnIsrExit            
-000012d1  Interrupt_enableInterrupt                  
-00001183  Interrupt_enableMaster                     
-0000152f  Interrupt_enableSleepOnIsrExit             
-000012ab  Interrupt_getPriority                      
-00001223  Interrupt_getPriorityGrouping              
-0000150f  Interrupt_getPriorityMask                  
-00001529  Interrupt_getVectorTableAddress            
-000013b5  Interrupt_isEnabled                        
-00001441  Interrupt_pendInterrupt                    
-000011a3  Interrupt_registerInterrupt                
-0000125b  Interrupt_setPriority                      
-00001209  Interrupt_setPriorityGrouping              
-000014ff  Interrupt_setPriorityMask                  
-00001519  Interrupt_setVectorTableAddress            
-000014b1  Interrupt_unpendInterrupt                  
-000011f5  Interrupt_unregisterInterrupt              
-00000e93  ManualMode                                 
-000018fd  OPT3001_getLux                             
-00001899  OPT3001_init                               
-000018cd  OPT3001_readConfigReg                      
-000018bd  OPT3001_readDeviceId                       
-000018ed  OPT3001_readHighLimitReg                   
-000018dd  OPT3001_readLowLimitReg                    
-000018ad  OPT3001_readManufacturerId                 
-00000f35  ResetT32_1                                 
+00001ab3  I2C_write16                                
+000019fd  Init_I2C_GPIO                              
+0000136b  Interrupt_disableInterrupt                 
+000011bb  Interrupt_disableMaster                    
+00001569  Interrupt_disableSleepOnIsrExit            
+000012f9  Interrupt_enableInterrupt                  
+000011ab  Interrupt_enableMaster                     
+00001557  Interrupt_enableSleepOnIsrExit             
+000012d3  Interrupt_getPriority                      
+0000124b  Interrupt_getPriorityGrouping              
+00001537  Interrupt_getPriorityMask                  
+00001551  Interrupt_getVectorTableAddress            
+000013dd  Interrupt_isEnabled                        
+00001469  Interrupt_pendInterrupt                    
+000011cb  Interrupt_registerInterrupt                
+00001283  Interrupt_setPriority                      
+00001231  Interrupt_setPriorityGrouping              
+00001527  Interrupt_setPriorityMask                  
+00001541  Interrupt_setVectorTableAddress            
+000014d9  Interrupt_unpendInterrupt                  
+0000121d  Interrupt_unregisterInterrupt              
+00000eb3  ManualMode                                 
+00001925  OPT3001_getLux                             
+000018c1  OPT3001_init                               
+000018f5  OPT3001_readConfigReg                      
+000018e5  OPT3001_readDeviceId                       
+00001915  OPT3001_readHighLimitReg                   
+00001905  OPT3001_readLowLimitReg                    
+000018d5  OPT3001_readManufacturerId                 
+00000f55  ResetT32_1                                 
 UNDEFED   SHT$$INIT_ARRAY$$Base                      
 UNDEFED   SHT$$INIT_ARRAY$$Limit                     
 00000e43  SenseLight                                 
-00000eb5  SetLamp                                    
-0000105d  Setup                                      
-00000e53  SmartMode                                  
+00000e53  SenseSound                                 
+00000ed5  SetLamp                                    
+00001081  Setup                                      
+00000e65  SmartMode                                  
 2000012c  SystemCoreClock                            
-00001571  SystemCoreClockUpdate                      
-000017e5  SystemInit                                 
-00001007  T32_ISR                                    
+00001599  SystemCoreClockUpdate                      
+0000180d  SystemInit                                 
+00001027  T32_ISR                                    
 4000480c  WDTCTL_SYM                                 
 20010000  __STACK_END                                
 00000200  __STACK_SIZE                               
-00001f9c  __TI_CINIT_Base                            
-00001fb4  __TI_CINIT_Limit                           
-00001f94  __TI_Handler_Table_Base                    
-00001f9c  __TI_Handler_Table_Limit                   
-00001c05  __TI_auto_init                             
+00001fc4  __TI_CINIT_Base                            
+00001fdc  __TI_CINIT_Limit                           
+00001fbc  __TI_Handler_Table_Base                    
+00001fc4  __TI_Handler_Table_Limit                   
+00001c2d  __TI_auto_init                             
 20000114  __TI_cleanup_ptr                           
-00001e53  __TI_decompress_none                       
-00001e61  __TI_decompress_rle24                      
+00001e7b  __TI_decompress_none                       
+00001e89  __TI_decompress_rle24                      
 20000118  __TI_dtors_ptr                             
 2000011c  __TI_enable_exit_profile_output            
 ffffffff  __TI_pprof_out_hndl                        
 ffffffff  __TI_prof_data_size                        
 ffffffff  __TI_prof_data_start                       
 00000000  __TI_static_base__                         
-00001b89  __aeabi_memclr                             
-00001b89  __aeabi_memclr4                            
-00001b89  __aeabi_memclr8                            
-00001aed  __aeabi_memcpy                             
-00001aed  __aeabi_memcpy4                            
-00001aed  __aeabi_memcpy8                            
-00001b8b  __aeabi_memset                             
-00001b8b  __aeabi_memset4                            
-00001b8b  __aeabi_memset8                            
+00001bb1  __aeabi_memclr                             
+00001bb1  __aeabi_memclr4                            
+00001bb1  __aeabi_memclr8                            
+00001b15  __aeabi_memcpy                             
+00001b15  __aeabi_memcpy4                            
+00001b15  __aeabi_memcpy8                            
+00001bb3  __aeabi_memset                             
+00001bb3  __aeabi_memset4                            
+00001bb3  __aeabi_memset8                            
 ffffffff  __binit__                                  
 ffffffff  __c_args__                                 
-00001c03  __mpu_init                                 
+00001c2b  __mpu_init                                 
 2000fe00  __stack                                    
-00001e15  _args_main                                 
-00001ce1  _c_int00                                   
+00001e3d  _args_main                                 
+00001d09  _c_int00                                   
 20000120  _lock                                      
-00001e3b  _nop                                       
-00001e33  _register_lock                             
-00001e2d  _register_unlock                           
-00001cdf  _system_post_cinit                         
-00001e67  _system_pre_init                           
+00001e63  _nop                                       
+00001e5b  _register_lock                             
+00001e55  _register_unlock                           
+00001d07  _system_post_cinit                         
+00001e8f  _system_pre_init                           
 20000124  _unlock                                    
-00001d39  abort                                      
+00001d61  abort                                      
 ffffffff  binit                                      
-00001d89  copy_in                                    
-00001d41  exit                                       
+00001db1  copy_in                                    
+00001d69  exit                                       
 20000134  g_bBlink3Done                              
 20000135  g_bModeSelector                            
 20000136  g_bSecondPassed                            
 20000137  g_checkLightSensorBool                     
 20000130  g_iSecCount                                
 20000000  g_pfnRAMVectors                            
-00001ef8  i2cConfig                                  
+00001f20  i2cConfig                                  
 00000000  interruptVectors                           
 00000d75  main                                       
 20000128  main_func_sp                               
-00001aed  memcpy                                     
-00001b91  memset                                     
+00001b15  memcpy                                     
+00001bb9  memset                                     
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -424,84 +425,85 @@ address   name
 00000d75  main                                       
 00000dd5  Blink3                                     
 00000e43  SenseLight                                 
-00000e53  SmartMode                                  
-00000e93  ManualMode                                 
-00000eb5  SetLamp                                    
-00000f35  ResetT32_1                                 
-00000f6f  GetLampState                               
-00000fcb  BUTTON_ISR                                 
-00001007  T32_ISR                                    
-0000105d  Setup                                      
-00001183  Interrupt_enableMaster                     
-00001193  Interrupt_disableMaster                    
-000011a3  Interrupt_registerInterrupt                
-000011f5  Interrupt_unregisterInterrupt              
-00001209  Interrupt_setPriorityGrouping              
-00001223  Interrupt_getPriorityGrouping              
-0000125b  Interrupt_setPriority                      
-000012ab  Interrupt_getPriority                      
-000012d1  Interrupt_enableInterrupt                  
-00001343  Interrupt_disableInterrupt                 
-000013b5  Interrupt_isEnabled                        
-00001441  Interrupt_pendInterrupt                    
-000014b1  Interrupt_unpendInterrupt                  
-000014ff  Interrupt_setPriorityMask                  
-0000150f  Interrupt_getPriorityMask                  
-00001519  Interrupt_setVectorTableAddress            
-00001529  Interrupt_getVectorTableAddress            
-0000152f  Interrupt_enableSleepOnIsrExit             
-00001541  Interrupt_disableSleepOnIsrExit            
-00001571  SystemCoreClockUpdate                      
-000017e5  SystemInit                                 
-00001899  OPT3001_init                               
-000018ad  OPT3001_readManufacturerId                 
-000018bd  OPT3001_readDeviceId                       
-000018cd  OPT3001_readConfigReg                      
-000018dd  OPT3001_readLowLimitReg                    
-000018ed  OPT3001_readHighLimitReg                   
-000018fd  OPT3001_getLux                             
-000019d5  Init_I2C_GPIO                              
-000019ed  I2C_init                                   
-00001a05  I2C_read16                                 
-00001a8b  I2C_write16                                
-00001acf  I2C_setslave                               
-00001aed  __aeabi_memcpy                             
-00001aed  __aeabi_memcpy4                            
-00001aed  __aeabi_memcpy8                            
-00001aed  memcpy                                     
-00001b89  __aeabi_memclr                             
-00001b89  __aeabi_memclr4                            
-00001b89  __aeabi_memclr8                            
-00001b8b  __aeabi_memset                             
-00001b8b  __aeabi_memset4                            
-00001b8b  __aeabi_memset8                            
-00001b91  memset                                     
-00001c03  __mpu_init                                 
-00001c05  __TI_auto_init                             
-00001cdf  _system_post_cinit                         
-00001ce1  _c_int00                                   
-00001d35  C$$EXIT                                    
-00001d39  abort                                      
-00001d41  exit                                       
-00001d89  copy_in                                    
-00001dd5  CPU_cpsid                                  
-00001de1  CPU_primask                                
-00001deb  CPU_cpsie                                  
-00001df7  CPU_wfi                                    
-00001dfb  CPU_basepriSet                             
-00001e09  CPU_basepriGet                             
-00001e15  _args_main                                 
-00001e2d  _register_unlock                           
-00001e33  _register_lock                             
-00001e3b  _nop                                       
-00001e53  __TI_decompress_none                       
-00001e61  __TI_decompress_rle24                      
-00001e67  _system_pre_init                           
-00001ef8  i2cConfig                                  
-00001f94  __TI_Handler_Table_Base                    
-00001f9c  __TI_CINIT_Base                            
-00001f9c  __TI_Handler_Table_Limit                   
-00001fb4  __TI_CINIT_Limit                           
+00000e53  SenseSound                                 
+00000e65  SmartMode                                  
+00000eb3  ManualMode                                 
+00000ed5  SetLamp                                    
+00000f55  ResetT32_1                                 
+00000f8f  GetLampState                               
+00000feb  BUTTON_ISR                                 
+00001027  T32_ISR                                    
+00001081  Setup                                      
+000011ab  Interrupt_enableMaster                     
+000011bb  Interrupt_disableMaster                    
+000011cb  Interrupt_registerInterrupt                
+0000121d  Interrupt_unregisterInterrupt              
+00001231  Interrupt_setPriorityGrouping              
+0000124b  Interrupt_getPriorityGrouping              
+00001283  Interrupt_setPriority                      
+000012d3  Interrupt_getPriority                      
+000012f9  Interrupt_enableInterrupt                  
+0000136b  Interrupt_disableInterrupt                 
+000013dd  Interrupt_isEnabled                        
+00001469  Interrupt_pendInterrupt                    
+000014d9  Interrupt_unpendInterrupt                  
+00001527  Interrupt_setPriorityMask                  
+00001537  Interrupt_getPriorityMask                  
+00001541  Interrupt_setVectorTableAddress            
+00001551  Interrupt_getVectorTableAddress            
+00001557  Interrupt_enableSleepOnIsrExit             
+00001569  Interrupt_disableSleepOnIsrExit            
+00001599  SystemCoreClockUpdate                      
+0000180d  SystemInit                                 
+000018c1  OPT3001_init                               
+000018d5  OPT3001_readManufacturerId                 
+000018e5  OPT3001_readDeviceId                       
+000018f5  OPT3001_readConfigReg                      
+00001905  OPT3001_readLowLimitReg                    
+00001915  OPT3001_readHighLimitReg                   
+00001925  OPT3001_getLux                             
+000019fd  Init_I2C_GPIO                              
+00001a15  I2C_init                                   
+00001a2d  I2C_read16                                 
+00001ab3  I2C_write16                                
+00001af7  I2C_setslave                               
+00001b15  __aeabi_memcpy                             
+00001b15  __aeabi_memcpy4                            
+00001b15  __aeabi_memcpy8                            
+00001b15  memcpy                                     
+00001bb1  __aeabi_memclr                             
+00001bb1  __aeabi_memclr4                            
+00001bb1  __aeabi_memclr8                            
+00001bb3  __aeabi_memset                             
+00001bb3  __aeabi_memset4                            
+00001bb3  __aeabi_memset8                            
+00001bb9  memset                                     
+00001c2b  __mpu_init                                 
+00001c2d  __TI_auto_init                             
+00001d07  _system_post_cinit                         
+00001d09  _c_int00                                   
+00001d5d  C$$EXIT                                    
+00001d61  abort                                      
+00001d69  exit                                       
+00001db1  copy_in                                    
+00001dfd  CPU_cpsid                                  
+00001e09  CPU_primask                                
+00001e13  CPU_cpsie                                  
+00001e1f  CPU_wfi                                    
+00001e23  CPU_basepriSet                             
+00001e31  CPU_basepriGet                             
+00001e3d  _args_main                                 
+00001e55  _register_unlock                           
+00001e5b  _register_lock                             
+00001e63  _nop                                       
+00001e7b  __TI_decompress_none                       
+00001e89  __TI_decompress_rle24                      
+00001e8f  _system_pre_init                           
+00001f20  i2cConfig                                  
+00001fbc  __TI_Handler_Table_Base                    
+00001fc4  __TI_CINIT_Base                            
+00001fc4  __TI_Handler_Table_Limit                   
+00001fdc  __TI_CINIT_Limit                           
 20000000  g_pfnRAMVectors                            
 20000114  __TI_cleanup_ptr                           
 20000118  __TI_dtors_ptr                             
@@ -527,4 +529,4 @@ ffffffff  binit
 UNDEFED   SHT$$INIT_ARRAY$$Base                      
 UNDEFED   SHT$$INIT_ARRAY$$Limit                     
 
-[170 symbols]
+[171 symbols]
