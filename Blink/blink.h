@@ -8,6 +8,8 @@
 #ifndef BLINK_H_
 #define BLINK_H_
 
+#define LAMP_POWER5
+
 #define T32_SEC_COUNT 11720
 //
 #define BUTTON_PORT GPIO_PORT_P3
@@ -33,6 +35,7 @@ void Setup(void);
 void InitSystem(void);
 void Blink3(void);
 void CallSubrutines(void);
+void SetLamp(int i_iState);
 float SenseLight(void);
 
 #endif /* BLINK_H_ */

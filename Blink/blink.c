@@ -85,27 +85,27 @@ void Blink3(void) {
 	switch (g_iSecCount) {
 
 		case 0:
-			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_ON_LAMP);
 			break;
 
 		case 1:
-			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_OFF_LAMP);
 			break;
 
 		case 2:
-			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_ON_LAMP);
 			break;
 
 		case 3:
-			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_OFF_LAMP);
 			break;
 
 		case 4:
-			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_ON_LAMP);
 			break;
 
 		case 5:
-			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_OFF_LAMP);
 			break;
 
 		case 6:
@@ -113,7 +113,7 @@ void Blink3(void) {
 			break;
 
 		default:
-			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			SetLamp(TURN_OFF_LAMP);
 			g_bBlink3Done = true;
 			break;
 	}
@@ -143,13 +143,13 @@ void CallSubrutines (void) {
 	if (l_fLux < LUX_LIMIT) {
 
 		g_iSecCount = 0;
-		GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+		SetLamp(TURN_ON_LAMP);
 
 	}
 
 	else if (g_iSecCount == SEC_COUNT_LIMIT) {
 
-		GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+		SetLamp(TURN_OFF_LAMP);
 
 	}
 
@@ -157,14 +157,63 @@ void CallSubrutines (void) {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-// WORK IN PROGRESS
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 void SetLamp(int i_iState) {
 
 	switch (i_iState) {
 
+		case TURN_ON_LAMP:
+			#if (defined(LAMP_POWER5) || defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			#endif
+			#if (defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_setOutputHighOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+			#endif
+			#ifdef LAMP_POWER15
+			GPIO_setOutputHighOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+			#endif
 
+			break;
 
+		case TURN_OFF_LAMP:
+			#if (defined(LAMP_POWER5) || defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			#endif
+			#if (defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+			#endif
+			#ifdef LAMP_POWER15
+			GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+			#endif
+
+			break;
+
+		case TOGGLE_LAMP:
+			#if (defined(LAMP_POWER5) || defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			#endif
+			#if (defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_toggleOutputOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+			#endif
+			#ifdef LAMP_POWER15
+			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+			#endif
+
+			break;
+
+		default:
+			#if (defined(LAMP_POWER5) || defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_setOutputHighOnPin(RGB_RED_PORT,RGB_RED_PIN);
+			#endif
+			#if (defined(LAMP_POWER10) || defined(LAMP_POWER15))
+			GPIO_setOutputHighOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+			#endif
+			#ifdef LAMP_POWER15
+			GPIO_setOutputHighOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+			#endif
+
+			break;
 
 	}
 
@@ -184,7 +233,7 @@ void BUTTON_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
-		GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
+		SetLamp(TOGGLE_LAMP);
 		g_iSecCount = 0;
 	}
 
@@ -244,16 +293,13 @@ void Setup(void)
 	GPIO_setAsOutputPin(RGB_RED_PORT,RGB_RED_PIN);
 	GPIO_setAsOutputPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 	GPIO_setAsOutputPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-	GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
+	//GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
 	// Initial value of LEDs on low.
-	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
-	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
-	GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-	GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
+	SetLamp(TURN_OFF_LAMP);
+	//GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
 	//
 	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
 	//////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
     /* Initialize I2C communication */
