@@ -295,7 +295,9 @@ void Setup(void)
 	GPIO_setAsOutputPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 	//GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
 	// Initial value of LEDs on low.
-	SetLamp(TURN_OFF_LAMP);
+	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+	GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 	//GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
 	//
 	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
