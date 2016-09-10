@@ -1,6 +1,7 @@
 # FIXED
 
 blink.obj: ../blink.c
+blink.obj: /home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdbool.h
 blink.obj: /home/aglt93/ti/ccsv6/ccs_base/arm/include/msp.h
 blink.obj: /home/aglt93/ti/ccsv6/ccs_base/arm/include/msp432p401r.h
 blink.obj: /home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdint.h
@@ -15,7 +16,6 @@ blink.obj: /home/aglt93/ti/ccsv6/ccs_base/arm/include/system_msp432p401r.h
 blink.obj: ../blink.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/driverlib.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/adc14.h
-blink.obj: /home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdbool.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/aes256.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/comp_e.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/cpu.h
@@ -48,6 +48,7 @@ blink.obj: /home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_I2C.h
 blink.obj: /home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_OPT3001.h
 
 ../blink.c: 
+/home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdbool.h: 
 /home/aglt93/ti/ccsv6/ccs_base/arm/include/msp.h: 
 /home/aglt93/ti/ccsv6/ccs_base/arm/include/msp432p401r.h: 
 /home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdint.h: 
@@ -62,7 +63,6 @@ blink.obj: /home/aglt93/workspace_v6_1_3/Blink/extra_libs/HAL_OPT3001.h
 ../blink.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/driverlib.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/adc14.h: 
-/home/aglt93/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdbool.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/aes256.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/comp_e.h: 
 /home/aglt93/workspace_v6_1_3/Blink/driverlib/MSP432P4xx/cpu.h: 

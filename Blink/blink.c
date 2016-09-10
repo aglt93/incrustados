@@ -8,21 +8,22 @@
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+#include <stdbool.h>
 #include "msp.h"
 #include "blink.h"
 #include <driverlib.h>
 #include <HAL_I2C.h>
 #include <HAL_OPT3001.h>
-#include <stdbool.h>
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Global Variables Definition.
 bool g_checkLightSensorBool;
-bool g_bCallBlink3;
 bool g_bBlink3Done;
-bool g_bSmartMode;
+bool g_bSecondPassed;
+bool g_bModeSelector;	// TRUE -> SMART_MODE;	FALSE -> MANUAL_MODE
+bool g_bLampState;		// TRUE -> LAMP_ON;		FALSE -> LAMP_OFF
 //
 int g_iSecCount;
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,8 +43,9 @@ void main(void) {
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	while (!g_bBlink3Done) {
 
-	   if(g_bCallBlink3) {
+	   if(g_bSecondPassed) {
 
+		   g_bSecondPassed = false;
 		   Blink3();
 
 	   }
@@ -58,16 +60,24 @@ void main(void) {
 	GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 	GPIO_enableInterrupt(BUTTON_PORT, BUTTON_PIN);
 
-	g_bSmartMode = true;
+	g_bSecondPassed = true;
+	g_bModeSelector = SMART_MODE;
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	while(1) {
 
-	   if (g_bSmartMode) {
+	   if (g_bSecondPassed) {
 
-		   SmartMode();
+		   g_bSecondPassed = false;
 
+		   if (g_bModeSelector == SMART_MODE) {
+			   SmartMode();
+		   }
+
+		   else {
+			   ManualMode();
+		   }
 	   }
 
 	   __wfe();
@@ -80,12 +90,9 @@ void main(void) {
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Blink3(void) {
 
-	g_bCallBlink3 = false;
-
 	switch (g_iSecCount) {
 
 		case 0:
-			// g_fLux = SenseLight();
 			SetLamp(TURN_ON_LAMP);
 			break;
 
@@ -111,20 +118,6 @@ void Blink3(void) {
 
 		case 6:
 			g_bBlink3Done = true;
-			/*
-			if (l_fLux < LUX_LIMIT) {
-
-				g_iSecCount = 0;
-				SetLamp(TURN_ON_LAMP);
-
-			}
-
-			else if (g_iSecCount == SEC_COUNT_LIMIT) {
-
-				SetLamp(TURN_OFF_LAMP);
-
-			}
-			*/
 			break;
 
 		default:
@@ -150,14 +143,13 @@ void SmartMode (void) {
 
 	float l_fLux;
 
-	g_bSmartMode = false;
-
 	l_fLux = SenseLight();
 
 	if (l_fLux < LUX_LIMIT) {
 
-		g_iSecCount = 0;
 		SetLamp(TURN_ON_LAMP);
+		ResetT32_1();
+		g_iSecCount = 0;
 
 	}
 
@@ -173,7 +165,23 @@ void SmartMode (void) {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-void SetLamp(int i_iState) {
+void ManualMode (void) {
+
+	if (g_iSecCount == SEC_COUNT_LIMIT) {
+
+		SetLamp(TURN_OFF_LAMP);
+		ResetT32_1();
+		g_bModeSelector = SMART_MODE;
+		g_iSecCount = 0;
+
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+void SetLamp (int i_iState) {
 
 	switch (i_iState) {
 
@@ -232,8 +240,40 @@ void SetLamp(int i_iState) {
 	}
 
 }
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+void ResetT32_1 (void) {
+
+	MAP_Timer32_clearInterruptFlag(TIMER32_BASE);
+	MAP_Timer32_setCount(TIMER32_BASE,T32_SEC_COUNT);
+	MAP_Timer32_enableInterrupt(TIMER32_BASE);
+	MAP_Timer32_startTimer(TIMER32_BASE, true);
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+bool GetLampState (void) {
+
+	bool l_bLampState = false;
+
+	#if (defined(LAMP_POWER5) || defined(LAMP_POWER10) || defined(LAMP_POWER15))
+	l_bLampState = GPIO_getInputPinValue(RGB_RED_PORT,RGB_RED_PIN);
+	#endif
+	#if (defined(LAMP_POWER10) || defined(LAMP_POWER15))
+	l_bLampState = l_bLampState && GPIO_getInputPinValue(RGB_GREEN_PORT,RGB_GREEN_PIN);
+	#endif
+	#ifdef LAMP_POWER15
+	l_bLampState = l_bLampState && GPIO_getInputPinValue(RGB_BLUE_PORT,RGB_BLUE_PIN);
+	#endif
+
+	return l_bLampState;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
@@ -248,6 +288,7 @@ void BUTTON_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
 		SetLamp(TOGGLE_LAMP);
+		g_bModeSelector = !GetLampState();
 		g_iSecCount = 0;
 	}
 
@@ -265,12 +306,13 @@ void T32_ISR(void) {
 	MAP_Timer32_clearInterruptFlag(TIMER32_BASE);
 	//
 	g_iSecCount++;
-	g_bSmartMode = true;
-	g_bCallBlink3 = true;
+	g_bSecondPassed = true;
 	//
 	MAP_Timer32_setCount(TIMER32_BASE,T32_SEC_COUNT);
 	MAP_Timer32_enableInterrupt(TIMER32_BASE);
 	MAP_Timer32_startTimer(TIMER32_BASE, true);
+	//
+	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,9 +335,9 @@ void Setup(void)
 	//     INIT GLOBAL VARIABLES
 	// ****************************
 	g_checkLightSensorBool = false;
-	g_bCallBlink3 = true;
 	g_bBlink3Done = false;
-	g_bSmartMode = false;
+	g_bSecondPassed = true;
+	g_bModeSelector = SMART_MODE;
 	g_iSecCount = 0;
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -307,12 +349,12 @@ void Setup(void)
 	GPIO_setAsOutputPin(RGB_RED_PORT,RGB_RED_PIN);
 	GPIO_setAsOutputPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 	GPIO_setAsOutputPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-	//GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
+	GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
 	// Initial value of LEDs on low.
 	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
 	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 	GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-	//GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
+	GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
 	//
 	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
 	//////////////////////////////////////////////////////////////////////////////////////////////

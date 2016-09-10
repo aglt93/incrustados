@@ -31,10 +31,16 @@
 #define TURN_OFF_LAMP 1
 #define TOGGLE_LAMP 2
 //
+#define SMART_MODE true
+#define MANUAL_MODE false
+//
 void Setup(void);
 void Blink3(void);
 void SmartMode(void);
 void SetLamp(int i_iState);
+bool GetLampState (void);
+void ManualMode(void);
 float SenseLight(void);
+void ResetT32_1(void);
 
 #endif /* BLINK_H_ */
