@@ -34,13 +34,20 @@
 #define SMART_MODE true
 #define MANUAL_MODE false
 //
+#define MIC_PORT GPIO_PORT_P4
+#define MIC_PIN GPIO_PIN3
+//
+#define MAX_SAMPLE 5
+
 void Setup(void);
 void Blink3(void);
+bool secCount(void);
 void SmartMode(void);
 void SetLamp(int i_iState);
 bool GetLampState (void);
 void ManualMode(void);
 float SenseLight(void);
+bool SenseSound(void);
 void ResetT32_1(void);
 
 #endif /* BLINK_H_ */

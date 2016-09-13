@@ -5,8 +5,8 @@
 * CMSIS compliant coding
 *
 ******************************************************************************/
-// kvalleci 16:56 from clean alejandro doc
-//
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 #include <stdbool.h>
 #include "msp.h"
@@ -24,8 +24,47 @@ bool g_bBlink3Done;
 bool g_bSecondPassed;
 bool g_bModeSelector;	// TRUE -> SMART_MODE;	FALSE -> MANUAL_MODE
 bool g_bLampState;		// TRUE -> LAMP_ON;		FALSE -> LAMP_OFF
+bool g_bToggleLamp;
 //
 int g_iSecCount;
+//////////////////////////////////////////////////////////////////////////////////////////////
+/* Statics */
+static volatile float g_fSample1SecBuffer[MAX_SAMPLE];
+static volatile float g_fSample200msBuffer[MAX_SAMPLE];
+static volatile int16_t g_f200msSample;
+static volatile int16_t g_u8Count200ms;
+static volatile int16_t g_u8Count200msI;
+
+static volatile uint16_t g_u8Count1Sec;
+static volatile uint16_t g_u8Count1SecI;
+static volatile bool g_b200msPassed;
+static volatile bool g_bSecSamplerInitDone;
+
+static volatile bool g_b1SecPassed;
+static volatile int16_t g_fSampleAverage;
+static volatile int16_t g_f200msSumSample;
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+/* Timer_A Continuous Mode Configuration Parameter */
+const Timer_A_UpModeConfig upModeConfig =
+{
+        TIMER_A_CLOCKSOURCE_ACLK,            // ACLK Clock Source
+        TIMER_A_CLOCKSOURCE_DIVIDER_1,       // ACLK/1 = 32Khz
+		6554,//32768,//6554,//16384,
+        TIMER_A_TAIE_INTERRUPT_DISABLE,      // Disable Timer ISR
+        TIMER_A_CCIE_CCR0_INTERRUPT_DISABLE, // Disable CCR0
+        TIMER_A_DO_CLEAR                     // Clear Counter
+};
+
+/* Timer_A Compare Configuration Parameter */
+const Timer_A_CompareModeConfig compareConfig =
+{
+        TIMER_A_CAPTURECOMPARE_REGISTER_1,          // Use CCR1
+        TIMER_A_CAPTURECOMPARE_INTERRUPT_DISABLE,   // Disable CCR interrupt
+        TIMER_A_OUTPUTMODE_SET_RESET,               // Toggle output but
+		6554//32768//6554//16384                                       // 16000 Period
+};
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -44,14 +83,38 @@ void main(void) {
 	while (!g_bBlink3Done) {
 
 	   if(g_bSecondPassed) {
-
 		   g_bSecondPassed = false;
 		   Blink3();
-
 	   }
-
+	   if(g_b200msPassed){
+		   g_b200msPassed = false;
+		   msSampler();
+		   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+		   if(g_b1SecPassed){
+			   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+			   if(!g_bSecSamplerInitDone){
+				   g_bSecSamplerInitDone = secSamplerInit();
+				   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+			   }
+			   g_u8Count1Sec++;
+		   }
+	   }
 	   __wfe();
 	}
+//	   if(g_b200msPassed){
+//		   g_b200msPassed = false;
+//		   if(secCount()){
+//			   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+//		   }
+//		   if(msSampler() && !secSamplerInitDone){
+//			secSamplerInit();
+//		   }
+//		   else if(secSamplerInitDone){
+//			   secSampler();
+//		   }
+
+
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -78,6 +141,19 @@ void main(void) {
 		   else {
 			   ManualMode();
 		   }
+	   }
+
+	   if (g_bToggleLamp) {
+
+			g_bToggleLamp = false;
+			__delay_cycles(100000);
+			if (GPIO_getInputPinValue(BUTTON_PORT,BUTTON_PIN) == 0) {
+				SetLamp(TOGGLE_LAMP);
+				g_bModeSelector = !GetLampState();
+				ResetT32_1();
+				g_iSecCount = 0;
+			}
+
 	   }
 
 	   __wfe();
@@ -129,34 +205,118 @@ void Blink3(void) {
 	return;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
+//bool secCount(void){
+//	if (g_u8Count200ms==5){
+//		g_u8Count200ms = 0;
+//		g_b1SecPassed = true;
+//		return true;
+//	}
+//	return false;
+//}
+//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+bool msSampler(void){
+	g_f200msSumSample+=g_f200msSample;
+	g_u8Count200msI = g_u8Count200ms-1;
+	g_fSample200msBuffer[g_u8Count200msI]=g_f200msSample;
+	//printf("g_f200msSample = %i, count %i\n", g_f200msSample ,g_u8Count200ms );
+	if (g_u8Count200ms==5){
+		//printf("g_f200msSumSample = %i, count %u\n", g_f200msSumSample ,g_u8Count200ms );
+		g_fSampleAverage = g_f200msSumSample/MAX_SAMPLE;
+		//printf("g_fSampleAverage = %f, count %u\n", g_fSampleAverage ,g_u8Count200ms );
+		g_u8Count200ms = 0;
+		g_f200msSumSample = 0;
+		g_b1SecPassed = true;
+		return true;
+	}
+	g_b1SecPassed = false;
+	return false;
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+bool secSamplerInit(void){
+	//g_u8Count1SecI=g_u8Count1Sec%5;
+//	printf("g_fSampleAverage = %i, g_u8Count1Sec %i, g_u8Count1SecI %i\n", g_fSampleAverage ,g_u8Count1Sec, g_u8Count1SecI );
+	g_fSample1SecBuffer[g_u8Count1Sec]=g_fSampleAverage;
+	//printf("g_fSampleAverage = %i, g_u8Count1Sec %i\n", g_fSampleAverage ,g_u8Count1Sec );
 
-
+	if (g_u8Count1Sec==5){
+		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+		g_u8Count1Sec = 0;
+		return true;
+	}
+	return false;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 float SenseLight (void) {
 
 	return OPT3001_getLux();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-
 //////////////////////////////////////////////////////////////////////////////////////////////
-bool SenseSound (void) {
-	bool l_bDb;
-	l_bDb = true;
-	return l_bDb;
-}
+//bool msSampler(void){
+//	sumSample+=sample
+//	if (count==5){
+//		count = 0;
+//		msAverage = sumSample/5;
+//		return true;
+//	}
+//	return false;
+//}
+
+//void secSampler(void){
+//	for (int i=0 i<4; i++){
+//		secBuffer[i]=secBUffer[i+1];
+//	}
+//	secBuffer[4]=average;
+//}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//bool SenseSound (void) {
+//	//printf("sample = %i, count %i\n", sample , count );
+//    sampleN= sampleN1;
+//    sampleN1+=sample
+//    resultsBuffer[count]=sample;
+//    printf("sampleN = %f, count %i\n", sampleN ,count );
+//    for ( i = 0; i <)
+////    if (count==5){
+////    	sampleA = sampleN/5;
+////       	//printf("sampleN1 = %i, count %i\n", sampleN1 , count );
+////    }
+////    if (count>5){
+//////    	sampleN+= sample;
+////		if (sampleN1>sampleA*1.1){
+////			countTenSec++;
+////			if (countTenSec<=50){
+////				GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+////				senseSound = true;
+////			}
+////			else{
+////				senseSound = false;
+////				countTenSec=0;
+////				count=0;
+////			}
+////			//printf("senseSOund= %u\n",senseSound);
+////		}
+////		else{
+////			senseSound = false;
+////		}
+////    }
+//	//resultsBuffer[resPos++] = MAP_ADC14_getResult(ADC_MEM0);
+//	//printf("sample = %i, Sec %i\n", sample , resPos++ );
+//	return senseSound;
+//}
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 void SmartMode (void) {
 
 	float l_fLux;
-	bool l_bDb;
 
 	l_fLux = SenseLight();
-	l_bDb = SenseSound();
 
-
-	if (l_fLux < LUX_LIMIT && l_bDb) {
+	if (l_fLux < LUX_LIMIT ) {
+//	if (SenseSound()) {
 
 		SetLamp(TURN_ON_LAMP);
 		ResetT32_1();
@@ -182,8 +342,8 @@ void ManualMode (void) {
 
 		SetLamp(TURN_OFF_LAMP);
 		ResetT32_1();
-		g_bModeSelector = SMART_MODE;
 		g_iSecCount = 0;
+		g_bModeSelector = SMART_MODE;
 
 	}
 }
@@ -263,8 +423,8 @@ void ResetT32_1 (void) {
 	MAP_Timer32_startTimer(TIMER32_BASE, true);
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 bool GetLampState (void) {
@@ -298,9 +458,7 @@ void BUTTON_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
-		SetLamp(TOGGLE_LAMP);
-		g_bModeSelector = !GetLampState();
-		g_iSecCount = 0;
+		g_bToggleLamp = true;
 	}
 
 }
@@ -323,11 +481,32 @@ void T32_ISR(void) {
 	MAP_Timer32_enableInterrupt(TIMER32_BASE);
 	MAP_Timer32_startTimer(TIMER32_BASE, true);
 	//
-	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+//	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+/* This interrupt is fired whenever a conversion is completed and placed in
+ * ADC_MEM0 */
+void ADC14_IRQHandler(void)
+{
+    uint64_t l_u64Status;
+    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+    MAP_ADC14_clearInterruptFlag(l_u64Status);
+    if (l_u64Status & ADC_INT0)
+    {
+    	g_f200msSample= MAP_ADC14_getResult(ADC_MEM0);
+    	g_f200msSample = abs(g_f200msSample);
+    	g_u8Count200ms++;
+//    	g_u8Count1Sec++;
+    	g_b200msPassed = true;
+    	//GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
 // Setup function for the application
 // @input - none
@@ -349,7 +528,23 @@ void Setup(void)
 	g_bBlink3Done = false;
 	g_bSecondPassed = true;
 	g_bModeSelector = SMART_MODE;
+	g_bToggleLamp = false;
 	g_iSecCount = 0;
+	int i = 0;
+	for (i = 0; i < MAX_SAMPLE-1; i++){
+		g_fSample1SecBuffer[i] = 0.0;
+	}
+	g_f200msSample = 0.0;
+	g_fSampleAverage = 0.0;
+	g_u8Count200ms = 0;
+	g_u8Count200msI = 0;
+	g_u8Count1Sec = 0;
+	g_u8Count1SecI = 0;
+	g_b200msPassed = true;
+	g_b1SecPassed = false;
+	g_bSecSamplerInitDone = false;
+	g_f200msSumSample = 0.0;
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,11 +576,39 @@ void Setup(void)
     // Delay in order to make stable the sensor.
     __delay_cycles(100000);
 
-    MAP_Timer32_initModule(TIMER32_BASE, TIMER32_PRESCALER_256, TIMER32_32BIT,
-    	            TIMER32_PERIODIC_MODE);
+    MAP_Timer32_initModule(TIMER32_BASE, TIMER32_PRESCALER_256, TIMER32_32BIT,TIMER32_PERIODIC_MODE);
     MAP_Interrupt_enableInterrupt(INT_T32_INT1);
     MAP_Timer32_setCount(TIMER32_BASE,T32_SEC_COUNT);
 	MAP_Timer32_enableInterrupt(TIMER32_BASE);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+    MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
+    /* Initializing ADC (MCLK/1/1) */
+    MAP_ADC14_enableModule();
+    MAP_ADC14_initModule(ADC_CLOCKSOURCE_MCLK, ADC_PREDIVIDER_1, ADC_DIVIDER_1,0);
+    /* Configuring GPIOs (5.5 A0) */
+    MAP_GPIO_setAsPeripheralModuleFunctionInputPin(MIC_PORT, MIC_PIN,GPIO_TERTIARY_MODULE_FUNCTION);
+    /* Configuring ADC Memory */
+    MAP_ADC14_configureSingleSampleMode(ADC_MEM0, true);
+    MAP_ADC14_configureConversionMemory(ADC_MEM0, ADC_VREFPOS_AVCC_VREFNEG_VSS,ADC_INPUT_A10, false);
+
+    ADC14_setResultFormat(ADC_SIGNED_BINARY);
+    /* Configuring Timer_A in continuous mode and sourced from ACLK */
+    MAP_Timer_A_configureUpMode(TIMER_A0_BASE, &upModeConfig);
+    /* Configuring Timer_A0 in CCR1 to trigger at 16000 (0.5s) */
+    MAP_Timer_A_initCompare(TIMER_A0_BASE, &compareConfig);
+    /* Configuring the sample trigger to be sourced from Timer_A0  and setting it
+    * to automatic iteration after it is triggered*/
+    MAP_ADC14_setSampleHoldTrigger(ADC_TRIGGER_SOURCE1, false);
+    /* Enabling the interrupt when a conversion on channel 1 is complete and
+    * enabling conversions */
+    MAP_ADC14_enableInterrupt(ADC_INT0);
+    MAP_ADC14_enableConversion();
+    /* Enabling Interrupts */
+    MAP_Interrupt_enableInterrupt(INT_ADC14);
+    MAP_Interrupt_enableMaster();
+    /* Starting the Timer */
+    MAP_Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
