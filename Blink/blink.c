@@ -6,7 +6,7 @@
 *
 ******************************************************************************/
 
-
+// 1 SEC MAIN KVALLECI 20:08 13/9/16
 //////////////////////////////////////////////////////////////////////////////////////////////
 #include <stdbool.h>
 #include "msp.h"
@@ -39,10 +39,16 @@ static volatile uint16_t g_u8Count1Sec;
 static volatile uint16_t g_u8Count1SecI;
 static volatile bool g_b200msPassed;
 static volatile bool g_bSecSamplerInitDone;
-
+static volatile bool g_bSecSamplerMainDone;
+static volatile bool g_bSample5SecDone;
 static volatile bool g_b1SecPassed;
 static volatile int16_t g_fSampleAverage;
+static volatile int16_t g_fTotalAverage;
+static volatile int16_t g_fSumAverage;
+static volatile int16_t g_fTotalAverage;
 static volatile int16_t g_f200msSumSample;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +84,6 @@ void main(void) {
 	Setup();
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
-
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	while (!g_bBlink3Done) {
 
@@ -89,31 +94,18 @@ void main(void) {
 	   if(g_b200msPassed){
 		   g_b200msPassed = false;
 		   msSampler();
-		   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+		   //GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 		   if(g_b1SecPassed){
 			   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 			   if(!g_bSecSamplerInitDone){
 				   g_bSecSamplerInitDone = secSamplerInit();
-				   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+				//   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 			   }
 			   g_u8Count1Sec++;
 		   }
 	   }
 	   __wfe();
 	}
-//	   if(g_b200msPassed){
-//		   g_b200msPassed = false;
-//		   if(secCount()){
-//			   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
-//		   }
-//		   if(msSampler() && !secSamplerInitDone){
-//			secSamplerInit();
-//		   }
-//		   else if(secSamplerInitDone){
-//			   secSampler();
-//		   }
-
-
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,6 +121,20 @@ void main(void) {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	while(1) {
+
+		if(g_b200msPassed){
+		   g_b200msPassed = false;
+		   msSampler();
+//		   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+		   if(g_b1SecPassed){
+		   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+			   if(!g_bSecSamplerMainDone){
+				   g_bSecSamplerMainDone = secSamplerInit();
+				  // GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+			   }
+			   g_u8Count1Sec++;
+		   }
+		}
 
 	   if (g_bSecondPassed) {
 
@@ -205,15 +211,7 @@ void Blink3(void) {
 	return;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-//bool secCount(void){
-//	if (g_u8Count200ms==5){
-//		g_u8Count200ms = 0;
-//		g_b1SecPassed = true;
-//		return true;
-//	}
-//	return false;
-//}
-//////////////////////////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 bool msSampler(void){
 	g_f200msSumSample+=g_f200msSample;
@@ -233,43 +231,48 @@ bool msSampler(void){
 	return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 bool secSamplerInit(void){
 	//g_u8Count1SecI=g_u8Count1Sec%5;
 //	printf("g_fSampleAverage = %i, g_u8Count1Sec %i, g_u8Count1SecI %i\n", g_fSampleAverage ,g_u8Count1Sec, g_u8Count1SecI );
 	g_fSample1SecBuffer[g_u8Count1Sec]=g_fSampleAverage;
+	g_fSumAverage+=g_fSampleAverage;
 	//printf("g_fSampleAverage = %i, g_u8Count1Sec %i\n", g_fSampleAverage ,g_u8Count1Sec );
 
 	if (g_u8Count1Sec==5){
 		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+		g_fTotalAverage = g_fSumAverage/MAX_SAMPLE;
+		g_bSample5SecDone = true;
 		g_u8Count1Sec = 0;
 		return true;
 	}
+	g_bSample5SecDone = false;
 	return false;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
-float SenseLight (void) {
+bool secSamplerMain(void){
+	//g_u8Count1SecI=g_u8Count1Sec%5;
+//	printf("g_fSampleAverage = %i, g_u8Count1Sec %i, g_u8Count1SecI %i\n", g_fSampleAverage ,g_u8Count1Sec, g_u8Count1SecI );
+	g_fSample1SecBuffer[g_u8Count1Sec]=g_fSampleAverage;
+	g_fSumAverage+=g_fSampleAverage;
+	//printf("g_fSampleAverage = %i, g_u8Count1Sec %i\n", g_fSampleAverage ,g_u8Count1Sec );
 
-	return OPT3001_getLux();
+	if (g_u8Count1Sec==5){
+		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+		g_fTotalAverage = g_fSumAverage/MAX_SAMPLE;
+		g_bSample5SecDone = true;
+		g_u8Count1Sec = 0;
+		return true;
+	}
+	g_bSample5SecDone = false;
+	return false;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//bool msSampler(void){
-//	sumSample+=sample
-//	if (count==5){
-//		count = 0;
-//		msAverage = sumSample/5;
-//		return true;
-//	}
-//	return false;
-//}
-
-//void secSampler(void){
-//	for (int i=0 i<4; i++){
-//		secBuffer[i]=secBUffer[i+1];
-//	}
-//	secBuffer[4]=average;
+//bool SenseSound(void){
+//	if(g_bSample5SecDone)
+//
 //}
 //////////////////////////////////////////////////////////////////////////////////////////////
 //bool SenseSound (void) {
@@ -308,6 +311,13 @@ float SenseLight (void) {
 //}
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+float SenseLight (void) {
+
+	return OPT3001_getLux();
+}
 //////////////////////////////////////////////////////////////////////////////////////////////
 void SmartMode (void) {
 
@@ -536,6 +546,8 @@ void Setup(void)
 	}
 	g_f200msSample = 0.0;
 	g_fSampleAverage = 0.0;
+	g_fSumAverage = 0;
+	g_fTotalAverage = 0;
 	g_u8Count200ms = 0;
 	g_u8Count200msI = 0;
 	g_u8Count1Sec = 0;
@@ -543,6 +555,8 @@ void Setup(void)
 	g_b200msPassed = true;
 	g_b1SecPassed = false;
 	g_bSecSamplerInitDone = false;
+	g_bSecSamplerMainDone = false;
+	g_bSample5SecDone = false;
 	g_f200msSumSample = 0.0;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
