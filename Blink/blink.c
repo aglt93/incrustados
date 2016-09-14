@@ -42,6 +42,7 @@ static volatile bool g_bSecSamplerInitDone;
 static volatile bool g_bSecSamplerMainDone;
 static volatile bool g_bSample5SecDone;
 static volatile bool g_b1SecPassed;
+static volatile bool g_bOutlierDetected;
 static volatile int16_t g_fSampleAverage;
 static volatile int16_t g_fTotalAverage;
 static volatile int16_t g_fSumAverage;
@@ -130,6 +131,9 @@ void main(void) {
 		   GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 			   if(!g_bSecSamplerMainDone){
 				   g_bSecSamplerMainDone = secSamplerInit();
+				   if(g_bSecSamplerMainDone){
+					   g_bOutlierDetected = outlier10p();
+				   }
 				  // GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 			   }
 			   g_u8Count1Sec++;
@@ -270,45 +274,18 @@ bool secSamplerMain(void){
 	return false;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-//bool SenseSound(void){
-//	if(g_bSample5SecDone)
-//
-//}
-//////////////////////////////////////////////////////////////////////////////////////////////
-//bool SenseSound (void) {
-//	//printf("sample = %i, count %i\n", sample , count );
-//    sampleN= sampleN1;
-//    sampleN1+=sample
-//    resultsBuffer[count]=sample;
-//    printf("sampleN = %f, count %i\n", sampleN ,count );
-//    for ( i = 0; i <)
-////    if (count==5){
-////    	sampleA = sampleN/5;
-////       	//printf("sampleN1 = %i, count %i\n", sampleN1 , count );
-////    }
-////    if (count>5){
-//////    	sampleN+= sample;
-////		if (sampleN1>sampleA*1.1){
-////			countTenSec++;
-////			if (countTenSec<=50){
-////				GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
-////				senseSound = true;
-////			}
-////			else{
-////				senseSound = false;
-////				countTenSec=0;
-////				count=0;
-////			}
-////			//printf("senseSOund= %u\n",senseSound);
-////		}
-////		else{
-////			senseSound = false;
-////		}
-////    }
-//	//resultsBuffer[resPos++] = MAP_ADC14_getResult(ADC_MEM0);
-//	//printf("sample = %i, Sec %i\n", sample , resPos++ );
-//	return senseSound;
-//}
+bool OutlierDetected(void){
+	   int i;
+
+	   /* for loop execution */
+	   for( i = 0; i < 5; i++ ){
+		   if(g_fSample1SecBuffer[i]*1.1>g_fTotalAverage){
+			   g_bOutlierDetected = true;
+		   }
+		   g_bOutlierDetected = false;
+	   }
+	   return true;
+}
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,7 +302,7 @@ void SmartMode (void) {
 
 	l_fLux = SenseLight();
 
-	if (l_fLux < LUX_LIMIT ) {
+	if (l_fLux < LUX_LIMIT && g_bOutlierDetected ) {
 //	if (SenseSound()) {
 
 		SetLamp(TURN_ON_LAMP);
@@ -359,7 +336,7 @@ void ManualMode (void) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-
+//
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 void SetLamp (int i_iState) {
@@ -558,6 +535,7 @@ void Setup(void)
 	g_bSecSamplerMainDone = false;
 	g_bSample5SecDone = false;
 	g_f200msSumSample = 0.0;
+	g_bOutlierDetected = false;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
