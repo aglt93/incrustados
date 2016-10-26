@@ -11,7 +11,7 @@
 #include "msp.h"
 #include "Task.hpp"
 
-#define NUMBER_OF_SLOTS 255
+#define NUMBER_OF_SLOTS 5
 #define NULL            0
 
 class Scheduler

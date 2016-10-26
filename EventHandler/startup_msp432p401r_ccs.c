@@ -103,6 +103,7 @@ extern void PORT3_IRQHandler    (void) __attribute__((weak,alias("Default_Handle
 extern void PORT4_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 extern void PORT5_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 extern void PORT6_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
+extern void BUTTON_ISR(void);
 
 /* Interrupt vector table.  Note that the proper constructs must be placed on this to */
 /* ensure that it ends up at physical address 0x0000.0000 or at the start of          */
@@ -165,7 +166,7 @@ void (* const interruptVectors[])(void) =
     DMA_INT0_IRQHandler,                   /* DMA_INT0 ISR              */
     PORT1_IRQHandler,                      /* PORT1 ISR                 */
     PORT2_IRQHandler,                      /* PORT2 ISR                 */
-    PORT3_IRQHandler,                      /* PORT3 ISR                 */
+	BUTTON_ISR,                      /* PORT3 ISR                 */
     PORT4_IRQHandler,                      /* PORT4 ISR                 */
     PORT5_IRQHandler,                      /* PORT5 ISR                 */
     PORT6_IRQHandler                       /* PORT6 ISR                 */

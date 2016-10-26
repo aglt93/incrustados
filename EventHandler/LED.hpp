@@ -15,11 +15,13 @@
 class LED : public Task
 {
     public:
-        LED();
-        LED(uint64_t i_u64FinalCount);
+        LED(int LED_PORT,int LED_PIN);
+        LED(int LED_PORT,int LED_PIN,uint64_t i_u64FinalCount);
         virtual uint8_t run(void);
     protected:
     private:
+        int m_iLedPort;
+        int m_iLedPin;
 };
 
 #endif /* LED_HPP_ */
