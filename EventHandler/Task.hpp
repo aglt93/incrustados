@@ -16,11 +16,18 @@ class Task
 		bool                IsTaskFinished(void){return m_bIsFinished;};
 		uint8_t             GetTaskPriority(void) {return m_u8Priority;};
 		void                SetTaskPriority(uint8_t i_u8NewPriority){m_u8Priority = i_u8NewPriority;};
+		void				SetTaskCurrentCount(uint64_t i_u64CurrentCount);
+		void				SetTaskFinalCount(uint64_t i_u64FinalCount);
+		uint64_t			GetTaskCurrentCount();
+		uint64_t			GetTaskFinalCount();
+
 	private:
 	   static uint8_t m_u8NextTaskID;
 	   uint8_t m_u8Priority;
 	protected:
 	   bool m_bIsFinished;
+	   uint64_t m_u64CurrentCount;
+	   uint64_t m_u64FinalCount;
 };
 
 #endif /* TASK_HPP_ */

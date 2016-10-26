@@ -13,12 +13,13 @@ void main(void)
     Scheduler MainScheduler;
     LED BlinkLED;
     Setup();
-    MainScheduler.attach(&BlinkLED,20);
+    MainScheduler.attach(&BlinkLED);
     while(1){
     	__wfe();
         if(SystemTicks != MainScheduler.ticks)
         {
             MainScheduler.ticks = SystemTicks;
+            MainScheduler.CalculateNextSchedule();
             MainScheduler.run();
         }
     };
@@ -71,5 +72,4 @@ extern "C"
 		SystemTicks++;
 		return;
 	}
-
 }

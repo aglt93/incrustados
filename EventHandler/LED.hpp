@@ -16,6 +16,7 @@ class LED : public Task
 {
     public:
         LED();
+        LED(uint64_t i_u64FinalCount);
         virtual uint8_t run(void);
     protected:
     private:
