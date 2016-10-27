@@ -16,6 +16,8 @@ void main(void)
     LED BlinkLED(RGB_BLUE_PORT,RGB_BLUE_PIN,5);
     LED BlinkLED2(RGB_GREEN_PORT,RGB_GREEN_PIN,3);
     Setup();
+	GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
+	GPIO_enableInterrupt(BUTTON_PORT, BUTTON_PIN);
     MainScheduler.attach(&BlinkLED);
     MainScheduler.attach(&BlinkLED2);
     while(1){
@@ -48,6 +50,7 @@ void BUTTON_ISR(void) {
 
 }
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // **********************************
@@ -89,7 +92,10 @@ void Setup(void)
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);
 
+	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
+
 	/* Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition */
+
 	GPIO_interruptEdgeSelect(BUTTON_PORT, BUTTON_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
 	GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
 
