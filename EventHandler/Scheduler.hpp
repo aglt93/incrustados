@@ -11,8 +11,9 @@
 #include "msp.h"
 #include "Task.hpp"
 
-#define NUMBER_OF_SLOTS 5
+#define NUMBER_OF_SLOTS 255
 #define NULL            0
+
 
 class Scheduler
 {
@@ -23,6 +24,8 @@ public:
     uint8_t attach(Task * i_ToAttach, uint64_t i_u64TickInterval);
     uint8_t run(void);
     uint8_t CalculateNextSchedule(void);
+    void	ProcessMessageQueue();
+    MSG MessageQueue[NUMBER_OF_SLOTS];
 private:
     uint8_t mOpenSlots;
     uint8_t mNextSlot;
@@ -31,6 +34,7 @@ private:
     //uint8_t CalculateNextSchedule(void);
     uint8_t SortScheduleByPriority(Task * i_pSchedule);
 };
+
 
 
 

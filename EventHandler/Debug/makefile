@@ -2,12 +2,13 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS
+CG_TOOL_ROOT := /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./Button.obj" \
 "./LED.obj" \
 "./Scheduler.obj" \
 "./Task.obj" \
@@ -170,22 +171,22 @@ all: EventHandler.out
 EventHandler.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MSP432 Linker'
-	"/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all -g --gcc --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs --display_error_number --diag_warning=225 --diag_wrap=off --abi=eabi -z -m"EventHandler.map" --heap_size=1024 --stack_size=512 -i"/opt/ti/ccsv6/ccs_base/arm/include" -i"/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/lib" -i"/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="EventHandler_linkInfo.xml" --rom_model -o "EventHandler.out" $(ORDERED_OBJS)
+	"/home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all -g --gcc --define=__MSP432P401R__ --define=TARGET_IS_MSP432P4XX --define=ccs --display_error_number --diag_warning=225 --diag_wrap=off --abi=eabi -z -m"EventHandler.map" --heap_size=1024 --stack_size=512 -i"/home/aglt93/ti/ccsv6/ccs_base/arm/include" -i"/home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/lib" -i"/home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="EventHandler_linkInfo.xml" --rom_model -o "EventHandler.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 EventHandler.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: MSP432 Hex Utility'
-	"/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/bin/armhex" --memwidth=8 --romwidth=8 -o "EventHandler.hex" $(EXE_OUTPUTS__QUOTED)
+	"/home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/bin/armhex" --memwidth=8 --romwidth=8 -o "EventHandler.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "LED.d" "Scheduler.d" "Task.d" "main.d" 
+	-$(RM) "Button.d" "LED.d" "Scheduler.d" "Task.d" "main.d" 
 	-$(RM) "startup_msp432p401r_ccs.d" "system_msp432p401r.d" "driverlib/MSP432P4xx/adc14.d" "driverlib/MSP432P4xx/aes256.d" "driverlib/MSP432P4xx/comp_e.d" "driverlib/MSP432P4xx/cpu.d" "driverlib/MSP432P4xx/crc32.d" "driverlib/MSP432P4xx/cs.d" "driverlib/MSP432P4xx/dma.d" "driverlib/MSP432P4xx/flash.d" "driverlib/MSP432P4xx/fpu.d" "driverlib/MSP432P4xx/gpio.d" "driverlib/MSP432P4xx/i2c.d" "driverlib/MSP432P4xx/interrupt.d" "driverlib/MSP432P4xx/mpu.d" "driverlib/MSP432P4xx/pcm.d" "driverlib/MSP432P4xx/pmap.d" "driverlib/MSP432P4xx/pss.d" "driverlib/MSP432P4xx/ref_a.d" "driverlib/MSP432P4xx/reset.d" "driverlib/MSP432P4xx/rtc_c.d" "driverlib/MSP432P4xx/spi.d" "driverlib/MSP432P4xx/sysctl.d" "driverlib/MSP432P4xx/systick.d" "driverlib/MSP432P4xx/timer32.d" "driverlib/MSP432P4xx/timer_a.d" "driverlib/MSP432P4xx/uart.d" "driverlib/MSP432P4xx/wdt_a.d" 
-	-$(RM) "LED.obj" "Scheduler.obj" "Task.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" "driverlib/MSP432P4xx/adc14.obj" "driverlib/MSP432P4xx/aes256.obj" "driverlib/MSP432P4xx/comp_e.obj" "driverlib/MSP432P4xx/cpu.obj" "driverlib/MSP432P4xx/crc32.obj" "driverlib/MSP432P4xx/cs.obj" "driverlib/MSP432P4xx/dma.obj" "driverlib/MSP432P4xx/flash.obj" "driverlib/MSP432P4xx/fpu.obj" "driverlib/MSP432P4xx/gpio.obj" "driverlib/MSP432P4xx/i2c.obj" "driverlib/MSP432P4xx/interrupt.obj" "driverlib/MSP432P4xx/mpu.obj" "driverlib/MSP432P4xx/pcm.obj" "driverlib/MSP432P4xx/pmap.obj" "driverlib/MSP432P4xx/pss.obj" "driverlib/MSP432P4xx/ref_a.obj" "driverlib/MSP432P4xx/reset.obj" "driverlib/MSP432P4xx/rtc_c.obj" "driverlib/MSP432P4xx/spi.obj" "driverlib/MSP432P4xx/sysctl.obj" "driverlib/MSP432P4xx/systick.obj" "driverlib/MSP432P4xx/timer32.obj" "driverlib/MSP432P4xx/timer_a.obj" "driverlib/MSP432P4xx/uart.obj" "driverlib/MSP432P4xx/wdt_a.obj" 
+	-$(RM) "Button.obj" "LED.obj" "Scheduler.obj" "Task.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" "driverlib/MSP432P4xx/adc14.obj" "driverlib/MSP432P4xx/aes256.obj" "driverlib/MSP432P4xx/comp_e.obj" "driverlib/MSP432P4xx/cpu.obj" "driverlib/MSP432P4xx/crc32.obj" "driverlib/MSP432P4xx/cs.obj" "driverlib/MSP432P4xx/dma.obj" "driverlib/MSP432P4xx/flash.obj" "driverlib/MSP432P4xx/fpu.obj" "driverlib/MSP432P4xx/gpio.obj" "driverlib/MSP432P4xx/i2c.obj" "driverlib/MSP432P4xx/interrupt.obj" "driverlib/MSP432P4xx/mpu.obj" "driverlib/MSP432P4xx/pcm.obj" "driverlib/MSP432P4xx/pmap.obj" "driverlib/MSP432P4xx/pss.obj" "driverlib/MSP432P4xx/ref_a.obj" "driverlib/MSP432P4xx/reset.obj" "driverlib/MSP432P4xx/rtc_c.obj" "driverlib/MSP432P4xx/spi.obj" "driverlib/MSP432P4xx/sysctl.obj" "driverlib/MSP432P4xx/systick.obj" "driverlib/MSP432P4xx/timer32.obj" "driverlib/MSP432P4xx/timer_a.obj" "driverlib/MSP432P4xx/uart.obj" "driverlib/MSP432P4xx/wdt_a.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

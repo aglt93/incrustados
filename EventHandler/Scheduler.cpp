@@ -61,7 +61,7 @@ uint8_t Scheduler::run(void)
         }
         else
         {
-            NextTaskSlot++;
+            break;//NextTaskSlot++;
         }
     }
     return l_u8ReturnCode;
@@ -77,6 +77,11 @@ uint8_t Scheduler::CalculateNextSchedule(void)
     uint64_t l_u64FinalCount;
 
     for (int i=0; i<=NUMBER_OF_SLOTS;i++) {
+
+    	if (NextSchedule[i] == NULL) {
+    		break;
+    	}
+
     	NextSchedule[i] = NULL;
     }
 
@@ -89,7 +94,12 @@ uint8_t Scheduler::CalculateNextSchedule(void)
         l_u64FinalCount = NextTask->GetTaskFinalCount();
         NextTask->SetTaskCurrentCount(l_u64CurrentCount);
 
-        if(NextTask != ((uintptr_t) 0) && (l_u64CurrentCount >= l_u64FinalCount)) {
+        if(NextTask == ((uintptr_t) 0)){
+        	break;
+        }
+
+
+        else if ((l_u64CurrentCount >= l_u64FinalCount)) {
 
 			NextTask->SetTaskCurrentCount(0);
 			NextSchedule[NextScheduleSlot] = NextTask;
@@ -105,7 +115,19 @@ uint8_t Scheduler::CalculateNextSchedule(void)
     }
     return l_u8ReturnCode;
 }
+
 uint8_t Scheduler::SortScheduleByPriority(Task * i_pSchedule)
 {
     return(NO_ERR);
+}
+
+
+
+void Scheduler::ProcessMessageQueue() {
+
+	return;
+
+
+
+
 }

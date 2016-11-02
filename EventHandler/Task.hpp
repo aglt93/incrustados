@@ -7,6 +7,15 @@
 #define NO_ERR 0
 #define RET_ERR 1
 
+class Task;
+
+struct MSG {
+	Task * source;
+	Task * destination;
+	uintptr_t data;
+};
+
+
 class Task
 {
 	public:
@@ -20,6 +29,8 @@ class Task
 		void				SetTaskFinalCount(uint64_t i_u64FinalCount);
 		uint64_t			GetTaskCurrentCount();
 		uint64_t			GetTaskFinalCount();
+		virtual void		ProcessMessage(MSG* i_message){return;};
+		virtual MSG			SendMessage(){MSG nullMsg = {0,0,0}; return nullMsg;};
 
 	private:
 	   static uint8_t m_u8NextTaskID;
@@ -28,6 +39,9 @@ class Task
 	   bool m_bIsFinished;
 	   uint64_t m_u64CurrentCount;
 	   uint64_t m_u64FinalCount;
+
 };
+
+
 
 #endif /* TASK_HPP_ */

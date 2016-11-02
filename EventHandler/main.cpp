@@ -4,32 +4,15 @@
 #include "Scheduler.hpp"
 #include "Task.hpp"
 #include "LED.hpp"
+#include "Button.hpp"
 #include <driverlib.h>
 
 
 uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 
-void main(void)
-{
-    Scheduler MainScheduler;
-    LED BlinkLED(RGB_BLUE_PORT,RGB_BLUE_PIN,5);
-    LED BlinkLED2(RGB_GREEN_PORT,RGB_GREEN_PIN,3);
-    Setup();
-	GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
-	GPIO_enableInterrupt(BUTTON_PORT, BUTTON_PIN);
-    MainScheduler.attach(&BlinkLED);
-    MainScheduler.attach(&BlinkLED2);
-    while(1){
-    	__wfe();
-        if(SystemTicks != MainScheduler.ticks)
-        {
-            MainScheduler.ticks = SystemTicks;
-            MainScheduler.CalculateNextSchedule();
-            MainScheduler.run();
-        }
-    };
-}
+
+Button button(BUTTON_PORT,BUTTON_PIN,200);
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
@@ -44,12 +27,42 @@ void BUTTON_ISR(void) {
 	if(GPIO_getInterruptStatus(BUTTON_PORT, BUTTON_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
-		GPIO_toggleOutputOnPin(LED_RED_PORT, LED_RED_PIN);
+
+		button.m_bRunTask = true;
 
 	}
 
 }
 }
+
+void main(void)
+{
+
+
+    Scheduler MainScheduler;
+    LED BlinkLED(RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
+
+    GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
+    LED BlinkLED2(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+
+    Setup();
+
+    MainScheduler.attach(&BlinkLED);
+    MainScheduler.attach(&BlinkLED2);
+    MainScheduler.attach(&button);
+
+    while(1){
+    	__wfe();
+
+    	if(SystemTicks != MainScheduler.ticks) {
+            MainScheduler.ticks = SystemTicks;
+            MainScheduler.CalculateNextSchedule();
+            MainScheduler.run();
+        }
+    };
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -91,15 +104,8 @@ void Setup(void)
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);
-
-	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
-
-	/* Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition */
-
-	GPIO_interruptEdgeSelect(BUTTON_PORT, BUTTON_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
-	GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
-
 	__enable_irq();
+
 
 
 	return;
