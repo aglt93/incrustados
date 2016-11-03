@@ -4,6 +4,8 @@ Scheduler::Scheduler()
 {
     mOpenSlots = static_cast<uint8_t>(NUMBER_OF_SLOTS);
     mNextSlot = 0;
+    mMessageIndex = 0;
+
     for(uint8_t index = 0; index < (NUMBER_OF_SLOTS-1U); index++)
     {
         Schedule[index] = (uintptr_t) 0;
@@ -76,15 +78,6 @@ uint8_t Scheduler::CalculateNextSchedule(void)
     uint64_t l_u64CurrentCount;
     uint64_t l_u64FinalCount;
 
-    for (int i=0; i<=NUMBER_OF_SLOTS;i++) {
-
-    	if (NextSchedule[i] == NULL) {
-    		break;
-    	}
-
-    	NextSchedule[i] = NULL;
-    }
-
 
     while(NextTaskSlot < (NUMBER_OF_SLOTS-1U)) {
 
@@ -125,9 +118,64 @@ uint8_t Scheduler::SortScheduleByPriority(Task * i_pSchedule)
 
 void Scheduler::ProcessMessageQueue() {
 
+/*
+	for (i = 0; i < mMessageIndex; i++) {
+
+
+
+	}
+*/
+	clearMessageQueue();
+
 	return;
 
 
+}
 
+
+void Scheduler::attachMessage(MSG i_messageToAttach) {
+
+	MessageQueue[mMessageIndex] = i_messageToAttach;
+
+	mMessageIndex++;
+
+	return;
+}
+
+void Scheduler::clearMessageQueue() {
+
+	for (int i = 0; i < mMessageIndex; i++) {
+
+		MSG nullMSG = {-1,-1,0};
+		MessageQueue[i] = nullMSG;
+
+	}
+
+	mMessageIndex = 0;
+
+	return;
 
 }
+
+void Scheduler::clearNextScheduler() {
+
+	for (int i=0; i<=NUMBER_OF_SLOTS;i++) {
+
+		if (NextSchedule[i] == NULL) {
+			break;
+		}
+
+		NextSchedule[i] = NULL;
+	}
+
+	return;
+}
+
+
+
+
+
+
+
+
+

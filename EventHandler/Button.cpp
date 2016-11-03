@@ -4,9 +4,10 @@
 #define LED_RED_PORT GPIO_PORT_P2
 #define LED_RED_PIN GPIO_PIN6
 
-Button::Button(int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount)
+Button::Button(int i_iTaskID,int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount)
 {
     //ctor
+	m_iTaskID = i_iTaskID;
 	m_iButtonPort = BUTTON_PORT;
 	m_iButtonPin = BUTTON_PIN;
 
@@ -24,6 +25,7 @@ Button::Button(int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount)
 	m_u64FinalCount = i_u64FinalCount;
 
 	m_bRunTask = false;
+
 
 }
 /*
@@ -55,12 +57,13 @@ uint8_t Button::run(void)
 
 MSG Button::SendMessage(){
 
-	MSG testMessage = {
-			0,
-			0,
-			0,
-	};
+	MSG testMessage;
 
+/*
+	switch () {
+
+	};
+*/
 
 	return testMessage;
 }

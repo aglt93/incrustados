@@ -15,9 +15,10 @@
 class Button : public Task
 {
     public:
-        Button(int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount);
+        Button(int i_iTaskID, int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount);
         virtual uint8_t run(void);
         bool m_bRunTask;
+        int m_iMsgClass;
     protected:
     private:
         int m_iButtonPort;

@@ -1,9 +1,10 @@
 #include "LED.hpp"
 #include <driverlib.h>
 
-LED::LED(int LED_PORT,int LED_PIN)
+LED::LED(int i_iTaskID, int LED_PORT,int LED_PIN)
 {
     //ctor
+	m_iTaskID = i_iTaskID;
 	m_iLedPort = LED_PORT;
 	m_iLedPin = LED_PIN;
 
@@ -15,9 +16,10 @@ LED::LED(int LED_PORT,int LED_PIN)
 
 }
 
-LED::LED(int LED_PORT,int LED_PIN, uint64_t i_u64FinalCount)
+LED::LED(int i_iTaskID, int LED_PORT,int LED_PIN, uint64_t i_u64FinalCount)
 {
     //ctor
+	m_iTaskID = i_iTaskID;
 	m_iLedPort = LED_PORT;
 	m_iLedPin = LED_PIN;
 

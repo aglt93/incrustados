@@ -14,7 +14,8 @@ uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 
 
-Button button(BUTTON_PORT,BUTTON_PIN,200);
+Button button(1,BUTTON_PORT,BUTTON_PIN,200);
+Scheduler MainScheduler;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
@@ -30,7 +31,9 @@ void BUTTON_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
-		button.m_bRunTask = true;
+		button.m_iMsgClass = 1;
+		MSG callButton = {1,0,0};
+		MainScheduler.attachMessage(callButton);
 
 	}
 
@@ -41,11 +44,11 @@ void main(void)
 {
 
 
-    Scheduler MainScheduler;
-    LED BlinkLED(RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
+
+    LED BlinkLED(2,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
 
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
-    LED BlinkLED2(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+    LED BlinkLED2(3, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
 
     Setup();
@@ -61,6 +64,8 @@ void main(void)
             MainScheduler.ticks = SystemTicks;
             MainScheduler.CalculateNextSchedule();
             MainScheduler.run();
+            MainScheduler.clearNextScheduler();
+            MainScheduler.ProcessMessageQueue();
         }
     };
 }
@@ -83,6 +88,15 @@ void Setup(void)
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
 
 
+    /* Initializes Clock System */
+    MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
+    MAP_CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+    MAP_CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+    MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+    MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
+
+
+
 	// ****************************
 	//         PORT CONFIG
 	// ****************************
@@ -103,7 +117,7 @@ void Setup(void)
 	// - Re-enable interrupts
 	__disable_irq();
 	//TIMER32_1->LOAD = 0x002DC6C0; //~1s ---> a 3Mhz
-	TIMER32_1->LOAD = 0x00000BB8; //~1ms ---> a 3Mhz
+	TIMER32_1->LOAD = 0x0000BB80; //~1ms ---> a 3Mhz
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);

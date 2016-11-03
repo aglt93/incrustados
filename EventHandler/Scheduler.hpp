@@ -25,7 +25,10 @@ public:
     uint8_t run(void);
     uint8_t CalculateNextSchedule(void);
     void	ProcessMessageQueue();
-    MSG MessageQueue[NUMBER_OF_SLOTS];
+    MSG		MessageQueue[NUMBER_OF_SLOTS];
+    void	attachMessage(MSG i_messageToAttach);
+    void	clearMessageQueue();
+    void	clearNextScheduler();
 private:
     uint8_t mOpenSlots;
     uint8_t mNextSlot;
@@ -33,6 +36,7 @@ private:
     Task * NextSchedule[NUMBER_OF_SLOTS];
     //uint8_t CalculateNextSchedule(void);
     uint8_t SortScheduleByPriority(Task * i_pSchedule);
+    uint8_t mMessageIndex;
 };
 
 

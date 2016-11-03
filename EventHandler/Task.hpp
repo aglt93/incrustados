@@ -10,8 +10,8 @@
 class Task;
 
 struct MSG {
-	Task * source;
-	Task * destination;
+	int source;
+	int destination;
 	uintptr_t data;
 };
 
@@ -20,7 +20,7 @@ class Task
 {
 	public:
 		Task();
-		uint8_t m_u8TaskID;
+		int m_iTaskID;
 		virtual uint8_t     run(void){return(0);};
 		bool                IsTaskFinished(void){return m_bIsFinished;};
 		uint8_t             GetTaskPriority(void) {return m_u8Priority;};
