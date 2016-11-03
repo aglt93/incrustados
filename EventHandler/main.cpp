@@ -1,10 +1,12 @@
 #define __NOP __nop
+
 #include "msp.h"
 #include "main.hpp"
 #include "Scheduler.hpp"
 #include "Task.hpp"
 #include "LED.hpp"
 #include "Button.hpp"
+#include "Screen.hpp"
 #include <driverlib.h>
 
 
@@ -44,6 +46,7 @@ void main(void)
 
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
     LED BlinkLED2(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+    Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
 
     Setup();
 

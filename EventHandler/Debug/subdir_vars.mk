@@ -7,11 +7,15 @@ CPP_SRCS += \
 ../Button.cpp \
 ../LED.cpp \
 ../Scheduler.cpp \
+../Screen.cpp \
 ../Task.cpp \
 ../main.cpp 
 
 CMD_SRCS += \
 ../msp432p401r.cmd 
+
+LIB_SRCS += \
+../dsplib-msp432.lib 
 
 C_SRCS += \
 ../startup_msp432p401r_ccs.c \
@@ -21,6 +25,7 @@ OBJS += \
 ./Button.obj \
 ./LED.obj \
 ./Scheduler.obj \
+./Screen.obj \
 ./Task.obj \
 ./main.obj \
 ./startup_msp432p401r_ccs.obj \
@@ -30,6 +35,7 @@ CPP_DEPS += \
 ./Button.d \
 ./LED.d \
 ./Scheduler.d \
+./Screen.d \
 ./Task.d \
 ./main.d 
 
@@ -41,6 +47,7 @@ CPP_DEPS__QUOTED += \
 "Button.d" \
 "LED.d" \
 "Scheduler.d" \
+"Screen.d" \
 "Task.d" \
 "main.d" 
 
@@ -52,6 +59,7 @@ OBJS__QUOTED += \
 "Button.obj" \
 "LED.obj" \
 "Scheduler.obj" \
+"Screen.obj" \
 "Task.obj" \
 "main.obj" \
 "startup_msp432p401r_ccs.obj" \
@@ -61,6 +69,7 @@ CPP_SRCS__QUOTED += \
 "../Button.cpp" \
 "../LED.cpp" \
 "../Scheduler.cpp" \
+"../Screen.cpp" \
 "../Task.cpp" \
 "../main.cpp" 
 
