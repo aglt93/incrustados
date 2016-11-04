@@ -5,6 +5,7 @@ Scheduler::Scheduler()
     mOpenSlots = static_cast<uint8_t>(NUMBER_OF_SLOTS);
     mNextSlot = 0;
     mMessageIndex = 0;
+    NextScheduleSlot = 0U;
 
     for(uint8_t index = 0; index < (NUMBER_OF_SLOTS-1U); index++)
     {
@@ -73,7 +74,6 @@ uint8_t Scheduler::run(void)
 uint8_t Scheduler::CalculateNextSchedule(void)
 {
     uint8_t NextTaskSlot = 0U;
-    uint8_t NextScheduleSlot = 0U;
     Task * NextTask = (uintptr_t) 0;
     uint8_t l_u8ReturnCode = NO_ERR;
     uint64_t l_u64CurrentCount;
@@ -88,12 +88,12 @@ uint8_t Scheduler::CalculateNextSchedule(void)
         l_u64FinalCount = NextTask->GetTaskFinalCount();
         NextTask->SetTaskCurrentCount(l_u64CurrentCount);
 
-        if(NextTask == ((uintptr_t) 0) || !(NextTask->m_bPeriodicTask)){
+        if(NextTask == ((uintptr_t) 0)){
         	break;
         }
 
 
-        else if ((l_u64CurrentCount >= l_u64FinalCount)) {
+        else if ((l_u64CurrentCount >= l_u64FinalCount) && (NextTask->m_bPeriodicTask)) {
 
 			NextTask->SetTaskCurrentCount(0);
 			NextSchedule[NextScheduleSlot] = NextTask;
@@ -119,12 +119,22 @@ uint8_t Scheduler::SortScheduleByPriority(Task * i_pSchedule)
 
 void Scheduler::ProcessMessageQueue() {
 
-
 	for (int i = 0; i < mMessageIndex; i++) {
 
 		MSG newMSG = MessageQueue[i];
-		Task* newTask = ID_LUP[newMSG.destination];
-		newTask->ProcessMessage(newMSG);
+
+		if (newMSG.source != -1 && newMSG.destination != -1) {
+			if (newMSG.destination != 0) {
+				Task* newTask = ID_LUP[newMSG.destination];
+				newTask->ProcessMessage(newMSG);
+			}
+
+			else {
+
+				processMessage(newMSG);
+
+			}
+		}
 	}
 
 	clearMessageQueue();
@@ -171,9 +181,32 @@ void Scheduler::clearNextScheduler() {
 		NextSchedule[i] = NULL;
 	}
 
+	NextScheduleSlot = 0U;
+
 	return;
 }
 
+
+void Scheduler::processMessage(MSG i_MSG) {
+
+	int l_iSourceTask = i_MSG.source;
+
+
+	switch(l_iSourceTask) {
+
+		// Caso boton
+		case 1:
+
+			Task* TaskToAdd = static_cast<Task*> (i_MSG.data);
+			NextSchedule[NextScheduleSlot] = TaskToAdd;
+			NextScheduleSlot++;
+			break;
+
+	};
+
+	return;
+
+}
 
 
 

@@ -11,7 +11,7 @@
 // Port and pin values to the button.
 #define BUTTON_PORT GPIO_PORT_P3
 #define BUTTON_PIN GPIO_PIN5
-
+//
 #define RGB_BLUE_PORT GPIO_PORT_P5
 #define RGB_BLUE_PIN GPIO_PIN6
 #define RGB_GREEN_PORT GPIO_PORT_P2
@@ -20,6 +20,10 @@
 #define LED_RED_PIN GPIO_PIN6
 #define RGB_RED_PORT GPIO_PORT_P2
 #define RGB_RED_PIN GPIO_PIN6
+
+//
+#define NOT_PERIODIC_TASK false
+#define PERIODIC_TASK true
 
 // Define de task ID for each task.
 #define SCHEDULER_ID 0

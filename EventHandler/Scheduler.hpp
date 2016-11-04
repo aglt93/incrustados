@@ -30,6 +30,7 @@ public:
     void	clearMessageQueue();
     void	clearNextScheduler();
     Task*	ID_LUP[NUMBER_OF_SLOTS];
+    void	processMessage(MSG i_MSG);
 private:
     uint8_t mOpenSlots;
     uint8_t mNextSlot;
@@ -38,6 +39,7 @@ private:
     //uint8_t CalculateNextSchedule(void);
     uint8_t SortScheduleByPriority(Task * i_pSchedule);
     uint8_t mMessageIndex;
+    uint8_t NextScheduleSlot;
 };
 
 

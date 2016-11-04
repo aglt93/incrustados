@@ -4,13 +4,13 @@
 #define LED_RED_PORT GPIO_PORT_P2
 #define LED_RED_PIN GPIO_PIN6
 
-Button::Button(int i_iTaskID,int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount)
+Button::Button(int i_iTaskID,bool i_bPeriodicTask,int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount)
 {
     //ctor
 	m_iTaskID = i_iTaskID;
 	m_iButtonPort = BUTTON_PORT;
 	m_iButtonPin = BUTTON_PIN;
-	m_bPeriodicTask = false;
+	m_bPeriodicTask = i_bPeriodicTask;
 
 	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
 
@@ -24,8 +24,6 @@ Button::Button(int i_iTaskID,int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalC
 
 	m_u64CurrentCount = 0;
 	m_u64FinalCount = i_u64FinalCount;
-
-	m_bRunTask = false;
 
 
 }
@@ -47,11 +45,7 @@ LED::LED(int LED_PORT,int LED_PIN, uint64_t i_u64FinalCount)
 
 uint8_t Button::run(void)
 {
-	if (m_bRunTask) {
-		m_bRunTask = false;
-		GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
-	}
-
+	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 
     return(NO_ERR);
 }

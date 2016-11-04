@@ -14,8 +14,9 @@ uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 
 
-Button button(BUTTON_ID,BUTTON_PORT,BUTTON_PIN,200);
+Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
 Scheduler MainScheduler;
+LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
@@ -31,12 +32,9 @@ void BUTTON_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
-		button.m_iMsgClass = 1;
+		Task* TaskToSend = &button;
 
-		int* valor = new int();
-		*valor = 0;
-
-		MSG callButton = {BUTTON_ID,SCHEDULER_ID,valor};
+		MSG callButton = {BUTTON_ID,SCHEDULER_ID,TaskToSend};
 		MainScheduler.attachMessage(callButton);
 
 	}
@@ -47,12 +45,8 @@ void BUTTON_ISR(void) {
 void main(void)
 {
 
-
-
-    LED BlinkLED(LED1_ID,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
-
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
-    LED BlinkLED2(LED2_ID, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+    LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
 
     Setup();
