@@ -29,6 +29,7 @@ public:
     void	attachMessage(MSG i_messageToAttach);
     void	clearMessageQueue();
     void	clearNextScheduler();
+    Task*	ID_LUP[NUMBER_OF_SLOTS];
 private:
     uint8_t mOpenSlots;
     uint8_t mNextSlot;

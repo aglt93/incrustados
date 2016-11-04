@@ -19,12 +19,13 @@ class Button : public Task
         virtual uint8_t run(void);
         bool m_bRunTask;
         int m_iMsgClass;
+        virtual void ProcessMessage(MSG i_Message);
     protected:
     private:
         int m_iButtonPort;
         int m_iButtonPin;
         virtual MSG SendMessage();
-        virtual void ProcessMessage(MSG* i_Message);
+
 
 };
 

@@ -14,7 +14,7 @@ uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 
 
-Button button(1,BUTTON_PORT,BUTTON_PIN,200);
+Button button(BUTTON_ID,BUTTON_PORT,BUTTON_PIN,200);
 Scheduler MainScheduler;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,11 @@ void BUTTON_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
 		button.m_iMsgClass = 1;
-		MSG callButton = {1,0,0};
+
+		int* valor = new int();
+		*valor = 0;
+
+		MSG callButton = {BUTTON_ID,SCHEDULER_ID,valor};
 		MainScheduler.attachMessage(callButton);
 
 	}
@@ -45,10 +49,10 @@ void main(void)
 
 
 
-    LED BlinkLED(2,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
+    LED BlinkLED(LED1_ID,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
 
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
-    LED BlinkLED2(3, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+    LED BlinkLED2(LED2_ID, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
 
     Setup();
@@ -117,7 +121,7 @@ void Setup(void)
 	// - Re-enable interrupts
 	__disable_irq();
 	//TIMER32_1->LOAD = 0x002DC6C0; //~1s ---> a 3Mhz
-	TIMER32_1->LOAD = 0x0000BB80; //~1ms ---> a 3Mhz
+	TIMER32_1->LOAD = 0x0000BB80; //~1ms ---> a 48Mhz
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);

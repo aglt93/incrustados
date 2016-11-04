@@ -10,6 +10,7 @@ Button::Button(int i_iTaskID,int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalC
 	m_iTaskID = i_iTaskID;
 	m_iButtonPort = BUTTON_PORT;
 	m_iButtonPin = BUTTON_PIN;
+	m_bPeriodicTask = false;
 
 	GPIO_setAsInputPinWithPullUpResistor(BUTTON_PORT, BUTTON_PIN);
 
@@ -57,7 +58,7 @@ uint8_t Button::run(void)
 
 MSG Button::SendMessage(){
 
-	MSG testMessage;
+	MSG testMessage = {-1,-1,0};
 
 /*
 	switch () {
@@ -69,6 +70,6 @@ MSG Button::SendMessage(){
 }
 
 
-void Button::ProcessMessage(MSG* i_Message){
+void Button::ProcessMessage(MSG i_Message){
 	return;
 }

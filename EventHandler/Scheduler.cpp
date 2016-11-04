@@ -19,6 +19,7 @@ uint8_t Scheduler::attach(Task * i_ToAttach)
     if((mOpenSlots>0) && (mNextSlot < NUMBER_OF_SLOTS))
     {
         Schedule[mNextSlot] = i_ToAttach;
+        ID_LUP[i_ToAttach->m_iTaskID] = i_ToAttach;
         mOpenSlots--;
         mNextSlot++;
     }
@@ -87,7 +88,7 @@ uint8_t Scheduler::CalculateNextSchedule(void)
         l_u64FinalCount = NextTask->GetTaskFinalCount();
         NextTask->SetTaskCurrentCount(l_u64CurrentCount);
 
-        if(NextTask == ((uintptr_t) 0)){
+        if(NextTask == ((uintptr_t) 0) || !(NextTask->m_bPeriodicTask)){
         	break;
         }
 
@@ -118,13 +119,14 @@ uint8_t Scheduler::SortScheduleByPriority(Task * i_pSchedule)
 
 void Scheduler::ProcessMessageQueue() {
 
-/*
-	for (i = 0; i < mMessageIndex; i++) {
 
+	for (int i = 0; i < mMessageIndex; i++) {
 
-
+		MSG newMSG = MessageQueue[i];
+		Task* newTask = ID_LUP[newMSG.destination];
+		newTask->ProcessMessage(newMSG);
 	}
-*/
+
 	clearMessageQueue();
 
 	return;
@@ -146,6 +148,7 @@ void Scheduler::clearMessageQueue() {
 
 	for (int i = 0; i < mMessageIndex; i++) {
 
+		delete MessageQueue[i].data;
 		MSG nullMSG = {-1,-1,0};
 		MessageQueue[i] = nullMSG;
 

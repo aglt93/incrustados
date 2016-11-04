@@ -7,12 +7,10 @@
 #define NO_ERR 0
 #define RET_ERR 1
 
-class Task;
-
 struct MSG {
 	int source;
 	int destination;
-	uintptr_t data;
+	void* data;
 };
 
 
@@ -29,8 +27,9 @@ class Task
 		void				SetTaskFinalCount(uint64_t i_u64FinalCount);
 		uint64_t			GetTaskCurrentCount();
 		uint64_t			GetTaskFinalCount();
-		virtual void		ProcessMessage(MSG* i_message){return;};
+		virtual void		ProcessMessage(MSG i_message){return;};
 		virtual MSG			SendMessage(){MSG nullMsg = {0,0,0}; return nullMsg;};
+		bool				m_bPeriodicTask;
 
 	private:
 	   static uint8_t m_u8NextTaskID;

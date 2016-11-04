@@ -4,6 +4,7 @@ Task::Task()
 {
     //m_u8TaskID = m_u8NextTaskID;
     //m_u8NextTaskID++;
+	m_bPeriodicTask = true;
     m_bIsFinished = false;
 }
 
