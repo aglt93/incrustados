@@ -12,6 +12,10 @@
 #define BUTTON_PORT GPIO_PORT_P3
 #define BUTTON_PIN GPIO_PIN5
 //
+// Port and pin values for Accelerometer.
+#define ACCELEROMETER_PORT GPIO_PORT_P3
+#define ACCELEROMETER_PIN GPIO_PIN5
+//
 #define RGB_BLUE_PORT GPIO_PORT_P5
 #define RGB_BLUE_PIN GPIO_PIN6
 #define RGB_GREEN_PORT GPIO_PORT_P2
@@ -30,6 +34,7 @@
 #define BUTTON_ID 1
 #define LED1_ID 2
 #define LED2_ID 3
+#define ACCELEROMETER_ID 4
 
 
 void Setup(void);

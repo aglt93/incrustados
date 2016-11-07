@@ -6,8 +6,11 @@
 #include "Task.hpp"
 #include "LED.hpp"
 #include "Button.hpp"
+#include "Accelerometer.hpp"
 #include "Screen.hpp"
 #include <driverlib.h>
+#include <stdlib.h>     /* abs */
+
 
 
 uint8_t Task::m_u8NextTaskID = 0;
@@ -15,6 +18,8 @@ volatile static uint64_t SystemTicks = 0;
 
 
 Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
+Accelerometer accelerometer(ACCELEROMETER_ID,NOT_PERIODIC_TASK,ACCELEROMETER_PORT,ACCELEROMETER_PIN,200);
+
 Scheduler MainScheduler;
 LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
 
@@ -42,6 +47,35 @@ void BUTTON_ISR(void) {
 }
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// **********************************
+// Interrupt service routine for
+// ADC
+// **********************************
+extern "C"
+{
+/* This interrupt is fired whenever a conversion is completed and placed in
+ * ADC_MEM0 */
+/* This interrupt is fired whenever a conversion is completed and placed in
+ * ADC_MEM0 */
+void ADC14_IRQHandler(void)
+{
+
+    uint64_t l_u64Status;
+    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+    MAP_ADC14_clearInterruptFlag(l_u64Status);
+    int16_t l_fSample = 0;
+
+    if (l_u64Status & ADC_INT0) {
+
+    	l_fSample = MAP_ADC14_getResult(ADC_MEM0);
+    	l_fSample = abs(l_fSample);
+  		GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+
+    }
+}
+}
+
 void main(void)
 {
 
@@ -54,7 +88,7 @@ void main(void)
     MainScheduler.attach(&BlinkLED);
     MainScheduler.attach(&BlinkLED2);
     MainScheduler.attach(&button);
-
+    MainScheduler.attach(&accelerometer);
     while(1){
     	__wfe();
 

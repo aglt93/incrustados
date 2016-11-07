@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../Accelerometer.cpp \
 ../Button.cpp \
 ../LED.cpp \
 ../Scheduler.cpp \
@@ -22,6 +23,7 @@ C_SRCS += \
 ../system_msp432p401r.c 
 
 OBJS += \
+./Accelerometer.obj \
 ./Button.obj \
 ./LED.obj \
 ./Scheduler.obj \
@@ -32,6 +34,7 @@ OBJS += \
 ./system_msp432p401r.obj 
 
 CPP_DEPS += \
+./Accelerometer.d \
 ./Button.d \
 ./LED.d \
 ./Scheduler.d \
@@ -44,6 +47,7 @@ C_DEPS += \
 ./system_msp432p401r.d 
 
 CPP_DEPS__QUOTED += \
+"Accelerometer.d" \
 "Button.d" \
 "LED.d" \
 "Scheduler.d" \
@@ -56,6 +60,7 @@ C_DEPS__QUOTED += \
 "system_msp432p401r.d" 
 
 OBJS__QUOTED += \
+"Accelerometer.obj" \
 "Button.obj" \
 "LED.obj" \
 "Scheduler.obj" \
@@ -66,6 +71,7 @@ OBJS__QUOTED += \
 "system_msp432p401r.obj" 
 
 CPP_SRCS__QUOTED += \
+"../Accelerometer.cpp" \
 "../Button.cpp" \
 "../LED.cpp" \
 "../Scheduler.cpp" \
