@@ -1,0 +1,6 @@
+// Define de task ID for each task.
+#define SCHEDULER_ID 0
+#define BUTTON_ID 1
+#define LED1_ID 2
+#define LED2_ID 3
+#define PORT3_ISR_ID 4

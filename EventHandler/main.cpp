@@ -6,10 +6,11 @@
 #include "Task.hpp"
 #include "LED.hpp"
 #include "Button.hpp"
-#include "Accelerometer.hpp"
+//#include "Accelerometer.hpp"
 #include "Screen.hpp"
 #include <driverlib.h>
 #include <stdlib.h>     /* abs */
+#include "task_ids.hpp"
 
 
 
@@ -17,11 +18,11 @@ uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 
 
-Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
-Accelerometer accelerometer(ACCELEROMETER_ID,NOT_PERIODIC_TASK,ACCELEROMETER_PORT,ACCELEROMETER_PIN,200);
+
+//Accelerometer accelerometer(ACCELEROMETER_ID,NOT_PERIODIC_TASK,ACCELEROMETER_PORT,ACCELEROMETER_PIN,200);
 
 Scheduler MainScheduler;
-LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************
@@ -37,9 +38,10 @@ void BUTTON_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
-		Task* TaskToSend = &button;
+		int* DataToSend = new int();
+		*DataToSend = BUTTON_ID;
 
-		MSG callButton = {BUTTON_ID,SCHEDULER_ID,TaskToSend};
+		MSG callButton = {PORT3_ISR_ID,SCHEDULER_ID,DataToSend};
 		MainScheduler.attachMessage(callButton);
 
 	}
@@ -52,35 +54,37 @@ void BUTTON_ISR(void) {
 // Interrupt service routine for
 // ADC
 // **********************************
-extern "C"
-{
-/* This interrupt is fired whenever a conversion is completed and placed in
- * ADC_MEM0 */
-/* This interrupt is fired whenever a conversion is completed and placed in
- * ADC_MEM0 */
-void ADC14_IRQHandler(void)
-{
-
-    uint64_t l_u64Status;
-    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-    MAP_ADC14_clearInterruptFlag(l_u64Status);
-    int16_t l_fSample = 0;
-
-    if (l_u64Status & ADC_INT0) {
-
-    	l_fSample = MAP_ADC14_getResult(ADC_MEM0);
-    	l_fSample = abs(l_fSample);
-  		GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
-
-    }
-}
-}
+//extern "C"
+//{
+///* This interrupt is fired whenever a conversion is completed and placed in
+// * ADC_MEM0 */
+///* This interrupt is fired whenever a conversion is completed and placed in
+// * ADC_MEM0 */
+//void ADC14_IRQHandler(void)
+//{
+//
+//    uint64_t l_u64Status;
+//    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+//    MAP_ADC14_clearInterruptFlag(l_u64Status);
+//    int16_t l_fSample = 0;
+//
+//    if (l_u64Status & ADC_INT0) {
+//
+//    	l_fSample = MAP_ADC14_getResult(ADC_MEM0);
+//    	l_fSample = abs(l_fSample);
+//  		GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+//
+//    }
+//}
+//}
 
 void main(void)
 {
 
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
+    LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
     LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+    Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
     Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
 
     Setup();
@@ -88,7 +92,8 @@ void main(void)
     MainScheduler.attach(&BlinkLED);
     MainScheduler.attach(&BlinkLED2);
     MainScheduler.attach(&button);
-    MainScheduler.attach(&accelerometer);
+    //MainScheduler.attach(&accelerometer);
+
     while(1){
     	__wfe();
 
@@ -101,7 +106,6 @@ void main(void)
         }
     };
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,17 +132,15 @@ void Setup(void)
     MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
 
 
-
 	// ****************************
 	//         PORT CONFIG
 	// ****************************
 	// - P1.0 is connected to the Red LED
 	P1->DIR |= BIT0;
 
+	GPIO_setAsOutputPin(RGB_RED_PORT,RGB_RED_PIN);
+	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
 
-
-	GPIO_setAsOutputPin(LED_RED_PORT, LED_RED_PIN);
-	GPIO_setOutputLowOnPin(LED_RED_PORT, LED_RED_PIN);
 	// ****************************
 	//       TIMER CONFIG
 	// ****************************
@@ -155,16 +157,15 @@ void Setup(void)
 	NVIC_EnableIRQ(T32_INT1_IRQn);
 	__enable_irq();
 
-
-
 	return;
 }
 
 
 
 
-extern "C"
-{
+extern "C" {
+
+
 	void T32_INT1_IRQHandler(void)
 	{
 		TIMER32_1->INTCLR = 0U;

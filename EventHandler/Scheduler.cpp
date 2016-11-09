@@ -1,4 +1,5 @@
 #include "Scheduler.hpp"
+#include "task_ids.hpp"
 
 Scheduler::Scheduler()
 {
@@ -20,7 +21,7 @@ uint8_t Scheduler::attach(Task * i_ToAttach)
     if((mOpenSlots>0) && (mNextSlot < NUMBER_OF_SLOTS))
     {
         Schedule[mNextSlot] = i_ToAttach;
-        ID_LUP[i_ToAttach->m_iTaskID] = i_ToAttach;
+        ID_LUT[i_ToAttach->m_iTaskID] = i_ToAttach;
         mOpenSlots--;
         mNextSlot++;
     }
@@ -124,8 +125,8 @@ void Scheduler::ProcessMessageQueue() {
 		MSG newMSG = MessageQueue[i];
 
 		if (newMSG.source != -1 && newMSG.destination != -1) {
-			if (newMSG.destination != 0) {
-				Task* newTask = ID_LUP[newMSG.destination];
+			if (newMSG.destination != SCHEDULER_ID) {
+				Task* newTask = ID_LUT[newMSG.destination];
 				newTask->ProcessMessage(newMSG);
 			}
 
@@ -194,13 +195,14 @@ void Scheduler::processMessage(MSG i_MSG) {
 
 	switch(l_iSourceTask) {
 
-		// Caso boton
-		case 1:
+        // Caso boton
+        case PORT3_ISR_ID:
 
-			Task* TaskToAdd = static_cast<Task*> (i_MSG.data);
-			NextSchedule[NextScheduleSlot] = TaskToAdd;
-			NextScheduleSlot++;
-			break;
+            int* TaskID = (int*) i_MSG.data;
+            Task* TaskToAdd = ID_LUT[*TaskID];
+            NextSchedule[NextScheduleSlot] = TaskToAdd;
+            NextScheduleSlot++;
+            break;
 
 	};
 
