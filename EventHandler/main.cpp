@@ -8,6 +8,7 @@
 #include "Button.hpp"
 //#include "Accelerometer.hpp"
 #include "Screen.hpp"
+#include "Servo.hpp"
 #include <driverlib.h>
 #include <stdlib.h>     /* abs */
 #include "task_ids.hpp"
@@ -43,6 +44,13 @@ void BUTTON_ISR(void) {
 
 		MSG callButton = {PORT3_ISR_ID,SCHEDULER_ID,DataToSend};
 		MainScheduler.attachMessage(callButton);
+
+/*
+		int* DataToSend2 = new int();
+		*DataToSend2 = 480;
+		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend2};
+		MainScheduler.attachMessage(changeServo);
+*/
 
 	}
 
@@ -86,12 +94,14 @@ void main(void)
     LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
     Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+    //Servo Servo1(SERVO_ID,PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
 
     Setup();
 
     MainScheduler.attach(&BlinkLED);
     MainScheduler.attach(&BlinkLED2);
     MainScheduler.attach(&button);
+    //MainScheduler.attach(&Servo1);
     //MainScheduler.attach(&accelerometer);
 
     while(1){
@@ -123,13 +133,12 @@ void Setup(void)
 	// - Disable WDT
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
 
-
     /* Initializes Clock System */
-    MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
-    MAP_CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
-    MAP_CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
-    MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
-    MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
+//    MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
+//    MAP_CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+//    MAP_CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+//    MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+//    MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
 
 
 	// ****************************

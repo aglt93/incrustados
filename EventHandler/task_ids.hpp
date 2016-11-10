@@ -4,3 +4,4 @@
 #define LED1_ID 2
 #define LED2_ID 3
 #define PORT3_ISR_ID 4
+#define SERVO_ID 5

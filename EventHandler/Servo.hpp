@@ -15,13 +15,16 @@
 class Servo : public Task
 {
     public:
-        Servo(int i_iTaskID, bool i_bPeriodicTask, int SERVO_PORT, int SERVO_PIN);
+        Servo(int i_iTaskID, bool i_bPeriodicTask, int servo_port, int servo_pin);
         virtual uint8_t run(void);
+        virtual void ProcessMessage(MSG i_Message);
+        int ADCtoServoValueConv(int i_iADCvalue);
     protected:
     private:
         int m_iServoPort;
         int m_iServoPin;
         int m_i;
+
 };
 
 #endif /* LED_HPP_ */
