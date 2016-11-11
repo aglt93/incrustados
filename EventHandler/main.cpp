@@ -45,12 +45,12 @@ void BUTTON_ISR(void) {
 		MSG callButton = {PORT3_ISR_ID,SCHEDULER_ID,DataToSend};
 		MainScheduler.attachMessage(callButton);
 
-/*
+
 		int* DataToSend2 = new int();
-		*DataToSend2 = 480;
+		*DataToSend2 = 300;
 		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend2};
 		MainScheduler.attachMessage(changeServo);
-*/
+
 
 	}
 
@@ -86,22 +86,28 @@ void BUTTON_ISR(void) {
 //}
 //}
 
+#define DUTY_CYCLE_90		7600
+#define DUTY_CYCLE_MINUS_90	1600
+#define DEGREE_DIFF_10		300
+#define PERIOD_20_MS		60000
+
+
 void main(void)
 {
+
 
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
     LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
     LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
     Screen PrintScreen(RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
-    //Servo Servo1(SERVO_ID,PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
-
+    Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
     Setup();
 
     MainScheduler.attach(&BlinkLED);
     MainScheduler.attach(&BlinkLED2);
     MainScheduler.attach(&button);
-    //MainScheduler.attach(&Servo1);
+    MainScheduler.attach(&Servo1);
     //MainScheduler.attach(&accelerometer);
 
     while(1){
@@ -114,6 +120,7 @@ void main(void)
             MainScheduler.clearNextScheduler();
             MainScheduler.ProcessMessageQueue();
         }
+
     };
 }
 
@@ -132,14 +139,6 @@ void Setup(void)
 	// ****************************
 	// - Disable WDT
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
-
-    /* Initializes Clock System */
-//    MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
-//    MAP_CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
-//    MAP_CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
-//    MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
-//    MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
-
 
 	// ****************************
 	//         PORT CONFIG

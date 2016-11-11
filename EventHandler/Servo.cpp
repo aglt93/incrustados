@@ -2,16 +2,16 @@
 #include <driverlib.h>
 #include "task_ids.hpp"
 
-#define DUTY_CYCLE_90		6648
-#define DUTY_CYCLE_MINUS_90	1500
-#define DEGREE_DIFF_10		480
-#define PERIOD_20_MS		61440
+#define DUTY_CYCLE_90		7600
+#define DUTY_CYCLE_MINUS_90	1600
+#define DEGREE_DIFF_10		300
+#define PERIOD_20_MS		60000
 
 extern "C" {
 
 	Timer_A_PWMConfig pwmConfig = {
 									TIMER_A_CLOCKSOURCE_SMCLK,
-									TIMER_A_CLOCKSOURCE_DIVIDER_6,
+									TIMER_A_CLOCKSOURCE_DIVIDER_16,
 									PERIOD_20_MS,
 									TIMER_A_CAPTURECOMPARE_REGISTER_2,
 									TIMER_A_OUTPUTMODE_RESET_SET,
@@ -29,10 +29,10 @@ Servo::Servo(int i_iTaskID, bool i_bPeriodicTask, int i_iServoPort,int i_iServoP
 	m_bPeriodicTask = i_bPeriodicTask;
 
 	MAP_GPIO_setAsPeripheralModuleFunctionOutputPin(m_iServoPort, m_iServoPin, GPIO_PRIMARY_MODULE_FUNCTION);
-	Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
+	MAP_Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
 
 	m_u64CurrentCount = 0;
-	m_u64FinalCount = 2000;
+	m_u64FinalCount = 1000;
 
 }
 
@@ -41,6 +41,7 @@ uint8_t Servo::run(void)
     //#########################
     // Blink code
     //#########################
+
 	if(pwmConfig.dutyCycle >= DUTY_CYCLE_90)
 		pwmConfig.dutyCycle = DUTY_CYCLE_MINUS_90;
 	else

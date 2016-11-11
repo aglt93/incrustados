@@ -30,8 +30,8 @@
 #define PERIODIC_TASK true
 
 //
-#define SERVO_PORT 2
-#define SERVO_PIN 5
+#define SERVO_PORT GPIO_PORT_P2
+#define SERVO_PIN GPIO_PIN5
 
 
 void Setup(void);
