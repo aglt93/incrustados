@@ -12,11 +12,14 @@
 #include <stdlib.h>     /* abs */
 #include "task_ids.hpp"
 
+	#include <grlib.h>
+	#include "Crystalfontz128x128_ST7735.h"
+Graphics_Context g_sContext;
 
 
 uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
-volatile static int x = 20;
+volatile static int x = 30;
 
 
 Scheduler MainScheduler;
@@ -71,7 +74,8 @@ void BUTTON_ISR(void) {
 
 
 		int* DataToSend2 = new int();
-		*DataToSend2 = 80;
+
+		*DataToSend2 = x++;
 		MSG changeScreen = {PORT3_ISR_ID,SCREEN_ID,DataToSend2};
 		MainScheduler.attachMessage(changeScreen);
 
@@ -79,6 +83,7 @@ void BUTTON_ISR(void) {
 		*DataToSend3 = 300;
 		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
 		MainScheduler.attachMessage(changeServo);
+
 
 	}
 
