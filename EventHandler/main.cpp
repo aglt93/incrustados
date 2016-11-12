@@ -12,14 +12,15 @@
 #include <stdlib.h>     /* abs */
 #include "task_ids.hpp"
 
-	#include <grlib.h>
-	#include "Crystalfontz128x128_ST7735.h"
+#include <grlib.h>
+#include "Crystalfontz128x128_ST7735.h"
+
 Graphics_Context g_sContext;
 
 
 uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
-volatile static int x = 30;
+volatile static int x = 40; // tomala alejandro playo...
 
 
 Scheduler MainScheduler;
