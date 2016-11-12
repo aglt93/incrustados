@@ -16,13 +16,21 @@
 class Screen : public Task
 {
     public:
-        Screen(int Screen_PORT,int Screen_PIN);
-        Screen(int Screen_PORT,int Screen_PIN,uint64_t i_u64FinalCount);
+	    Screen(int i_iTaskID, bool i_bPeriodicTask);
         virtual uint8_t run(void);
+        virtual void ProcessMessage(MSG i_Message);
+        virtual void printScreen(uint8_t x, uint8_t y, uint16_t z);
+
+
     protected:
     private:
         int m_iScreenPort;
         int m_iScreenPin;
+        int m_i;
+        uint8_t m_u16Initial;
+    	uint8_t m_ys;
+
+
 };
 
 #endif /* Screen_HPP_ */
