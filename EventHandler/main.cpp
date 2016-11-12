@@ -74,11 +74,11 @@ void BUTTON_ISR(void) {
 		MainScheduler.attachMessage(callButton);
 
 
-		int* DataToSend2 = new int();
-
-		*DataToSend2 = x++;
-		MSG changeScreen = {PORT3_ISR_ID,SCREEN_ID,DataToSend2};
-		MainScheduler.attachMessage(changeScreen);
+//		int* DataToSend2 = new int();
+//
+//		*DataToSend2 = x++;
+//		MSG changeScreen = {PORT3_ISR_ID,SCREEN_ID,DataToSend2};
+//		MainScheduler.attachMessage(changeScreen);
 
 		int* DataToSend3 = new int();
 		*DataToSend3 = 300;
@@ -94,44 +94,45 @@ void BUTTON_ISR(void) {
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
-//extern "C"
-//{
-///* This interrupt is fired whenever a conversion is completed and placed in
-// * ADC_MEM2. This signals the end of conversion and the results array is
-// * grabbed and placed in resultsBuffer */
-//void ADC14_IRQHandler(void)
-//{
-//
-////    int* DataToSend = new int();
-////    *DataToSend = SCREEN_ID;
-//
-////    MSG callScreen = {ADC_ISR_ID,SCHEDULER_ID,DataToSend};
-////    MainScheduler.attachMessage(callScreen);
-//
-//    uint64_t l_u64Status;
-//
-//    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-//
-//    MAP_ADC14_clearInterruptFlag(l_u64Status);
-//
-////    int* DataToSend2 = new int();
-//
-//    GPIO_toggleOutputOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
-//
-//    /* ADC_MEM2 conversion completed */
-//    if(l_u64Status & ADC_INT2)
-//    {
-//        /* Store ADC14 conversion results */
-///*    	l_u16resultsBuffer[0] = ADC14_getResult(ADC_MEM0);
-//    	l_u16resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
-//    	l_u16resultsBuffer[2] = ADC14_getResult(ADC_MEM2);
-//*/
-////        *DataToSend2 = ADC14_getResult(ADC_MEM1);
-////        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2};
-////        MainScheduler.attachMessage(changeServo);
-//    }
-//}
-//}
+extern "C"
+{
+/* This interrupt is fired whenever a conversion is completed and placed in
+ * ADC_MEM2. This signals the end of conversion and the results array is
+ * grabbed and placed in resultsBuffer */
+void ADC14_IRQHandler(void)
+{
+
+//	int* DataToSendADC = new int();
+//    *DataToSendADC = SCREEN_ID;
+
+    //MSG callScreen = {ADC_ISR_ID,SCHEDULER_ID,DataToSendADC};
+    //MainScheduler.attachMessage(callScreen);
+
+    uint64_t l_u64Status;
+
+    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+
+    MAP_ADC14_clearInterruptFlag(l_u64Status);
+
+//    int* DataToSend2ADC  = new int();
+
+
+    /* ADC_MEM2 conversion completed */
+    if(l_u64Status & ADC_INT2)
+    {
+        GPIO_toggleOutputOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
+
+        /* Store ADC14 conversion results */
+/*    	l_u16resultsBuffer[0] = ADC14_getResult(ADC_MEM0);
+    	l_u16resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
+    	l_u16resultsBuffer[2] = ADC14_getResult(ADC_MEM2);
+*/
+//        *DataToSend2ADC  = ADC14_getResult(ADC_MEM1);
+//        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
+//        MainScheduler.attachMessage(changeServo);
+    }
+}
+}
 #define DUTY_CYCLE_90		7600
 #define DUTY_CYCLE_MINUS_90	1600
 #define DEGREE_DIFF_10		300
@@ -163,9 +164,9 @@ void main(void)
 
     	if(SystemTicks != MainScheduler.ticks) {
             MainScheduler.ticks = SystemTicks;
-            MainScheduler.CalculateNextSchedule();
-            MainScheduler.run();
-            MainScheduler.clearNextScheduler();
+            //MainScheduler.CalculateNextSchedule();
+            //MainScheduler.run();
+            //MainScheduler.clearNextScheduler();
             MainScheduler.ProcessMessageQueue();
         }
 
@@ -268,8 +269,8 @@ void Setup(void)
 	MAP_ADC14_enableSampleTimer(ADC_AUTOMATIC_ITERATION);
 //
 //	/* Triggering the start of the sample */
-//	ADC14_enableConversion();
-//	ADC14_toggleConversionTrigger();
+	ADC14_enableConversion();
+	ADC14_toggleConversionTrigger();
 
 
 	__disable_irq();

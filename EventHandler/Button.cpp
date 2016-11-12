@@ -45,7 +45,7 @@ LED::LED(int LED_PORT,int LED_PIN, uint64_t i_u64FinalCount)
 
 uint8_t Button::run(void)
 {
-	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+	//GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 
     return(NO_ERR);
 }

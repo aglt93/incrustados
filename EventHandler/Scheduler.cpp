@@ -1,5 +1,6 @@
 #include "Scheduler.hpp"
 #include "task_ids.hpp"
+#include <driverlib.h>
 
 Scheduler::Scheduler()
 {
@@ -164,6 +165,11 @@ void Scheduler::clearMessageQueue() {
 		MessageQueue[i] = nullMSG;
 
 	}
+
+//	uint64_t l_u64Status;
+//
+//	l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+//    ADC14_clearInterruptFlag(l_u64Status);
 
 	mMessageIndex = 0;
 
