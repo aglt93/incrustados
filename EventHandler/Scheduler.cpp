@@ -160,7 +160,7 @@ void Scheduler::clearMessageQueue() {
 
 	for (int i = 0; i < mMessageIndex; i++) {
 
-		delete MessageQueue[i].data;
+//		delete MessageQueue[i].data;
 		MSG nullMSG = {-1,-1,0};
 		MessageQueue[i] = nullMSG;
 

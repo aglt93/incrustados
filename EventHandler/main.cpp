@@ -21,8 +21,11 @@ Graphics_Context g_sContext;
 uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 volatile static int x = 40; // tomala alejandro playo...
-
-
+uint64_t g_u64Status;
+int* DataToSend = new int();
+int* DataToSendADC = new int();
+int* DataToSend2ADC  = new int();
+int* DataToSend3 = new int();
 Scheduler MainScheduler;
 
 
@@ -67,7 +70,7 @@ void BUTTON_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
 
-		int* DataToSend = new int();
+//		int* DataToSend = new int();
 		*DataToSend = BUTTON_ID;
 
 		MSG callButton = {PORT3_ISR_ID,SCHEDULER_ID,DataToSend};
@@ -80,7 +83,7 @@ void BUTTON_ISR(void) {
 //		MSG changeScreen = {PORT3_ISR_ID,SCREEN_ID,DataToSend2};
 //		MainScheduler.attachMessage(changeScreen);
 
-		int* DataToSend3 = new int();
+//		int* DataToSend3 = new int();
 		*DataToSend3 = 300;
 		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
 		MainScheduler.attachMessage(changeServo);
@@ -104,21 +107,20 @@ void ADC14_IRQHandler(void)
 
 //	int* DataToSendADC = new int();
 //    *DataToSendADC = SCREEN_ID;
+	*DataToSendADC = SCREEN_ID;
+//
+    MSG callScreen = {ADC_ISR_ID,SCHEDULER_ID,DataToSendADC};
+    MainScheduler.attachMessage(callScreen);
 
-    //MSG callScreen = {ADC_ISR_ID,SCHEDULER_ID,DataToSendADC};
-    //MainScheduler.attachMessage(callScreen);
+    g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
 
-    uint64_t l_u64Status;
-
-    l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-
-    MAP_ADC14_clearInterruptFlag(l_u64Status);
+    MAP_ADC14_clearInterruptFlag(g_u64Status);
 
 //    int* DataToSend2ADC  = new int();
 
 
     /* ADC_MEM2 conversion completed */
-    if(l_u64Status & ADC_INT2)
+    if(g_u64Status & ADC_INT2)
     {
         GPIO_toggleOutputOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
 
@@ -127,9 +129,9 @@ void ADC14_IRQHandler(void)
     	l_u16resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
     	l_u16resultsBuffer[2] = ADC14_getResult(ADC_MEM2);
 */
-//        *DataToSend2ADC  = ADC14_getResult(ADC_MEM1);
-//        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
-//        MainScheduler.attachMessage(changeServo);
+        *DataToSend2ADC  = ADC14_getResult(ADC_MEM1);
+        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
+        MainScheduler.attachMessage(changeServo);
     }
 }
 }
@@ -140,23 +142,24 @@ void ADC14_IRQHandler(void)
 
 
 void main(void)
+
 {
 
 
+
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
-    LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
-    LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
+   // LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
+   // LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
 
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
     Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
     Setup();
 
-    MainScheduler.attach(&BlinkLED);
-    MainScheduler.attach(&BlinkLED2);
+    //MainScheduler.attach(&BlinkLED);
+    //MainScheduler.attach(&BlinkLED2);
     MainScheduler.attach(&button);
     MainScheduler.attach(&PrintScreen);
-
     MainScheduler.attach(&Servo1);
 
     while(1){
@@ -198,14 +201,14 @@ void Setup(void)
 	// - P1.0 is connected to the Red LED
 	//P1->DIR |= BIT0;
 
-	GPIO_setAsOutputPin(RGB_RED_PORT,RGB_RED_PIN);
-	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
-
-	GPIO_setAsOutputPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-	GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-
-	GPIO_setAsOutputPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
-	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+//	GPIO_setAsOutputPin(RGB_RED_PORT,RGB_RED_PIN);
+//	GPIO_setOutputLowOnPin(RGB_RED_PORT,RGB_RED_PIN);
+//
+//	GPIO_setAsOutputPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+//	GPIO_setOutputLowOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+//
+//	GPIO_setAsOutputPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
+//	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 
 	GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
 	GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);

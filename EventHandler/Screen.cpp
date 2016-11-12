@@ -25,7 +25,7 @@ Screen::Screen(int i_iTaskID, bool i_bPeriodicTask)
 
 	m_u64CurrentCount = 0;
 	m_u64FinalCount = 1000;
-    m_u16Initial = 30;
+    m_u16Initial = 0;
     m_ys = 0;
 
 	//ctor
@@ -119,7 +119,7 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	m_u64CurrentCount = 0;
 	m_u64FinalCount = 1000;
-    m_ys = m_u16Initial;
+    m_ys = 0;
 
 	//ctor
 	Graphics_Context g_sContext;
