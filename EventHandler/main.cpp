@@ -129,7 +129,8 @@ void ADC14_IRQHandler(void)
     	l_u16resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
     	l_u16resultsBuffer[2] = ADC14_getResult(ADC_MEM2);
 */
-        *DataToSend2ADC  = ADC14_getResult(ADC_MEM1);
+
+        *DataToSend2ADC  = ADC14_getResult(ADC_MEM2);
         MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
         MainScheduler.attachMessage(changeServo);
     }

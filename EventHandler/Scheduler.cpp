@@ -33,6 +33,25 @@ uint8_t Scheduler::attach(Task * i_ToAttach)
     return l_ErrorCode;
 }
 
+void Scheduler::attachMessage(MSG i_messageToAttach) {
+
+	MessageQueue[mMessageIndex] = i_messageToAttach;
+
+	if (mMessageIndex == 255) {
+
+		mMessageIndex = 0;
+
+	}
+
+	else {
+
+		mMessageIndex++;
+
+	}
+
+	return;
+}
+
 
 uint8_t Scheduler::attach(Task * i_ToAttach, uint64_t i_u64TickInterval)
 {
@@ -147,14 +166,14 @@ void Scheduler::ProcessMessageQueue() {
 }
 
 
-void Scheduler::attachMessage(MSG i_messageToAttach) {
-
-	MessageQueue[mMessageIndex] = i_messageToAttach;
-
-	mMessageIndex++;
-
-	return;
-}
+//void Scheduler::attachMessage(MSG i_messageToAttach) {
+//
+//	MessageQueue[mMessageIndex] = i_messageToAttach;
+//
+//	mMessageIndex++;
+//
+//	return;
+//}
 
 void Scheduler::clearMessageQueue() {
 
