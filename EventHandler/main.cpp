@@ -34,6 +34,7 @@ int* DataToSend3 = new int();
 Scheduler MainScheduler;
 Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
 int counterADC;
+int counterADCScreen;
 
 extern "C"
 {
@@ -71,24 +72,30 @@ void ADC14_IRQHandler(void)
     MAP_ADC14_clearInterruptFlag(g_u64Status);
     //GPIO_toggleOutputOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
     counterADC++;
+    counterADCScreen++;
     /* ADC_MEM2 conversion completed */
-    if(g_u64Status & ADC_INT2 && counterADC == 200)
+    //if(g_u64Status & ADC_INT2 && counterADC == 200)
+    if(g_u64Status & ADC_INT2)
     {
-        GPIO_toggleOutputOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
-        counterADC = 0;
-        /* Store ADC14 conversion results */
     	aDataToSendADC[0] = ADC14_getResult(ADC_MEM1);
     	aDataToSendADC[1] = ADC14_getResult(ADC_MEM2);
+    	pDataToSendADC = aDataToSendADC;
 
-        pDataToSendADC = aDataToSendADC;
+    	if(counterADC == 200){
+    		GPIO_toggleOutputOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
+    		counterADC = 0;
+    		/* Store ADC14 conversion results */
 
-        MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToSendADC};
-        MainScheduler.attachMessage(changeScreen);
+    		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToSendADC};
+    		MainScheduler.attachMessage(changeScreen);
+    	}
 
-         *DataToSend3 = aDataToSendADC[1];
-		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
-		MainScheduler.attachMessage(changeServo);
-
+    	if (counterADCScreen == 100){
+    		counterADCScreen = 0;
+    		*DataToSend3 = aDataToSendADC[1];
+    		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
+    		MainScheduler.attachMessage(changeServo);
+    	}
 
 //        *DataToSend3 = 900;
 //		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
@@ -110,6 +117,7 @@ void main(void)
 
 
 	counterADC = 0;
+	counterADCScreen = 0;
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
    // LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
    // LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
