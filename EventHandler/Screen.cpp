@@ -122,7 +122,7 @@ void Screen::ProcessMessage(MSG i_Message) {
     m_ys = 0;
 
 	uint8_t y = 0;
-	uint16_t x = *l_pDataTask;
+	uint16_t x = *(l_pDataTask+2);
 	m_u16Initial = (x-5000)/51.8;
 
 	/* Initializes graphics context */
@@ -134,87 +134,88 @@ void Screen::ProcessMessage(MSG i_Message) {
 	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE);
 
 
-	for ( m_ys=FIRST_PIXEL; m_ys<LAST_PIXEL+1; m_ys++ ){
+//	for ( m_ys=FIRST_PIXEL; m_ys<LAST_PIXEL+1; m_ys++ ){
+//
+//		if(m_ys<m_u16Initial+1){
+//			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
+//			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
+//		}
+//		else
+//			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
+//			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
+//
+//	}
 
-		if(m_ys<m_u16Initial+1){
-			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
-		}
-		else
-			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
-
-	}
-
+	printScreen(0,m_u16Initial,*(l_pDataTask+1));
 }
 
-///*
-// * Clear display and redraw title + accelerometer data
-// */
-//void Screen::printScreen(uint8_t l_u16Initial, uint8_t l_u16Final, uint16_t l_u8UpOrDown)
-//{
-//	// 0 0 0 grad All GRAPHICS_COLOR_SANDY_BROWN
-//	// 0 64 45 grad Half GRAPHICS_COLOR_SANDY_BROWN Half GRAPHICS_COLOR_STEEL_BLUE
-//	// 0 127 90 grad All GRAPHICS_COLOR_STEEL_BLUE
-//	uint8_t ys = 0;
-//
-//
-//	if (l_u8UpOrDown > 11300) {
-//		if (Lcd_Orientation != LCD_ORIENTATION_UP){
-//			Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
-//		}
-//		else
-//			 ys = 0;
-//
-//			for ( ys=FIRST_PIXEL; ys<LAST_PIXEL+1; ys++ ){
-//
-//				if(ys<l_u16Final+1){
-//					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-//					Graphics_drawLineH(&g_sContext, 0, 127, ys);
-//				}
-//				else
-//					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-//					Graphics_drawLineH(&g_sContext, 0, 127, ys);
-//
-//			}
-//	}
-//
-//	else if (l_u8UpOrDown < 11300) {
-//		if (Lcd_Orientation != LCD_ORIENTATION_DOWN){
-//			Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_DOWN);
-//		}
-//		else
-//			ys = 0;
-//
-//			for ( ys=FIRST_PIXEL; ys<LAST_PIXEL+1; ys++ ){
-//
-//				if(ys<l_u16Final+1){
-//					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-//					Graphics_drawLineH(&g_sContext, 0, 127, ys);
-//				}
-//				else
-//					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-//					Graphics_drawLineH(&g_sContext, 0, 127, ys);
-//
-//			}
-//	}
-//
-//	else
-//
-//		ys = 0;
-//
-//		for ( ys=FIRST_PIXEL; ys<LAST_PIXEL+1; ys++ ){
-//
-//			if(ys<l_u16Final+1){
-//				Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-//				Graphics_drawLineH(&g_sContext, 0, 127, ys);
-//			}
-//			else
-//				Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-//				Graphics_drawLineH(&g_sContext, 0, 127, ys);
-//
-//		}
-//
-//
-//
-//}
+/*
+ * Clear display and redraw title + accelerometer data
+ */
+void Screen::printScreen(uint8_t l_u16Initial, uint8_t l_u16Final, uint16_t l_u8UpOrDown)
+{
+	/* 0 0 0 grad All GRAPHICS_COLOR_SANDY_BROWN
+	 0 64 45 grad Half GRAPHICS_COLOR_SANDY_BROWN Half GRAPHICS_COLOR_STEEL_BLUE
+	 0 127 90 grad All GRAPHICS_COLOR_STEEL_BLUE
+	*/
+	uint8_t ys = 0;
+
+	if (l_u8UpOrDown > 11300) {
+		if (Lcd_Orientation != LCD_ORIENTATION_UP){
+			Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
+		}
+		else
+			 ys = 0;
+
+			for ( ys=FIRST_PIXEL; ys<LAST_PIXEL+1; ys++ ){
+
+				if(ys<l_u16Final+1){
+					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
+					Graphics_drawLineH(&g_sContext, 0, 127, ys);
+				}
+				else
+					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
+					Graphics_drawLineH(&g_sContext, 0, 127, ys);
+
+			}
+	}
+
+	else if (l_u8UpOrDown < 11300) {
+		if (Lcd_Orientation != LCD_ORIENTATION_DOWN){
+			Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_DOWN);
+		}
+		else
+			ys = 0;
+
+			for ( ys=FIRST_PIXEL; ys<LAST_PIXEL+1; ys++ ){
+
+				if(ys<l_u16Final+1){
+					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
+					Graphics_drawLineH(&g_sContext, 0, 127, ys);
+				}
+				else
+					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
+					Graphics_drawLineH(&g_sContext, 0, 127, ys);
+
+			}
+	}
+
+	else
+
+		ys = 0;
+
+		for ( ys=FIRST_PIXEL; ys<LAST_PIXEL+1; ys++ ){
+
+			if(ys<l_u16Final+1){
+				Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
+				Graphics_drawLineH(&g_sContext, 0, 127, ys);
+			}
+			else
+				Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
+				Graphics_drawLineH(&g_sContext, 0, 127, ys);
+
+		}
+
+
+
+}

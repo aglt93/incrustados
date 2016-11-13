@@ -25,6 +25,11 @@ uint64_t g_u64Status;
 int* DataToSend = new int();
 int* DataToSendADC = new int();
 int* DataToSend2ADC  = new int();
+
+//typedef Ant* AntPtr;
+int aDataToSendADC[3];
+int *pDataToSendADC;
+
 int* DataToSend3 = new int();
 Scheduler MainScheduler;
 
@@ -125,13 +130,15 @@ void ADC14_IRQHandler(void)
         GPIO_toggleOutputOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
 
         /* Store ADC14 conversion results */
-/*    	l_u16resultsBuffer[0] = ADC14_getResult(ADC_MEM0);
-    	l_u16resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
-    	l_u16resultsBuffer[2] = ADC14_getResult(ADC_MEM2);
-*/
+    	aDataToSendADC[0] = ADC14_getResult(ADC_MEM0);
+    	aDataToSendADC[1] = ADC14_getResult(ADC_MEM1);
+    	aDataToSendADC[2] = ADC14_getResult(ADC_MEM2);
+
+        pDataToSendADC = aDataToSendADC;
 
         *DataToSend2ADC  = ADC14_getResult(ADC_MEM2);
-        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
+//        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
+        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,pDataToSendADC };
         MainScheduler.attachMessage(changeServo);
     }
 }
