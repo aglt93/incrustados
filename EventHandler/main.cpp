@@ -27,44 +27,13 @@ int* DataToSendADC = new int();
 int* DataToSend2ADC  = new int();
 
 //typedef Ant* AntPtr;
-int aDataToSendADC[3];
+int aDataToSendADC[2];
 int *pDataToSendADC;
 
 int* DataToSend3 = new int();
 Scheduler MainScheduler;
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-// **********************************
-// Interrupt service routine for
-// PORT3
-// **********************************
-//extern "C"
-//{
-//void BUTTON_ISR(void) {
-//
-//	// ISR for PIN5
-//	if(GPIO_getInterruptStatus(BUTTON_PORT, BUTTON_PIN)) {
-//		// Clear interrupt flag and toggle output LEDs.
-//		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
-//
-//		int* DataToSend = new int();
-//		*DataToSend = BUTTON_ID;
-//
-//		MSG callButton = {PORT3_ISR_ID,SCHEDULER_ID,DataToSend};
-//		MainScheduler.attachMessage(callButton);
-//
-//
-//		int* DataToSend2 = new int();
-//		*DataToSend2 = 300;
-//		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend2};
-//		MainScheduler.attachMessage(changeServo);
-//
-//
-//	}
-//
-//}
-//}
+Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
+int counterADC;
 
 extern "C"
 {
@@ -74,25 +43,12 @@ void BUTTON_ISR(void) {
 	if(GPIO_getInterruptStatus(BUTTON_PORT, BUTTON_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_PORT, BUTTON_PIN);
+        GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+        //Servo1.run();
 
-//		int* DataToSend = new int();
-		*DataToSend = BUTTON_ID;
-
-		MSG callButton = {PORT3_ISR_ID,SCHEDULER_ID,DataToSend};
-		MainScheduler.attachMessage(callButton);
-
-
-//		int* DataToSend2 = new int();
-//
-//		*DataToSend2 = x++;
-//		MSG changeScreen = {PORT3_ISR_ID,SCREEN_ID,DataToSend2};
-//		MainScheduler.attachMessage(changeScreen);
-
-//		int* DataToSend3 = new int();
-		*DataToSend3 = 300;
-		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
-		MainScheduler.attachMessage(changeServo);
-
+//		*DataToSend3 = 300;
+//		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
+//		MainScheduler.attachMessage(changeServo);
 
 	}
 
@@ -110,36 +66,35 @@ extern "C"
 void ADC14_IRQHandler(void)
 {
 
-//	int* DataToSendADC = new int();
-//    *DataToSendADC = SCREEN_ID;
-	*DataToSendADC = SCREEN_ID;
-//
-    MSG callScreen = {ADC_ISR_ID,SCHEDULER_ID,DataToSendADC};
-    MainScheduler.attachMessage(callScreen);
-
     g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
 
     MAP_ADC14_clearInterruptFlag(g_u64Status);
-
-//    int* DataToSend2ADC  = new int();
-
-
+    //GPIO_toggleOutputOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
+    counterADC++;
     /* ADC_MEM2 conversion completed */
-    if(g_u64Status & ADC_INT2)
+    if(g_u64Status & ADC_INT2 && counterADC == 200)
     {
-        GPIO_toggleOutputOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
-
+        GPIO_toggleOutputOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
+        counterADC = 0;
         /* Store ADC14 conversion results */
-    	aDataToSendADC[0] = ADC14_getResult(ADC_MEM0);
-    	aDataToSendADC[1] = ADC14_getResult(ADC_MEM1);
-    	aDataToSendADC[2] = ADC14_getResult(ADC_MEM2);
+    	aDataToSendADC[0] = ADC14_getResult(ADC_MEM1);
+    	aDataToSendADC[1] = ADC14_getResult(ADC_MEM2);
 
         pDataToSendADC = aDataToSendADC;
 
-        *DataToSend2ADC  = ADC14_getResult(ADC_MEM2);
-//        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,DataToSend2ADC };
-        MSG changeServo = {ADC_ISR_ID,SCREEN_ID,pDataToSendADC };
-        MainScheduler.attachMessage(changeServo);
+        MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToSendADC};
+        MainScheduler.attachMessage(changeScreen);
+
+         *DataToSend3 = aDataToSendADC[1];
+		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
+		MainScheduler.attachMessage(changeServo);
+
+
+//        *DataToSend3 = 900;
+//		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
+//		MainScheduler.attachMessage(changeServo);
+
+        //Servo1.ProcessMessage(changeServo);
     }
 }
 }
@@ -154,14 +109,14 @@ void main(void)
 {
 
 
-
+	counterADC = 0;
     GPIO_registerInterrupt(BUTTON_PORT, BUTTON_ISR);
    // LED BlinkLED(LED1_ID,PERIODIC_TASK,RGB_BLUE_PORT,RGB_BLUE_PIN,1000);
    // LED BlinkLED2(LED2_ID, PERIODIC_TASK, RGB_GREEN_PORT,RGB_GREEN_PIN,2000);
     Button button(BUTTON_ID,NOT_PERIODIC_TASK,BUTTON_PORT,BUTTON_PIN,200);
 
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-    Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
+
     Setup();
 
     //MainScheduler.attach(&BlinkLED);
@@ -255,7 +210,7 @@ void Setup(void)
 
 	    /* Initializing ADC (ADCOSC/64/8) */
 	MAP_ADC14_enableModule();
-	MAP_ADC14_initModule(ADC_CLOCKSOURCE_ADCOSC, ADC_PREDIVIDER_64, ADC_DIVIDER_8,0);
+	ADC14_initModule(ADC_CLOCKSOURCE_SMCLK, ADC_PREDIVIDER_64, ADC_DIVIDER_8,0);
 
 	/* Configuring ADC Memory (ADC_MEM0 - ADC_MEM2 (A11, A13, A14)  with no repeat)
 	 * with internal 2.5v reference */
@@ -287,6 +242,7 @@ void Setup(void)
 	__disable_irq();
 	//TIMER32_1->LOAD = 0x002DC6C0; //~1s ---> a 3Mhz
 	TIMER32_1->LOAD = 0x0000BB80; //~1ms ---> a 48Mhz
+	//TIMER32_1->LOAD = 0x00005DC0; //~1ms ---> a 48Mhz
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);
@@ -305,7 +261,7 @@ extern "C" {
 	{
 		TIMER32_1->INTCLR = 0U;
 		//P1->OUT ^= BIT0;
-	    GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+	    //GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 	   // GPIO_toggleOutputOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
 
 

@@ -70,7 +70,7 @@ void Servo::ProcessMessage(MSG i_Message) {
         	if(pwmConfig.dutyCycle >= DUTY_CYCLE_90)
 				pwmConfig.dutyCycle = DUTY_CYCLE_MINUS_90;
 			else
-				pwmConfig.dutyCycle += l_iServoValue;
+				pwmConfig.dutyCycle = DUTY_CYCLE_MINUS_90 + l_iServoValue;
 
 
 			MAP_Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
@@ -86,8 +86,8 @@ int Servo::ADCtoServoValueConv(int i_iADCvalue){
 
 	int l_iServoValue;
 
-	l_iServoValue = i_iADCvalue;
-	// Falta hacer la conversion del valor ADC al degree
+	l_iServoValue = (float) (i_iADCvalue-5050)/1.2;
+
 	return l_iServoValue;
 
 }

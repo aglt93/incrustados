@@ -121,9 +121,12 @@ void Screen::ProcessMessage(MSG i_Message) {
 	m_u64FinalCount = 1000;
     m_ys = 0;
 
-	uint8_t y = 0;
-	uint16_t x = *(l_pDataTask+2);
-	m_u16Initial = (x-5000)/51.8;
+//	uint8_t y = 0;
+//	uint16_t x = *(l_pDataTask+1);
+//	m_u16Initial = (x-5000)/51.8;
+//	ADCtoScreenValueConv()
+
+    int l_iScreenValue = ADCtoScreenValueConv(*(l_pDataTask+1));
 
 	/* Initializes graphics context */
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
@@ -133,21 +136,23 @@ void Screen::ProcessMessage(MSG i_Message) {
 	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN);
 	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE);
 
+/*
+	for ( m_ys=FIRST_PIXEL; m_ys<LAST_PIXEL+1; m_ys++ ){
 
-//	for ( m_ys=FIRST_PIXEL; m_ys<LAST_PIXEL+1; m_ys++ ){
-//
-//		if(m_ys<m_u16Initial+1){
-//			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-//			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
-//		}
-//		else
-//			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-//			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
-//
-//	}
+		if(m_ys<m_u16Initial+1){
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
+			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
+		}
+		else
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
+			Graphics_drawLineH(&g_sContext, 0, 127, m_ys);
 
-	printScreen(0,m_u16Initial,*(l_pDataTask+1));
+	}
+*/
+	printScreen(0,l_iScreenValue,*(l_pDataTask));
+
 }
+
 
 /*
  * Clear display and redraw title + accelerometer data
@@ -216,6 +221,15 @@ void Screen::printScreen(uint8_t l_u16Initial, uint8_t l_u16Final, uint16_t l_u8
 
 		}
 
+}
 
+
+int Screen::ADCtoScreenValueConv(int i_iADCvalue){
+
+	int l_iServoValue;
+
+	l_iServoValue = (float) (i_iADCvalue-5000)/51.8;
+
+	return l_iServoValue;
 
 }
