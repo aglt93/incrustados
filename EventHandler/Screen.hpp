@@ -21,15 +21,12 @@ class Screen : public Task
         virtual void ProcessMessage(MSG i_Message);
         virtual void printScreen(uint8_t x, uint8_t y, uint16_t z);
         virtual int ADCtoScreenValueConv(int i_iADCvalue);
-
-
-    protected:
+//
+//
+//    protected:
     private:
-        int m_iScreenPort;
-        int m_iScreenPin;
-        int m_i;
-        uint8_t m_u16Initial;
-    	uint8_t m_ys;
+        int16_t m_iScreenValue;
+        int16_t m_iPreScreenValue;
 
 
 };
