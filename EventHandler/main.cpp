@@ -105,10 +105,7 @@ void ADC14_IRQHandler(void)
     }
 }
 }
-#define DUTY_CYCLE_90		7600
-#define DUTY_CYCLE_MINUS_90	1600
-#define DEGREE_DIFF_10		300
-#define PERIOD_20_MS		60000
+
 
 
 void main(void)

@@ -33,41 +33,6 @@ uint8_t Scheduler::attach(Task * i_ToAttach)
     return l_ErrorCode;
 }
 
-void Scheduler::attachMessage(MSG i_messageToAttach) {
-
-	MessageQueue[mMessageIndex] = i_messageToAttach;
-
-	if (mMessageIndex == 255) {
-
-		mMessageIndex = 0;
-
-	}
-
-	else {
-
-		mMessageIndex++;
-
-	}
-
-	return;
-}
-
-
-uint8_t Scheduler::attach(Task * i_ToAttach, uint64_t i_u64TickInterval)
-{
-    uint8_t l_ErrorCode = NO_ERR;
-    if((mOpenSlots>0) && (mNextSlot < NUMBER_OF_SLOTS))
-    {
-        Schedule[mNextSlot] = i_ToAttach;
-        mOpenSlots--;
-        mNextSlot++;
-    }
-    else
-    {
-        l_ErrorCode = RET_ERR;
-    }
-    return l_ErrorCode;
-}
 
 
 uint8_t Scheduler::run(void)
@@ -131,9 +96,21 @@ uint8_t Scheduler::CalculateNextSchedule(void)
     return l_u8ReturnCode;
 }
 
-uint8_t Scheduler::SortScheduleByPriority(Task * i_pSchedule)
-{
-    return(NO_ERR);
+
+void Scheduler::clearNextScheduler() {
+
+	for (int i=0; i<=NUMBER_OF_SLOTS;i++) {
+
+		if (NextSchedule[i] == NULL) {
+			break;
+		}
+
+		NextSchedule[i] = NULL;
+	}
+
+	NextScheduleSlot = 0U;
+
+	return;
 }
 
 
@@ -165,15 +142,24 @@ void Scheduler::ProcessMessageQueue() {
 
 }
 
+void Scheduler::attachMessage(MSG i_messageToAttach) {
 
-//void Scheduler::attachMessage(MSG i_messageToAttach) {
-//
-//	MessageQueue[mMessageIndex] = i_messageToAttach;
-//
-//	mMessageIndex++;
-//
-//	return;
-//}
+	MessageQueue[mMessageIndex] = i_messageToAttach;
+
+	if (mMessageIndex == 255) {
+
+		mMessageIndex = 0;
+
+	}
+
+	else {
+
+		mMessageIndex++;
+
+	}
+
+	return;
+}
 
 void Scheduler::clearMessageQueue() {
 
@@ -185,32 +171,12 @@ void Scheduler::clearMessageQueue() {
 
 	}
 
-//	uint64_t l_u64Status;
-//
-//	l_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-//    ADC14_clearInterruptFlag(l_u64Status);
-
 	mMessageIndex = 0;
 
 	return;
 
 }
 
-void Scheduler::clearNextScheduler() {
-
-	for (int i=0; i<=NUMBER_OF_SLOTS;i++) {
-
-		if (NextSchedule[i] == NULL) {
-			break;
-		}
-
-		NextSchedule[i] = NULL;
-	}
-
-	NextScheduleSlot = 0U;
-
-	return;
-}
 
 
 void Scheduler::processMessage(MSG i_MSG) {
@@ -236,6 +202,11 @@ void Scheduler::processMessage(MSG i_MSG) {
 }
 
 
+
+uint8_t Scheduler::SortScheduleByPriority(Task * i_pSchedule)
+{
+    return(NO_ERR);
+}
 
 
 
