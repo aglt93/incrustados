@@ -27,22 +27,15 @@
 volatile static uint64_t SystemTicks = 0;
 
 // Punteros para enviar como datos en los msjs.
-int* DataToSend = new int();
-int* DataToSendADC = new int();
-int* DataToSend2ADC  = new int();
-int* DataToSend3 = new int();
+int* DataToServo = new int();
 
 // Arreglo y puntero al arreglo para la conversión ADC.
-int aDataToSendADC[2];
-int *pDataToSendADC;
+int aDataFromADC[2];
+int *pDataToScreen = aDataFromADC;
 
 // Una instancia global del Scheduler para que los msjs puedan ser agregados
 // por las interrupciones.
 Scheduler MainScheduler;
-
-// Variables auxiliares en la interrupcion del ADC.
-int counterADC;
-int counterADCScreen;
 /*******************************************************************************************/
 
 
@@ -65,10 +58,6 @@ int counterADCScreen;
 void main(void)
 
 {
-
-	counterADC = 0;
-	counterADCScreen = 0;
-
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
@@ -105,6 +94,8 @@ void main(void)
 
 
 
+/*******************************************************************************************/
+// SETUP
 /*******************************************************************************************/
 //////////////////////////////////////////////////////////////////////////////////////////////
 // SetupADC
@@ -181,15 +172,6 @@ void Setup(void)
     MAP_WDT_A_holdTimer();
     MAP_Interrupt_disableMaster();
 
-	GPIO_setAsOutputPin(LED_RED_PORT,LED_RED_PIN);
-	GPIO_setOutputLowOnPin(LED_RED_PORT,LED_RED_PIN);
-
-	GPIO_setAsOutputPin(LED_BLUE_PORT,LED_BLUE_PIN);
-	GPIO_setOutputLowOnPin(LED_BLUE_PORT,LED_BLUE_PIN);
-
-	GPIO_setAsOutputPin(LED_GREEN_PORT,LED_GREEN_PIN);
-	GPIO_setOutputLowOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
-
 	// Se configura el ADC.
 	setupADC();
 
@@ -214,6 +196,8 @@ void Setup(void)
 
 
 /*******************************************************************************************/
+// INTERRUPCIONES
+/*******************************************************************************************/
 extern "C" {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,46 +221,25 @@ void T32_INT1_IRQHandler() {
 //////////////////////////////////////////////////////////////////////////////////////////////
 // La interrupción se realiza cada vez que se termina una conversión y es almacenada en el
 // ADC_MEM2. Cuando estos sucede, la interrupción recoge los resultados de conversión y los
-// envía en msjs a la pantalla y al servo para que estos reflejen los cambios. Esto se realiza
-// cada ????
+// envía en msjs a la pantalla y al servo para que estos reflejen los cambios. La bandera de
+// interrupción es limpiada hasta que el scheduler procesa los msjs y limpia la cola de msjs.
+// Así se evita un sobre envío de msjs.
 //////////////////////////////////////////////////////////////////////////////////////////////
 void ADC14_IRQHandler(void) {
 
-	// Control de la bandera de interrupción
-    uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-    MAP_ADC14_clearInterruptFlag(g_u64Status);
-
-    //
-    counterADC++;
-    counterADCScreen++;
-
     // Si la conversión fue completada
-    if(g_u64Status & ADC_INT2)
-    {
-    	// Extraiga los datos de la memoria del ADC.
-    	aDataToSendADC[0] = ADC14_getResult(ADC_MEM1);
-    	aDataToSendADC[1] = ADC14_getResult(ADC_MEM2);
-    	pDataToSendADC = aDataToSendADC;
+	// Extraiga los datos de la memoria del ADC.
+	aDataFromADC[0] = ADC14_getResult(ADC_MEM1);
+	aDataFromADC[1] = ADC14_getResult(ADC_MEM2);
 
-    	// Envíe el msj a la pantalla para reflejar el cambio.
-    	if(counterADC == 200){
+	// Envíe el msj a la pantalla para reflejar el cambio.
+	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen};
+	MainScheduler.attachMessage(changeScreen);
 
-    		GPIO_toggleOutputOnPin(LED_GREEN_PORT,LED_GREEN_PIN);
-    		counterADC = 0;
-
-    		/* Store ADC14 conversion results */
-    		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToSendADC};
-    		MainScheduler.attachMessage(changeScreen);
-    	}
-
-    	// Envíe el msj al servo para que refleje el cambio.
-    	if (counterADCScreen == 100){
-    		counterADCScreen = 0;
-    		*DataToSend3 = aDataToSendADC[1];
-    		MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToSend3};
-    		MainScheduler.attachMessage(changeServo);
-    	}
-    }
+	// Envíe el msj al servo para que refleje el cambio.
+	*DataToServo = aDataFromADC[1];
+	MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToServo};
+	MainScheduler.attachMessage(changeServo);
 }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////

@@ -155,6 +155,10 @@ void Scheduler::ProcessMessageQueue() {
 
 	clearMessageQueue();
 
+	// Se limpia la bandera de interrupción del ADC.
+	uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+	MAP_ADC14_clearInterruptFlag(g_u64Status);
+
 	return;
 
 
