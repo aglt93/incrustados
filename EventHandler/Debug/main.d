@@ -56,7 +56,6 @@ main.obj: /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/linkage.h
 main.obj: ../Servo.hpp
 main.obj: /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h
 main.obj: ../task_ids.hpp
-main.obj: /home/aglt93/workspace_v6_1_3/EventHandler/GrLib/grlib/grlib.h
 
 ../main.cpp: 
 /home/aglt93/ti/ccsv6/ccs_base/arm/include/msp.h: 
@@ -114,4 +113,3 @@ main.obj: /home/aglt93/workspace_v6_1_3/EventHandler/GrLib/grlib/grlib.h
 ../Servo.hpp: 
 /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h: 
 ../task_ids.hpp: 
-/home/aglt93/workspace_v6_1_3/EventHandler/GrLib/grlib/grlib.h: 

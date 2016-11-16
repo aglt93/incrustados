@@ -39,7 +39,7 @@
 /* Linker variable that marks the top of the stack. */
 extern unsigned long __STACK_END;
 
-extern void BUTTON_ISR(void);
+//extern void BUTTON_ISR(void);
 
 /* External declaration for the reset handler that is to be called when the */
 /* processor is started                                                     */
@@ -168,7 +168,7 @@ void (* const interruptVectors[])(void) =
     DMA_INT0_IRQHandler,                   /* DMA_INT0 ISR              */
     PORT1_IRQHandler,                      /* PORT1 ISR                 */
     PORT2_IRQHandler,                      /* PORT2 ISR                 */
-	BUTTON_ISR,                      /* PORT3 ISR                 */
+	PORT3_IRQHandler,                      /* PORT3 ISR                 */
     PORT4_IRQHandler,                      /* PORT4 ISR                 */
     PORT5_IRQHandler,                      /* PORT5 ISR                 */
     PORT6_IRQHandler                       /* PORT6 ISR                 */
