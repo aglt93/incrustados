@@ -13,7 +13,7 @@
 #include "Screen.hpp"
 #include "Servo.hpp"
 #include <driverlib.h>
-#include <stdlib.h>     /* abs */
+#include <stdlib.h>
 #include "task_ids.hpp"
 /*******************************************************************************************/
 
@@ -55,9 +55,8 @@ Scheduler MainScheduler;
 // en su ciclo principal se dedica a que cada 1ms (definido así por el Timer32) se ejecuten
 // los procesos del scheduler necesarios para el correcto funcionamiento del scheduler.
 //////////////////////////////////////////////////////////////////////////////////////////////
-void main(void)
+void main(void) {
 
-{
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
@@ -238,7 +237,7 @@ void ADC14_IRQHandler(void) {
 
 	// Envíe el msj al servo para que refleje el cambio.
 	*DataToServo = aDataFromADC[1];
-	MSG changeServo = {PORT3_ISR_ID,SERVO_ID,DataToServo};
+	MSG changeServo = {ADC_ISR_ID,SERVO_ID,DataToServo};
 	MainScheduler.attachMessage(changeServo);
 }
 }

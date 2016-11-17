@@ -153,6 +153,7 @@ void Scheduler::ProcessMessageQueue() {
 		}
 	}
 
+	// Se limpia la cola de msjs.
 	clearMessageQueue();
 
 	// Se limpia la bandera de interrupción del ADC.
@@ -217,8 +218,8 @@ void Scheduler::processMessage(MSG i_MSG) {
 
 	switch(l_iSourceTask) {
 
-        // Caso boton
-        case PORT3_ISR_ID:
+        // Caso ADC
+        case ADC_ISR_ID:
 
             int* TaskID = (int*) i_MSG.data;
             Task* TaskToAdd = ID_LUT[*TaskID];

@@ -110,7 +110,7 @@ uint8_t Screen::run(void)
 
 void Screen::ProcessMessage(MSG i_Message) {
 
-	int l_iSourceTask = i_Message.source;
+	//int l_iSourceTask = i_Message.source;
 	int* l_pDataTask = (int*) i_Message.data;
 
 	//printScreen(0,*l_pDataTask,1);
