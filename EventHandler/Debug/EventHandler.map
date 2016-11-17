@@ -1,17 +1,17 @@
 ******************************************************************************
                   TI ARM Linker Unix v15.12.3                  
 ******************************************************************************
->> Linked Wed Nov 16 19:49:17 2016
+>> Linked Thu Nov 17 01:25:43 2016
 
 OUTPUT FILE NAME:   <EventHandler.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 000040b5
+ENTRY POINT SYMBOL: "_c_int00"  address: 0000406d
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  MAIN                  00000000   00040000  00004b27  0003b4d9  R  X
+  MAIN                  00000000   00040000  00004adf  0003b521  R  X
   INFO                  00200000   00004000  00000000  00004000  R  X
   SRAM_CODE             01000000   00010000  00001f92  0000e06e  RW X
   SRAM_DATA             20000000   00010000  00001f92  0000e06e  RW  
@@ -21,12 +21,12 @@ SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00004b2c   00004b2c    r-x
+00000000    00000000    00004ae4   00004ae4    r-x
   00000000    00000000    000000e4   000000e4    r-- .intvecs
-  000000e4    000000e4    00004246   00004246    r-x .text
-  0000432c    0000432c    0000074d   0000074d    r-- .const
-  00004a7c    00004a7c    00000004   00000004    r-- .init_array
-  00004a80    00004a80    000000ac   000000ac    r-- .cinit
+  000000e4    000000e4    000041fe   000041fe    r-x .text
+  000042e4    000042e4    0000074d   0000074d    r-- .const
+  00004a34    00004a34    00000004   00000004    r-- .init_array
+  00004a38    00004a38    000000ac   000000ac    r-- .cinit
 20000000    20000000    00001d98   00000000    rw-
   20000000    20000000    000000e4   00000000    rw- .vtable
   200000e8    200000e8    0000182e   00000000    rw- .bss
@@ -46,7 +46,7 @@ section   page    origin      length       input sections
 
 .binit     0    00000000    00000000     
 
-.text      0    000000e4    00004246     
+.text      0    000000e4    000041fe     
                   000000e4    000008e0     adc14.obj (.text)
                   000009c4    000008a4     spi.obj (.text)
                   00001268    00000678     Crystalfontz128x128_ST7735.obj (.text)
@@ -56,103 +56,103 @@ section   page    origin      length       input sections
                   000025e0    000003ec     Scheduler.obj (.text)
                   000029cc    000003dc     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.obj (.text)
                   00002da8    00000370     system_msp432p401r.obj (.text)
-                  00003118    000002e0     Screen.obj (.text)
-                  000033f8    000002d0     main.obj (.text)
-                  000036c8    00000266     context.obj (.text)
-                  0000392e    00000136     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_div_t2.obj (.text)
-                  00003a64    00000134     display.obj (.text)
-                  00003b98    00000130     Servo.obj (.text)
-                  00003cc8    000000bc     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.text)
-                  00003d84    000000bc     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.text)
-                  00003e40    0000009c                                   : memcpy_t2.obj (.text)
-                  00003edc    00000080     Task.obj (.text)
-                  00003f5c    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.obj (.text)
-                  00003fd6    00000002                                   : mpu_init.obj (.text)
-                  00003fd8    00000070                                   : autoinit.obj (.text)
-                  00004048    0000006a                                   : copy_decompress_rle.obj (.text)
-                  000040b2    00000002                                   : newhandler.obj (.text)
-                  000040b4    00000054                                   : boot.obj (.text)
-                  00004108    00000054                                   : exit.obj (.text)
-                  0000415c    0000004c                                   : cpy_tbl.obj (.text)
-                  000041a8    00000048                                   : fd_toi_t2.obj (.text)
-                  000041f0    0000003e     cpu.obj (.text)
-                  0000422e    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.obj (.text)
-                  00004266    00000002                                   : startup.obj (.text)
-                  00004268    00000030                                   : new_.obj (.text)
-                  00004298    00000020     LED.obj (.text:_ZN4Task11SendMessageEv)
-                  000042b8    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
-                  000042d0    00000014                                   : _lock.obj (.text)
-                  000042e4    0000000e                                   : copy_decompress_none.obj (.text:decompress:none)
-                  000042f2    0000000e     startup_msp432p401r_ccs.obj (.text)
-                  00004300    0000000c     LED.obj (.text:_ZN4Task14ProcessMessageE3MSG)
-                  0000430c    0000000c     Task.obj (.text:_ZN4Task3runEv)
-                  00004318    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : delete.obj (.text)
-                  00004320    00000006                                   : copy_decompress_rle.obj (.text:decompress:rle24)
-                  00004326    00000004                                   : pre_init.obj (.text)
+                  00003118    000002d0     main.obj (.text)
+                  000033e8    00000298     Screen.obj (.text)
+                  00003680    00000266     context.obj (.text)
+                  000038e6    00000136     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_div_t2.obj (.text)
+                  00003a1c    00000134     display.obj (.text)
+                  00003b50    00000130     Servo.obj (.text)
+                  00003c80    000000bc     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.text)
+                  00003d3c    000000bc     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.text)
+                  00003df8    0000009c                                   : memcpy_t2.obj (.text)
+                  00003e94    00000080     Task.obj (.text)
+                  00003f14    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.obj (.text)
+                  00003f8e    00000002                                   : mpu_init.obj (.text)
+                  00003f90    00000070                                   : autoinit.obj (.text)
+                  00004000    0000006a                                   : copy_decompress_rle.obj (.text)
+                  0000406a    00000002                                   : newhandler.obj (.text)
+                  0000406c    00000054                                   : boot.obj (.text)
+                  000040c0    00000054                                   : exit.obj (.text)
+                  00004114    0000004c                                   : cpy_tbl.obj (.text)
+                  00004160    00000048                                   : fd_toi_t2.obj (.text)
+                  000041a8    0000003e     cpu.obj (.text)
+                  000041e6    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.obj (.text)
+                  0000421e    00000002                                   : startup.obj (.text)
+                  00004220    00000030                                   : new_.obj (.text)
+                  00004250    00000020     LED.obj (.text:_ZN4Task11SendMessageEv)
+                  00004270    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
+                  00004288    00000014                                   : _lock.obj (.text)
+                  0000429c    0000000e                                   : copy_decompress_none.obj (.text:decompress:none)
+                  000042aa    0000000e     startup_msp432p401r_ccs.obj (.text)
+                  000042b8    0000000c     LED.obj (.text:_ZN4Task14ProcessMessageE3MSG)
+                  000042c4    0000000c     Task.obj (.text:_ZN4Task3runEv)
+                  000042d0    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : delete.obj (.text)
+                  000042d8    00000006                                   : copy_decompress_rle.obj (.text:decompress:rle24)
+                  000042de    00000004                                   : pre_init.obj (.text)
 
-.const     0    0000432c    0000074d     
-                  0000432c    000002f8     fontfixed6x8.obj (.const:.string:g_pucFontFixed6x8Data)
-                  00004624    000000c8     fontfixed6x8.obj (.const:g_sFontFixed6x8)
-                  000046ec    00000080     adc14.obj (.const:_ctlRegs)
-                  0000476c    00000050     interrupt.obj (.const:g_pulRegs)
-                  000047bc    0000002c     Crystalfontz128x128_ST7735.obj (.const:g_sCrystalfontz128x128)
-                  000047e8    00000028     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv123__fundamental_type_infoE)
-                  00004810    00000025                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv120__si_class_type_infoE)
-                  00004835    00000024                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv119__pointer_type_infoE)
-                  00004859    00000022                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__class_type_infoE)
-                  0000487b    00000022                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__pbase_type_infoE)
-                  0000489d    00000002                                   : typeinfo_.obj (.const:.typeinfo:_ZTSe)
-                  0000489f    00000001     --HOLE-- [fill = 0]
-                  000048a0    00000020     interrupt.obj (.const:g_pulPriority)
-                  000048c0    0000001c     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.const:$P$T0$1)
-                  000048dc    0000001c     gpio.obj (.const:GPIO_PORT_TO_INT)
-                  000048f8    0000001c     Screen.obj (.const:_ZTV6Screen)
-                  00004914    00000014     Task.obj (.const:_ZTV4Task)
-                  00004928    00000014     Servo.obj (.const:_ZTV5Servo)
-                  0000493c    00000010     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTIPKe)
-                  0000494c    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv117__class_type_infoE)
-                  0000495c    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv119__pointer_type_infoE)
-                  0000496c    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv120__si_class_type_infoE)
-                  0000497c    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv123__fundamental_type_infoE)
-                  0000498c    0000000d                                   : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
-                  00004999    00000003     --HOLE-- [fill = 0]
-                  0000499c    0000000c     LED.obj (.const:$P$T40$1)
-                  000049a8    0000000c     Scheduler.obj (.const:$P$T40$1)
-                  000049b4    0000000c     main.obj (.const:$P$T40$1)
-                  000049c0    0000000c     main.obj (.const:$P$T41$2)
-                  000049cc    0000000c     Servo.obj (.const:.typeinfo:_ZTI5Servo)
-                  000049d8    0000000c     Screen.obj (.const:.typeinfo:_ZTI6Screen)
-                  000049e4    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__class_type_infoE)
-                  000049f0    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__pbase_type_infoE)
-                  000049fc    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv119__pointer_type_infoE)
-                  00004a08    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv120__si_class_type_infoE)
-                  00004a14    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv123__fundamental_type_infoE)
-                  00004a20    00000008     Crystalfontz128x128_ST7735.obj (.const:$P$T0$1)
-                  00004a28    00000008     Button.obj (.const:.typeinfo:_ZTI4Task)
-                  00004a30    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTISt9type_info)
-                  00004a38    00000008                                   : typeinfo_.obj (.const:.typeinfo:_ZTIe)
-                  00004a40    00000008     Screen.obj (.const:.typeinfo:_ZTS6Screen)
-                  00004a48    00000008     interrupt.obj (.const:g_pulDisRegs)
-                  00004a50    00000008     interrupt.obj (.const:g_pulEnRegs)
-                  00004a58    00000008     interrupt.obj (.const:g_pulPendRegs)
-                  00004a60    00000008     interrupt.obj (.const:g_pulUnpendRegs)
-                  00004a68    00000007     Servo.obj (.const:.typeinfo:_ZTS5Servo)
-                  00004a6f    00000006     Button.obj (.const:.typeinfo:_ZTS4Task)
-                  00004a75    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSPKe)
+.const     0    000042e4    0000074d     
+                  000042e4    000002f8     fontfixed6x8.obj (.const:.string:g_pucFontFixed6x8Data)
+                  000045dc    000000c8     fontfixed6x8.obj (.const:g_sFontFixed6x8)
+                  000046a4    00000080     adc14.obj (.const:_ctlRegs)
+                  00004724    00000050     interrupt.obj (.const:g_pulRegs)
+                  00004774    0000002c     Crystalfontz128x128_ST7735.obj (.const:g_sCrystalfontz128x128)
+                  000047a0    00000028     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv123__fundamental_type_infoE)
+                  000047c8    00000025                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv120__si_class_type_infoE)
+                  000047ed    00000024                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv119__pointer_type_infoE)
+                  00004811    00000022                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__class_type_infoE)
+                  00004833    00000022                                   : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__pbase_type_infoE)
+                  00004855    00000002                                   : typeinfo_.obj (.const:.typeinfo:_ZTSe)
+                  00004857    00000001     --HOLE-- [fill = 0]
+                  00004858    00000020     interrupt.obj (.const:g_pulPriority)
+                  00004878    0000001c     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.const:$P$T0$1)
+                  00004894    0000001c     gpio.obj (.const:GPIO_PORT_TO_INT)
+                  000048b0    0000001c     Screen.obj (.const:_ZTV6Screen)
+                  000048cc    00000014     Task.obj (.const:_ZTV4Task)
+                  000048e0    00000014     Servo.obj (.const:_ZTV5Servo)
+                  000048f4    00000010     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTIPKe)
+                  00004904    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv117__class_type_infoE)
+                  00004914    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv119__pointer_type_infoE)
+                  00004924    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv120__si_class_type_infoE)
+                  00004934    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv123__fundamental_type_infoE)
+                  00004944    0000000d                                   : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
+                  00004951    00000003     --HOLE-- [fill = 0]
+                  00004954    0000000c     LED.obj (.const:$P$T40$1)
+                  00004960    0000000c     Scheduler.obj (.const:$P$T40$1)
+                  0000496c    0000000c     main.obj (.const:$P$T40$1)
+                  00004978    0000000c     main.obj (.const:$P$T41$2)
+                  00004984    0000000c     Servo.obj (.const:.typeinfo:_ZTI5Servo)
+                  00004990    0000000c     Screen.obj (.const:.typeinfo:_ZTI6Screen)
+                  0000499c    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__class_type_infoE)
+                  000049a8    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__pbase_type_infoE)
+                  000049b4    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv119__pointer_type_infoE)
+                  000049c0    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv120__si_class_type_infoE)
+                  000049cc    0000000c                                   : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv123__fundamental_type_infoE)
+                  000049d8    00000008     Crystalfontz128x128_ST7735.obj (.const:$P$T0$1)
+                  000049e0    00000008     Button.obj (.const:.typeinfo:_ZTI4Task)
+                  000049e8    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTISt9type_info)
+                  000049f0    00000008                                   : typeinfo_.obj (.const:.typeinfo:_ZTIe)
+                  000049f8    00000008     Screen.obj (.const:.typeinfo:_ZTS6Screen)
+                  00004a00    00000008     interrupt.obj (.const:g_pulDisRegs)
+                  00004a08    00000008     interrupt.obj (.const:g_pulEnRegs)
+                  00004a10    00000008     interrupt.obj (.const:g_pulPendRegs)
+                  00004a18    00000008     interrupt.obj (.const:g_pulUnpendRegs)
+                  00004a20    00000007     Servo.obj (.const:.typeinfo:_ZTS5Servo)
+                  00004a27    00000006     Button.obj (.const:.typeinfo:_ZTS4Task)
+                  00004a2d    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSPKe)
 
-.cinit     0    00004a80    000000ac     
-                  00004a80    0000006c     (.cinit..data.load) [load image, compression = rle]
-                  00004aec    00000004     --HOLE-- [fill = 0]
-                  00004af0    0000000b     (.cinit..bss.load) [load image, compression = rle]
-                  00004afb    00000005     --HOLE-- [fill = 0]
-                  00004b00    00000009     (.cinit..vtable.load) [load image, compression = rle]
-                  00004b09    00000003     --HOLE-- [fill = 0]
-                  00004b0c    00000008     (__TI_handler_table)
-                  00004b14    00000018     (__TI_cinit_table)
+.cinit     0    00004a38    000000ac     
+                  00004a38    0000006c     (.cinit..data.load) [load image, compression = rle]
+                  00004aa4    00000004     --HOLE-- [fill = 0]
+                  00004aa8    0000000b     (.cinit..bss.load) [load image, compression = rle]
+                  00004ab3    00000005     --HOLE-- [fill = 0]
+                  00004ab8    00000009     (.cinit..vtable.load) [load image, compression = rle]
+                  00004ac1    00000003     --HOLE-- [fill = 0]
+                  00004ac4    00000008     (__TI_handler_table)
+                  00004acc    00000018     (__TI_cinit_table)
 
 .init_array 
-*          0    00004a7c    00000004     
-                  00004a7c    00000004     main.obj (.init_array)
+*          0    00004a34    00000004     
+                  00004a34    00000004     main.obj (.init_array)
 
 .vtable    0    20000000    000000e4     UNINITIALIZED
                   20000000    000000e4     interrupt.obj (.vtable)
@@ -197,14 +197,14 @@ MODULE SUMMARY
        main.obj                                             720     28        12320  
        Scheduler.obj                                        1004    12        0      
        system_msp432p401r.obj                               880     0         8      
-       Screen.obj                                           736     48        56     
+       Screen.obj                                           664     48        56     
        Servo.obj                                            304     39        48     
        startup_msp432p401r_ccs.obj                          14      228       0      
        Task.obj                                             140     20        0      
        LED.obj                                              44      12        0      
        Button.obj                                           0       14        0      
     +--+----------------------------------------------------+-------+---------+---------+
-       Total:                                               3842    401       12432  
+       Total:                                               3770    401       12432  
                                                                                      
     ./GrLib/fonts/
        fontfixed6x8.obj                                     0       960       0      
@@ -233,7 +233,7 @@ MODULE SUMMARY
     +--+----------------------------------------------------+-------+---------+---------+
        Total:                                               6706    300       552    
                                                                                      
-    /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
+    /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
        memory.obj                                           988     0         24     
        typeinfo_.obj                                        188     356       8      
        fd_div_t2.obj                                        310     0         0      
@@ -264,20 +264,20 @@ MODULE SUMMARY
        Stack:                                               0       0         1024   
        Linker Generated:                                    0       160       0      
     +--+----------------------------------------------------+-------+---------+---------+
-       Grand Total:                                         16966   2257      16164  
+       Grand Total:                                         16894   2257      16164  
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004b14 records: 3, size/record: 8, table size: 24
-	.data: load addr=00004a80, load size=0000006c bytes, run addr=20001d18, run size=00000080 bytes, compression=rle
-	.bss: load addr=00004af0, load size=0000000b bytes, run addr=200000e8, run size=0000182e bytes, compression=rle
-	.vtable: load addr=00004b00, load size=00000009 bytes, run addr=20000000, run size=000000e4 bytes, compression=rle
+__TI_cinit_table @ 00004acc records: 3, size/record: 8, table size: 24
+	.data: load addr=00004a38, load size=0000006c bytes, run addr=20001d18, run size=00000080 bytes, compression=rle
+	.bss: load addr=00004aa8, load size=0000000b bytes, run addr=200000e8, run size=0000182e bytes, compression=rle
+	.vtable: load addr=00004ab8, load size=00000009 bytes, run addr=20000000, run size=000000e4 bytes, compression=rle
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00004b0c records: 2, size/record: 4, table size: 8
+__TI_handler_table @ 00004ac4 records: 2, size/record: 4, table size: 8
 	index: 0, handler: __TI_decompress_rle24
 	index: 1, handler: __TI_decompress_none
 
@@ -286,8 +286,8 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                                              
 -------   ----                                              
-000035f7  ADC14_IRQHandler                                  
-000035f7  ADC14_IRQHandler                                  
+00003317  ADC14_IRQHandler                                  
+00003317  ADC14_IRQHandler                                  
 00000939  ADC14_clearInterruptFlag                          
 000004d9  ADC14_configureConversionMemory                   
 00000381  ADC14_configureMultiSequenceMode                  
@@ -321,37 +321,37 @@ address   name
 00000315  ADC14_setSampleHoldTrigger                        
 0000048d  ADC14_toggleConversionTrigger                     
 0000097d  ADC14_unregisterInterrupt                         
-000042ff  AES256_IRQHandler                                 
-000042ff  BusFault_Handler                                  
-00004109  C$$EXIT                                           
-000042ff  COMP_E0_IRQHandler                                
-000042ff  COMP_E1_IRQHandler                                
-00004225  CPU_basepriGet                                    
-00004217  CPU_basepriSet                                    
-000041f1  CPU_cpsid                                         
-00004207  CPU_cpsie                                         
-000041fd  CPU_primask                                       
-00004213  CPU_wfi                                           
-000042ff  CS_IRQHandler                                     
+000042b7  AES256_IRQHandler                                 
+000042b7  BusFault_Handler                                  
+000040c1  C$$EXIT                                           
+000042b7  COMP_E0_IRQHandler                                
+000042b7  COMP_E1_IRQHandler                                
+000041dd  CPU_basepriGet                                    
+000041cf  CPU_basepriSet                                    
+000041a9  CPU_cpsid                                         
+000041bf  CPU_cpsie                                         
+000041b5  CPU_primask                                       
+000041cb  CPU_wfi                                           
+000042b7  CS_IRQHandler                                     
 00001269  Crystalfontz128x128_Init                          
 0000137d  Crystalfontz128x128_SetDrawFrame                  
 000014ab  Crystalfontz128x128_SetOrientation                
-000042ff  DMA_ERR_IRQHandler                                
-000042ff  DMA_INT0_IRQHandler                               
-000042ff  DMA_INT1_IRQHandler                               
-000042ff  DMA_INT2_IRQHandler                               
-000042ff  DMA_INT3_IRQHandler                               
+000042b7  DMA_ERR_IRQHandler                                
+000042b7  DMA_INT0_IRQHandler                               
+000042b7  DMA_INT1_IRQHandler                               
+000042b7  DMA_INT2_IRQHandler                               
+000042b7  DMA_INT3_IRQHandler                               
 20001904  DataToServo                                       
-000042ff  DebugMon_Handler                                  
-000042ff  Default_Handler                                   
-000042ff  EUSCIA0_IRQHandler                                
-000042ff  EUSCIA1_IRQHandler                                
-000042ff  EUSCIA2_IRQHandler                                
-000042ff  EUSCIA3_IRQHandler                                
-000042ff  EUSCIB0_IRQHandler                                
-000042ff  EUSCIB1_IRQHandler                                
-000042ff  EUSCIB2_IRQHandler                                
-000042ff  EUSCIB3_IRQHandler                                
+000042b7  DebugMon_Handler                                  
+000042b7  Default_Handler                                   
+000042b7  EUSCIA0_IRQHandler                                
+000042b7  EUSCIA1_IRQHandler                                
+000042b7  EUSCIA2_IRQHandler                                
+000042b7  EUSCIA3_IRQHandler                                
+000042b7  EUSCIB0_IRQHandler                                
+000042b7  EUSCIB1_IRQHandler                                
+000042b7  EUSCIB2_IRQHandler                                
+000042b7  EUSCIB3_IRQHandler                                
 00001133  EUSCI_A_SPI_changeClockPhasePolarity              
 000011e7  EUSCI_A_SPI_clearInterruptFlag                    
 00001217  EUSCI_A_SPI_disable                               
@@ -382,8 +382,8 @@ address   name
 00000ec9  EUSCI_B_SPI_select4PinFunctionality               
 00000f1b  EUSCI_B_SPI_slaveInit                             
 00000fa7  EUSCI_B_SPI_transmitData                          
-000042ff  FLCTL_IRQHandler                                  
-000042ff  FPU_IRQHandler                                    
+000042b7  FLCTL_IRQHandler                                  
+000042b7  FPU_IRQHandler                                    
 00002093  GPIO_clearInterruptFlag                           
 00002053  GPIO_disableInterrupt                             
 00002031  GPIO_enableInterrupt                              
@@ -404,39 +404,39 @@ address   name
 00001f1b  GPIO_setOutputLowOnPin                            
 00001f3d  GPIO_toggleOutputOnPin                            
 000021cb  GPIO_unregisterInterrupt                          
-000038b5  Graphics_clearDisplay                             
-00003b81  Graphics_clearDisplayOnDisplay                    
-00003ad3  Graphics_drawHorizontalLineOnDisplay              
+0000386d  Graphics_clearDisplay                             
+00003b39  Graphics_clearDisplayOnDisplay                    
+00003a8b  Graphics_drawHorizontalLineOnDisplay              
 00001bfd  Graphics_drawLine                                 
 000018e1  Graphics_drawLineH                                
 0000197d  Graphics_drawLineV                                
-00003a8f  Graphics_drawMultiplePixelsOnDisplay              
-000038c7  Graphics_drawPixel                                
-00003a65  Graphics_drawPixelOnDisplay                       
-00003b07  Graphics_drawVerticalLineOnDisplay                
-00003b3b  Graphics_fillRectangleOnDisplay                   
-000038a7  Graphics_flushBuffer                              
-00003b6f  Graphics_flushOnDisplay                           
-00003889  Graphics_getDisplayHeight                         
-00003879  Graphics_getDisplayWidth                          
-00003827  Graphics_getFontBaseline                          
-0000385d  Graphics_getFontHeight                            
-0000386b  Graphics_getFontMaxWidth                          
-00003899  Graphics_getHeightOfDisplay                       
-00003921  Graphics_getWidthOfDisplay                        
-000036c9  Graphics_initContext                              
-000037dd  Graphics_setBackgroundColor                       
-000037f7  Graphics_setBackgroundColorTranslated             
-00003713  Graphics_setClipRegion                            
-0000380d  Graphics_setFont                                  
-00003835  Graphics_setForegroundColor                       
-0000384b  Graphics_setForegroundColorTranslated             
-00003b59  Graphics_translateColorOnDisplay                  
-00003cc9  HAL_LCD_PortInit                                  
-00003cf9  HAL_LCD_SpiInit                                   
-00003d2f  HAL_LCD_writeCommand                              
-00003d57  HAL_LCD_writeData                                 
-000042ff  HardFault_Handler                                 
+00003a47  Graphics_drawMultiplePixelsOnDisplay              
+0000387f  Graphics_drawPixel                                
+00003a1d  Graphics_drawPixelOnDisplay                       
+00003abf  Graphics_drawVerticalLineOnDisplay                
+00003af3  Graphics_fillRectangleOnDisplay                   
+0000385f  Graphics_flushBuffer                              
+00003b27  Graphics_flushOnDisplay                           
+00003841  Graphics_getDisplayHeight                         
+00003831  Graphics_getDisplayWidth                          
+000037df  Graphics_getFontBaseline                          
+00003815  Graphics_getFontHeight                            
+00003823  Graphics_getFontMaxWidth                          
+00003851  Graphics_getHeightOfDisplay                       
+000038d9  Graphics_getWidthOfDisplay                        
+00003681  Graphics_initContext                              
+00003795  Graphics_setBackgroundColor                       
+000037af  Graphics_setBackgroundColorTranslated             
+000036cb  Graphics_setClipRegion                            
+000037c5  Graphics_setFont                                  
+000037ed  Graphics_setForegroundColor                       
+00003803  Graphics_setForegroundColorTranslated             
+00003b11  Graphics_translateColorOnDisplay                  
+00003c81  HAL_LCD_PortInit                                  
+00003cb1  HAL_LCD_SpiInit                                   
+00003ce7  HAL_LCD_writeCommand                              
+00003d0f  HAL_LCD_writeData                                 
+000042b7  HardFault_Handler                                 
 000023b3  Interrupt_disableInterrupt                        
 00002203  Interrupt_disableMaster                           
 000025b1  Interrupt_disableSleepOnIsrExit                   
@@ -464,21 +464,21 @@ address   name
 2000190e  Lcd_ScreenWidth                                   
 20001910  Lcd_TouchTrim                                     
 200000e8  MainScheduler                                     
-000042ff  MemManage_Handler                                 
-000042ff  NMI_Handler                                       
-000042ff  PCM_IRQHandler                                    
-000042ff  PORT1_IRQHandler                                  
-000042ff  PORT2_IRQHandler                                  
-000042ff  PORT3_IRQHandler                                  
-000042ff  PORT4_IRQHandler                                  
-000042ff  PORT5_IRQHandler                                  
-000042ff  PORT6_IRQHandler                                  
-000042ff  PSS_IRQHandler                                    
-000042ff  PendSV_Handler                                    
-000042ff  RTC_C_IRQHandler                                  
-000042f3  Reset_Handler                                     
-00004a7c  SHT$$INIT_ARRAY$$Base                             
-00004a80  SHT$$INIT_ARRAY$$Limit                            
+000042b7  MemManage_Handler                                 
+000042b7  NMI_Handler                                       
+000042b7  PCM_IRQHandler                                    
+000042b7  PORT1_IRQHandler                                  
+000042b7  PORT2_IRQHandler                                  
+000042b7  PORT3_IRQHandler                                  
+000042b7  PORT4_IRQHandler                                  
+000042b7  PORT5_IRQHandler                                  
+000042b7  PORT6_IRQHandler                                  
+000042b7  PSS_IRQHandler                                    
+000042b7  PendSV_Handler                                    
+000042b7  RTC_C_IRQHandler                                  
+000042ab  Reset_Handler                                     
+00004a34  SHT$$INIT_ARRAY$$Base                             
+00004a38  SHT$$INIT_ARRAY$$Limit                            
 00000b87  SPI_changeClockPhasePolarity                      
 00000ae1  SPI_changeMasterClock                             
 00000d39  SPI_clearInterruptFlag                            
@@ -498,79 +498,79 @@ address   name
 00000abb  SPI_selectFourPinFunctionality                    
 00000bb7  SPI_transmitData                                  
 00000e1d  SPI_unregisterInterrupt                           
-000042ff  SVC_Handler                                       
-000042ff  SysTick_Handler                                   
+000042b7  SVC_Handler                                       
+000042b7  SysTick_Handler                                   
 20001d94  SystemCoreClock                                   
 00002da9  SystemCoreClockUpdate                             
 0000301d  SystemInit                                        
-000035d9  T32_INT1_IRQHandler                               
-000035d9  T32_INT1_IRQHandler                               
-000042ff  T32_INT2_IRQHandler                               
-000042ff  T32_INTC_IRQHandler                               
-000042ff  TA0_0_IRQHandler                                  
-000042ff  TA0_N_IRQHandler                                  
-000042ff  TA1_0_IRQHandler                                  
-000042ff  TA1_N_IRQHandler                                  
-000042ff  TA2_0_IRQHandler                                  
-000042ff  TA2_N_IRQHandler                                  
-000042ff  TA3_0_IRQHandler                                  
-000042ff  TA3_N_IRQHandler                                  
-000042ff  UsageFault_Handler                                
+000032f9  T32_INT1_IRQHandler                               
+000032f9  T32_INT1_IRQHandler                               
+000042b7  T32_INT2_IRQHandler                               
+000042b7  T32_INTC_IRQHandler                               
+000042b7  TA0_0_IRQHandler                                  
+000042b7  TA0_N_IRQHandler                                  
+000042b7  TA1_0_IRQHandler                                  
+000042b7  TA1_N_IRQHandler                                  
+000042b7  TA2_0_IRQHandler                                  
+000042b7  TA2_N_IRQHandler                                  
+000042b7  TA3_0_IRQHandler                                  
+000042b7  TA3_N_IRQHandler                                  
+000042b7  UsageFault_Handler                                
 4000480c  WDTCTL_SYM                                        
-000042ff  WDT_A_IRQHandler                                  
-000040b3  _Z21__default_new_handlerv                        
-0000359d  _Z5Setupv                                         
-000034bb  _Z8setupADCv                                      
-00003e31  _ZN10__cxxabiv116__enum_type_infoD0Ev             
-00003e2f  _ZN10__cxxabiv116__enum_type_infoD1Ev             
-00003e2f  _ZN10__cxxabiv116__enum_type_infoD2Ev             
-00003e27  _ZN10__cxxabiv117__array_type_infoD0Ev            
-00003e25  _ZN10__cxxabiv117__array_type_infoD1Ev            
-00003e25  _ZN10__cxxabiv117__array_type_infoD2Ev            
-00003e1d  _ZN10__cxxabiv117__class_type_infoD0Ev            
-00003e1b  _ZN10__cxxabiv117__class_type_infoD1Ev            
-00003e1b  _ZN10__cxxabiv117__class_type_infoD2Ev            
-00003e13  _ZN10__cxxabiv117__pbase_type_infoD0Ev            
-00003e11  _ZN10__cxxabiv117__pbase_type_infoD1Ev            
-00003e11  _ZN10__cxxabiv117__pbase_type_infoD2Ev            
-00003e09  _ZN10__cxxabiv119__pointer_type_infoD0Ev          
-00003e07  _ZN10__cxxabiv119__pointer_type_infoD1Ev          
-00003e07  _ZN10__cxxabiv119__pointer_type_infoD2Ev          
-00003dff  _ZN10__cxxabiv120__function_type_infoD0Ev         
-00003dfd  _ZN10__cxxabiv120__function_type_infoD1Ev         
-00003dfd  _ZN10__cxxabiv120__function_type_infoD2Ev         
-00003df5  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
-00003df3  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
-00003df3  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
-00003deb  _ZN10__cxxabiv121__vmi_class_type_infoD0Ev        
-00003de9  _ZN10__cxxabiv121__vmi_class_type_infoD1Ev        
-00003de9  _ZN10__cxxabiv121__vmi_class_type_infoD2Ev        
-00003de1  _ZN10__cxxabiv123__fundamental_type_infoD0Ev      
-00003ddf  _ZN10__cxxabiv123__fundamental_type_infoD1Ev      
-00003ddf  _ZN10__cxxabiv123__fundamental_type_infoD2Ev      
-00003dd7  _ZN10__cxxabiv129__pointer_to_member_type_infoD0Ev
-00003dd5  _ZN10__cxxabiv129__pointer_to_member_type_infoD1Ev
-00003dd5  _ZN10__cxxabiv129__pointer_to_member_type_infoD2Ev
-00004299  _ZN4Task11SendMessageEv                           
-00004301  _ZN4Task14ProcessMessageE3MSG                     
-00003f47  _ZN4Task17GetTaskFinalCountEv                     
-00003f19  _ZN4Task17SetTaskFinalCountEy                     
-00003f37  _ZN4Task19GetTaskCurrentCountEv                   
-00003efb  _ZN4Task19SetTaskCurrentCountEy                   
-0000430d  _ZN4Task3runEv                                    
-00003edd  _ZN4TaskC1Ev                                      
-00003edd  _ZN4TaskC2Ev                                      
-00003c19  _ZN5Servo14ProcessMessageE3MSG                    
-00003c7d  _ZN5Servo19ADCtoServoValueConvEi                  
-00003c0d  _ZN5Servo3runEv                                   
-00003b99  _ZN5ServoC1Eibii                                  
-00003b99  _ZN5ServoC2Eibii                                  
-0000322b  _ZN6Screen11printScreenEhht                       
-000031b5  _ZN6Screen14ProcessMessageE3MSG                   
-000033a3  _ZN6Screen20ADCtoScreenValueConvEi                
-000031a9  _ZN6Screen3runEv                                  
-00003119  _ZN6ScreenC1Eib                                   
-00003119  _ZN6ScreenC2Eib                                   
+000042b7  WDT_A_IRQHandler                                  
+0000406b  _Z21__default_new_handlerv                        
+000032bd  _Z5Setupv                                         
+000031db  _Z8setupADCv                                      
+00003de9  _ZN10__cxxabiv116__enum_type_infoD0Ev             
+00003de7  _ZN10__cxxabiv116__enum_type_infoD1Ev             
+00003de7  _ZN10__cxxabiv116__enum_type_infoD2Ev             
+00003ddf  _ZN10__cxxabiv117__array_type_infoD0Ev            
+00003ddd  _ZN10__cxxabiv117__array_type_infoD1Ev            
+00003ddd  _ZN10__cxxabiv117__array_type_infoD2Ev            
+00003dd5  _ZN10__cxxabiv117__class_type_infoD0Ev            
+00003dd3  _ZN10__cxxabiv117__class_type_infoD1Ev            
+00003dd3  _ZN10__cxxabiv117__class_type_infoD2Ev            
+00003dcb  _ZN10__cxxabiv117__pbase_type_infoD0Ev            
+00003dc9  _ZN10__cxxabiv117__pbase_type_infoD1Ev            
+00003dc9  _ZN10__cxxabiv117__pbase_type_infoD2Ev            
+00003dc1  _ZN10__cxxabiv119__pointer_type_infoD0Ev          
+00003dbf  _ZN10__cxxabiv119__pointer_type_infoD1Ev          
+00003dbf  _ZN10__cxxabiv119__pointer_type_infoD2Ev          
+00003db7  _ZN10__cxxabiv120__function_type_infoD0Ev         
+00003db5  _ZN10__cxxabiv120__function_type_infoD1Ev         
+00003db5  _ZN10__cxxabiv120__function_type_infoD2Ev         
+00003dad  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
+00003dab  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
+00003dab  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
+00003da3  _ZN10__cxxabiv121__vmi_class_type_infoD0Ev        
+00003da1  _ZN10__cxxabiv121__vmi_class_type_infoD1Ev        
+00003da1  _ZN10__cxxabiv121__vmi_class_type_infoD2Ev        
+00003d99  _ZN10__cxxabiv123__fundamental_type_infoD0Ev      
+00003d97  _ZN10__cxxabiv123__fundamental_type_infoD1Ev      
+00003d97  _ZN10__cxxabiv123__fundamental_type_infoD2Ev      
+00003d8f  _ZN10__cxxabiv129__pointer_to_member_type_infoD0Ev
+00003d8d  _ZN10__cxxabiv129__pointer_to_member_type_infoD1Ev
+00003d8d  _ZN10__cxxabiv129__pointer_to_member_type_infoD2Ev
+00004251  _ZN4Task11SendMessageEv                           
+000042b9  _ZN4Task14ProcessMessageE3MSG                     
+00003eff  _ZN4Task17GetTaskFinalCountEv                     
+00003ed1  _ZN4Task17SetTaskFinalCountEy                     
+00003eef  _ZN4Task19GetTaskCurrentCountEv                   
+00003eb3  _ZN4Task19SetTaskCurrentCountEy                   
+000042c5  _ZN4Task3runEv                                    
+00003e95  _ZN4TaskC1Ev                                      
+00003e95  _ZN4TaskC2Ev                                      
+00003bd1  _ZN5Servo14ProcessMessageE3MSG                    
+00003c35  _ZN5Servo19ADCtoServoValueConvEi                  
+00003bc5  _ZN5Servo3runEv                                   
+00003b51  _ZN5ServoC1Eibii                                  
+00003b51  _ZN5ServoC2Eibii                                  
+000034b3  _ZN6Screen11printScreenEhht                       
+0000345b  _ZN6Screen14ProcessMessageE3MSG                   
+0000362b  _ZN6Screen20ADCtoScreenValueConvEi                
+0000344f  _ZN6Screen3runEv                                  
+000033e9  _ZN6ScreenC1Eib                                   
+000033e9  _ZN6ScreenC2Eib                                   
 00002875  _ZN9Scheduler13attachMessageE3MSG                 
 00002965  _ZN9Scheduler14processMessageE3MSG                
 000028cd  _ZN9Scheduler17clearMessageQueueEv                
@@ -582,109 +582,109 @@ address   name
 00002641  _ZN9Scheduler6attachEP4Task                       
 000025e1  _ZN9SchedulerC1Ev                                 
 000025e1  _ZN9SchedulerC2Ev                                 
-00003d97  _ZNKSt9type_info4nameEv                           
-00003dc7  _ZNKSt9type_info6beforeERKS_                      
-00003db1  _ZNKSt9type_infoeqERKS_                           
-00003d9b  _ZNKSt9type_infoneERKS_                           
-00003d8f  _ZNSt9type_infoD0Ev                               
-00003d8d  _ZNSt9type_infoD1Ev                               
-00003d8d  _ZNSt9type_infoD2Ev                               
+00003d4f  _ZNKSt9type_info4nameEv                           
+00003d7f  _ZNKSt9type_info6beforeERKS_                      
+00003d69  _ZNKSt9type_infoeqERKS_                           
+00003d53  _ZNKSt9type_infoneERKS_                           
+00003d47  _ZNSt9type_infoD0Ev                               
+00003d45  _ZNSt9type_infoD1Ev                               
+00003d45  _ZNSt9type_infoD2Ev                               
 20001908  _ZSt16__dummy_typeinfo                            
-00003d85  _ZSt21__gen_dummy_typeinfosv                      
-00004a28  _ZTI4Task                                         
-000049cc  _ZTI5Servo                                        
-000049d8  _ZTI6Screen                                       
-000049e4  _ZTIN10__cxxabiv117__class_type_infoE             
-000049f0  _ZTIN10__cxxabiv117__pbase_type_infoE             
-000049fc  _ZTIN10__cxxabiv119__pointer_type_infoE           
-00004a08  _ZTIN10__cxxabiv120__si_class_type_infoE          
-00004a14  _ZTIN10__cxxabiv123__fundamental_type_infoE       
-0000493c  _ZTIPKe                                           
-00004a30  _ZTISt9type_info                                  
-00004a38  _ZTIe                                             
-00004a6f  _ZTS4Task                                         
-00004a68  _ZTS5Servo                                        
-00004a40  _ZTS6Screen                                       
-00004859  _ZTSN10__cxxabiv117__class_type_infoE             
-0000487b  _ZTSN10__cxxabiv117__pbase_type_infoE             
-00004835  _ZTSN10__cxxabiv119__pointer_type_infoE           
-00004810  _ZTSN10__cxxabiv120__si_class_type_infoE          
-000047e8  _ZTSN10__cxxabiv123__fundamental_type_infoE       
-00004a75  _ZTSPKe                                           
-0000498c  _ZTSSt9type_info                                  
-0000489d  _ZTSe                                             
-00004914  _ZTV4Task                                         
-00004928  _ZTV5Servo                                        
-000048f8  _ZTV6Screen                                       
-0000494c  _ZTVN10__cxxabiv117__class_type_infoE             
-0000495c  _ZTVN10__cxxabiv119__pointer_type_infoE           
-0000496c  _ZTVN10__cxxabiv120__si_class_type_infoE          
-0000497c  _ZTVN10__cxxabiv123__fundamental_type_infoE       
-00004319  _ZdlPv                                            
-00004269  _Znwj                                             
+00003d3d  _ZSt21__gen_dummy_typeinfosv                      
+000049e0  _ZTI4Task                                         
+00004984  _ZTI5Servo                                        
+00004990  _ZTI6Screen                                       
+0000499c  _ZTIN10__cxxabiv117__class_type_infoE             
+000049a8  _ZTIN10__cxxabiv117__pbase_type_infoE             
+000049b4  _ZTIN10__cxxabiv119__pointer_type_infoE           
+000049c0  _ZTIN10__cxxabiv120__si_class_type_infoE          
+000049cc  _ZTIN10__cxxabiv123__fundamental_type_infoE       
+000048f4  _ZTIPKe                                           
+000049e8  _ZTISt9type_info                                  
+000049f0  _ZTIe                                             
+00004a27  _ZTS4Task                                         
+00004a20  _ZTS5Servo                                        
+000049f8  _ZTS6Screen                                       
+00004811  _ZTSN10__cxxabiv117__class_type_infoE             
+00004833  _ZTSN10__cxxabiv117__pbase_type_infoE             
+000047ed  _ZTSN10__cxxabiv119__pointer_type_infoE           
+000047c8  _ZTSN10__cxxabiv120__si_class_type_infoE          
+000047a0  _ZTSN10__cxxabiv123__fundamental_type_infoE       
+00004a2d  _ZTSPKe                                           
+00004944  _ZTSSt9type_info                                  
+00004855  _ZTSe                                             
+000048cc  _ZTV4Task                                         
+000048e0  _ZTV5Servo                                        
+000048b0  _ZTV6Screen                                       
+00004904  _ZTVN10__cxxabiv117__class_type_infoE             
+00004914  _ZTVN10__cxxabiv119__pointer_type_infoE           
+00004924  _ZTVN10__cxxabiv120__si_class_type_infoE          
+00004934  _ZTVN10__cxxabiv123__fundamental_type_infoE       
+000042d1  _ZdlPv                                            
+00004221  _Znwj                                             
 20010000  __STACK_END                                       
 00000200  __STACK_SIZE                                      
 00000400  __SYSMEM_SIZE                                     
-00004b14  __TI_CINIT_Base                                   
-00004b2c  __TI_CINIT_Limit                                  
-00004b0c  __TI_Handler_Table_Base                           
-00004b14  __TI_Handler_Table_Limit                          
-00003fd9  __TI_auto_init                                    
+00004acc  __TI_CINIT_Base                                   
+00004ae4  __TI_CINIT_Limit                                  
+00004ac4  __TI_Handler_Table_Base                           
+00004acc  __TI_Handler_Table_Limit                          
+00003f91  __TI_auto_init                                    
 20001d60  __TI_cleanup_ptr                                  
-000042e5  __TI_decompress_none                              
-00004321  __TI_decompress_rle24                             
+0000429d  __TI_decompress_none                              
+000042d9  __TI_decompress_rle24                             
 20001d64  __TI_dtors_ptr                                    
 20001d68  __TI_enable_exit_profile_output                   
 ffffffff  __TI_pprof_out_hndl                               
 ffffffff  __TI_prof_data_size                               
 ffffffff  __TI_prof_data_start                              
 00000000  __TI_static_base__                                
-000041a9  __aeabi_d2iz                                      
-0000392f  __aeabi_ddiv                                      
-0000422f  __aeabi_f2d                                       
-00003f5d  __aeabi_memclr                                    
-00003f5d  __aeabi_memclr4                                   
-00003f5d  __aeabi_memclr8                                   
-00003e41  __aeabi_memcpy                                    
-00003e41  __aeabi_memcpy4                                   
-00003e41  __aeabi_memcpy8                                   
-00003f5f  __aeabi_memset                                    
-00003f5f  __aeabi_memset4                                   
-00003f5f  __aeabi_memset8                                   
+00004161  __aeabi_d2iz                                      
+000038e7  __aeabi_ddiv                                      
+000041e7  __aeabi_f2d                                       
+00003f15  __aeabi_memclr                                    
+00003f15  __aeabi_memclr4                                   
+00003f15  __aeabi_memclr8                                   
+00003df9  __aeabi_memcpy                                    
+00003df9  __aeabi_memcpy4                                   
+00003df9  __aeabi_memcpy8                                   
+00003f17  __aeabi_memset                                    
+00003f17  __aeabi_memset4                                   
+00003f17  __aeabi_memset8                                   
 ffffffff  __binit__                                         
 ffffffff  __c_args__                                        
-00003fd7  __mpu_init                                        
+00003f8f  __mpu_init                                        
 2000fe00  __stack                                           
-00003655  __sti___8_main_cpp_2c535ab5                       
-000042b9  _args_main                                        
-000040b5  _c_int00                                          
+00003375  __sti___8_main_cpp_2c535ab5                       
+00004271  _args_main                                        
+0000406d  _c_int00                                          
 20001d84  _lock                                             
 20001d90  _new_handler                                      
-000042df  _nop                                              
-000042d7  _register_lock                                    
-000042d1  _register_unlock                                  
+00004297  _nop                                              
+0000428f  _register_lock                                    
+00004289  _register_unlock                                  
 20001918  _sys_memory                                       
-00004267  _system_post_cinit                                
-00004327  _system_pre_init                                  
+0000421f  _system_post_cinit                                
+000042df  _system_pre_init                                  
 20001d88  _unlock                                           
 200018fc  aDataFromADC                                      
-0000410d  abort                                             
+000040c5  abort                                             
 ffffffff  binit                                             
 00002d75  calloc                                            
-0000415d  copy_in                                           
-00004115  exit                                              
+00004115  copy_in                                           
+000040cd  exit                                              
 00002ac3  free                                              
 20000000  g_pfnRAMVectors                                   
 200018e0  g_sContext                                        
-000047bc  g_sCrystalfontz128x128                            
-00004624  g_sFontFixed6x8                                   
+00004774  g_sCrystalfontz128x128                            
+000045dc  g_sFontFixed6x8                                   
 00000000  interruptVectors                                  
-00003463  main                                              
+00003183  main                                              
 20001d8c  main_func_sp                                      
 00002a5b  malloc                                            
 00002c91  memalign                                          
-00003e41  memcpy                                            
-00003f65  memset                                            
+00003df9  memcpy                                            
+00003f1d  memset                                            
 000029cd  minit                                             
 20001d80  pDataToScreen                                     
 20001d48  pwmConfig                                         
@@ -845,226 +845,226 @@ address   name
 00002d75  calloc                                            
 00002da9  SystemCoreClockUpdate                             
 0000301d  SystemInit                                        
-00003119  _ZN6ScreenC1Eib                                   
-00003119  _ZN6ScreenC2Eib                                   
-000031a9  _ZN6Screen3runEv                                  
-000031b5  _ZN6Screen14ProcessMessageE3MSG                   
-0000322b  _ZN6Screen11printScreenEhht                       
-000033a3  _ZN6Screen20ADCtoScreenValueConvEi                
-00003463  main                                              
-000034bb  _Z8setupADCv                                      
-0000359d  _Z5Setupv                                         
-000035d9  T32_INT1_IRQHandler                               
-000035d9  T32_INT1_IRQHandler                               
-000035f7  ADC14_IRQHandler                                  
-000035f7  ADC14_IRQHandler                                  
-00003655  __sti___8_main_cpp_2c535ab5                       
-000036c9  Graphics_initContext                              
-00003713  Graphics_setClipRegion                            
-000037dd  Graphics_setBackgroundColor                       
-000037f7  Graphics_setBackgroundColorTranslated             
-0000380d  Graphics_setFont                                  
-00003827  Graphics_getFontBaseline                          
-00003835  Graphics_setForegroundColor                       
-0000384b  Graphics_setForegroundColorTranslated             
-0000385d  Graphics_getFontHeight                            
-0000386b  Graphics_getFontMaxWidth                          
-00003879  Graphics_getDisplayWidth                          
-00003889  Graphics_getDisplayHeight                         
-00003899  Graphics_getHeightOfDisplay                       
-000038a7  Graphics_flushBuffer                              
-000038b5  Graphics_clearDisplay                             
-000038c7  Graphics_drawPixel                                
-00003921  Graphics_getWidthOfDisplay                        
-0000392f  __aeabi_ddiv                                      
-00003a65  Graphics_drawPixelOnDisplay                       
-00003a8f  Graphics_drawMultiplePixelsOnDisplay              
-00003ad3  Graphics_drawHorizontalLineOnDisplay              
-00003b07  Graphics_drawVerticalLineOnDisplay                
-00003b3b  Graphics_fillRectangleOnDisplay                   
-00003b59  Graphics_translateColorOnDisplay                  
-00003b6f  Graphics_flushOnDisplay                           
-00003b81  Graphics_clearDisplayOnDisplay                    
-00003b99  _ZN5ServoC1Eibii                                  
-00003b99  _ZN5ServoC2Eibii                                  
-00003c0d  _ZN5Servo3runEv                                   
-00003c19  _ZN5Servo14ProcessMessageE3MSG                    
-00003c7d  _ZN5Servo19ADCtoServoValueConvEi                  
-00003cc9  HAL_LCD_PortInit                                  
-00003cf9  HAL_LCD_SpiInit                                   
-00003d2f  HAL_LCD_writeCommand                              
-00003d57  HAL_LCD_writeData                                 
-00003d85  _ZSt21__gen_dummy_typeinfosv                      
-00003d8d  _ZNSt9type_infoD1Ev                               
-00003d8d  _ZNSt9type_infoD2Ev                               
-00003d8f  _ZNSt9type_infoD0Ev                               
-00003d97  _ZNKSt9type_info4nameEv                           
-00003d9b  _ZNKSt9type_infoneERKS_                           
-00003db1  _ZNKSt9type_infoeqERKS_                           
-00003dc7  _ZNKSt9type_info6beforeERKS_                      
-00003dd5  _ZN10__cxxabiv129__pointer_to_member_type_infoD1Ev
-00003dd5  _ZN10__cxxabiv129__pointer_to_member_type_infoD2Ev
-00003dd7  _ZN10__cxxabiv129__pointer_to_member_type_infoD0Ev
-00003ddf  _ZN10__cxxabiv123__fundamental_type_infoD1Ev      
-00003ddf  _ZN10__cxxabiv123__fundamental_type_infoD2Ev      
-00003de1  _ZN10__cxxabiv123__fundamental_type_infoD0Ev      
-00003de9  _ZN10__cxxabiv121__vmi_class_type_infoD1Ev        
-00003de9  _ZN10__cxxabiv121__vmi_class_type_infoD2Ev        
-00003deb  _ZN10__cxxabiv121__vmi_class_type_infoD0Ev        
-00003df3  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
-00003df3  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
-00003df5  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
-00003dfd  _ZN10__cxxabiv120__function_type_infoD1Ev         
-00003dfd  _ZN10__cxxabiv120__function_type_infoD2Ev         
-00003dff  _ZN10__cxxabiv120__function_type_infoD0Ev         
-00003e07  _ZN10__cxxabiv119__pointer_type_infoD1Ev          
-00003e07  _ZN10__cxxabiv119__pointer_type_infoD2Ev          
-00003e09  _ZN10__cxxabiv119__pointer_type_infoD0Ev          
-00003e11  _ZN10__cxxabiv117__pbase_type_infoD1Ev            
-00003e11  _ZN10__cxxabiv117__pbase_type_infoD2Ev            
-00003e13  _ZN10__cxxabiv117__pbase_type_infoD0Ev            
-00003e1b  _ZN10__cxxabiv117__class_type_infoD1Ev            
-00003e1b  _ZN10__cxxabiv117__class_type_infoD2Ev            
-00003e1d  _ZN10__cxxabiv117__class_type_infoD0Ev            
-00003e25  _ZN10__cxxabiv117__array_type_infoD1Ev            
-00003e25  _ZN10__cxxabiv117__array_type_infoD2Ev            
-00003e27  _ZN10__cxxabiv117__array_type_infoD0Ev            
-00003e2f  _ZN10__cxxabiv116__enum_type_infoD1Ev             
-00003e2f  _ZN10__cxxabiv116__enum_type_infoD2Ev             
-00003e31  _ZN10__cxxabiv116__enum_type_infoD0Ev             
-00003e41  __aeabi_memcpy                                    
-00003e41  __aeabi_memcpy4                                   
-00003e41  __aeabi_memcpy8                                   
-00003e41  memcpy                                            
-00003edd  _ZN4TaskC1Ev                                      
-00003edd  _ZN4TaskC2Ev                                      
-00003efb  _ZN4Task19SetTaskCurrentCountEy                   
-00003f19  _ZN4Task17SetTaskFinalCountEy                     
-00003f37  _ZN4Task19GetTaskCurrentCountEv                   
-00003f47  _ZN4Task17GetTaskFinalCountEv                     
-00003f5d  __aeabi_memclr                                    
-00003f5d  __aeabi_memclr4                                   
-00003f5d  __aeabi_memclr8                                   
-00003f5f  __aeabi_memset                                    
-00003f5f  __aeabi_memset4                                   
-00003f5f  __aeabi_memset8                                   
-00003f65  memset                                            
-00003fd7  __mpu_init                                        
-00003fd9  __TI_auto_init                                    
-000040b3  _Z21__default_new_handlerv                        
-000040b5  _c_int00                                          
-00004109  C$$EXIT                                           
-0000410d  abort                                             
-00004115  exit                                              
-0000415d  copy_in                                           
-000041a9  __aeabi_d2iz                                      
-000041f1  CPU_cpsid                                         
-000041fd  CPU_primask                                       
-00004207  CPU_cpsie                                         
-00004213  CPU_wfi                                           
-00004217  CPU_basepriSet                                    
-00004225  CPU_basepriGet                                    
-0000422f  __aeabi_f2d                                       
-00004267  _system_post_cinit                                
-00004269  _Znwj                                             
-00004299  _ZN4Task11SendMessageEv                           
-000042b9  _args_main                                        
-000042d1  _register_unlock                                  
-000042d7  _register_lock                                    
-000042df  _nop                                              
-000042e5  __TI_decompress_none                              
-000042f3  Reset_Handler                                     
-000042ff  AES256_IRQHandler                                 
-000042ff  BusFault_Handler                                  
-000042ff  COMP_E0_IRQHandler                                
-000042ff  COMP_E1_IRQHandler                                
-000042ff  CS_IRQHandler                                     
-000042ff  DMA_ERR_IRQHandler                                
-000042ff  DMA_INT0_IRQHandler                               
-000042ff  DMA_INT1_IRQHandler                               
-000042ff  DMA_INT2_IRQHandler                               
-000042ff  DMA_INT3_IRQHandler                               
-000042ff  DebugMon_Handler                                  
-000042ff  Default_Handler                                   
-000042ff  EUSCIA0_IRQHandler                                
-000042ff  EUSCIA1_IRQHandler                                
-000042ff  EUSCIA2_IRQHandler                                
-000042ff  EUSCIA3_IRQHandler                                
-000042ff  EUSCIB0_IRQHandler                                
-000042ff  EUSCIB1_IRQHandler                                
-000042ff  EUSCIB2_IRQHandler                                
-000042ff  EUSCIB3_IRQHandler                                
-000042ff  FLCTL_IRQHandler                                  
-000042ff  FPU_IRQHandler                                    
-000042ff  HardFault_Handler                                 
-000042ff  MemManage_Handler                                 
-000042ff  NMI_Handler                                       
-000042ff  PCM_IRQHandler                                    
-000042ff  PORT1_IRQHandler                                  
-000042ff  PORT2_IRQHandler                                  
-000042ff  PORT3_IRQHandler                                  
-000042ff  PORT4_IRQHandler                                  
-000042ff  PORT5_IRQHandler                                  
-000042ff  PORT6_IRQHandler                                  
-000042ff  PSS_IRQHandler                                    
-000042ff  PendSV_Handler                                    
-000042ff  RTC_C_IRQHandler                                  
-000042ff  SVC_Handler                                       
-000042ff  SysTick_Handler                                   
-000042ff  T32_INT2_IRQHandler                               
-000042ff  T32_INTC_IRQHandler                               
-000042ff  TA0_0_IRQHandler                                  
-000042ff  TA0_N_IRQHandler                                  
-000042ff  TA1_0_IRQHandler                                  
-000042ff  TA1_N_IRQHandler                                  
-000042ff  TA2_0_IRQHandler                                  
-000042ff  TA2_N_IRQHandler                                  
-000042ff  TA3_0_IRQHandler                                  
-000042ff  TA3_N_IRQHandler                                  
-000042ff  UsageFault_Handler                                
-000042ff  WDT_A_IRQHandler                                  
-00004301  _ZN4Task14ProcessMessageE3MSG                     
-0000430d  _ZN4Task3runEv                                    
-00004319  _ZdlPv                                            
-00004321  __TI_decompress_rle24                             
-00004327  _system_pre_init                                  
-00004624  g_sFontFixed6x8                                   
-000047bc  g_sCrystalfontz128x128                            
-000047e8  _ZTSN10__cxxabiv123__fundamental_type_infoE       
-00004810  _ZTSN10__cxxabiv120__si_class_type_infoE          
-00004835  _ZTSN10__cxxabiv119__pointer_type_infoE           
-00004859  _ZTSN10__cxxabiv117__class_type_infoE             
-0000487b  _ZTSN10__cxxabiv117__pbase_type_infoE             
-0000489d  _ZTSe                                             
-000048f8  _ZTV6Screen                                       
-00004914  _ZTV4Task                                         
-00004928  _ZTV5Servo                                        
-0000493c  _ZTIPKe                                           
-0000494c  _ZTVN10__cxxabiv117__class_type_infoE             
-0000495c  _ZTVN10__cxxabiv119__pointer_type_infoE           
-0000496c  _ZTVN10__cxxabiv120__si_class_type_infoE          
-0000497c  _ZTVN10__cxxabiv123__fundamental_type_infoE       
-0000498c  _ZTSSt9type_info                                  
-000049cc  _ZTI5Servo                                        
-000049d8  _ZTI6Screen                                       
-000049e4  _ZTIN10__cxxabiv117__class_type_infoE             
-000049f0  _ZTIN10__cxxabiv117__pbase_type_infoE             
-000049fc  _ZTIN10__cxxabiv119__pointer_type_infoE           
-00004a08  _ZTIN10__cxxabiv120__si_class_type_infoE          
-00004a14  _ZTIN10__cxxabiv123__fundamental_type_infoE       
-00004a28  _ZTI4Task                                         
-00004a30  _ZTISt9type_info                                  
-00004a38  _ZTIe                                             
-00004a40  _ZTS6Screen                                       
-00004a68  _ZTS5Servo                                        
-00004a6f  _ZTS4Task                                         
-00004a75  _ZTSPKe                                           
-00004a7c  SHT$$INIT_ARRAY$$Base                             
-00004a80  SHT$$INIT_ARRAY$$Limit                            
-00004b0c  __TI_Handler_Table_Base                           
-00004b14  __TI_CINIT_Base                                   
-00004b14  __TI_Handler_Table_Limit                          
-00004b2c  __TI_CINIT_Limit                                  
+00003183  main                                              
+000031db  _Z8setupADCv                                      
+000032bd  _Z5Setupv                                         
+000032f9  T32_INT1_IRQHandler                               
+000032f9  T32_INT1_IRQHandler                               
+00003317  ADC14_IRQHandler                                  
+00003317  ADC14_IRQHandler                                  
+00003375  __sti___8_main_cpp_2c535ab5                       
+000033e9  _ZN6ScreenC1Eib                                   
+000033e9  _ZN6ScreenC2Eib                                   
+0000344f  _ZN6Screen3runEv                                  
+0000345b  _ZN6Screen14ProcessMessageE3MSG                   
+000034b3  _ZN6Screen11printScreenEhht                       
+0000362b  _ZN6Screen20ADCtoScreenValueConvEi                
+00003681  Graphics_initContext                              
+000036cb  Graphics_setClipRegion                            
+00003795  Graphics_setBackgroundColor                       
+000037af  Graphics_setBackgroundColorTranslated             
+000037c5  Graphics_setFont                                  
+000037df  Graphics_getFontBaseline                          
+000037ed  Graphics_setForegroundColor                       
+00003803  Graphics_setForegroundColorTranslated             
+00003815  Graphics_getFontHeight                            
+00003823  Graphics_getFontMaxWidth                          
+00003831  Graphics_getDisplayWidth                          
+00003841  Graphics_getDisplayHeight                         
+00003851  Graphics_getHeightOfDisplay                       
+0000385f  Graphics_flushBuffer                              
+0000386d  Graphics_clearDisplay                             
+0000387f  Graphics_drawPixel                                
+000038d9  Graphics_getWidthOfDisplay                        
+000038e7  __aeabi_ddiv                                      
+00003a1d  Graphics_drawPixelOnDisplay                       
+00003a47  Graphics_drawMultiplePixelsOnDisplay              
+00003a8b  Graphics_drawHorizontalLineOnDisplay              
+00003abf  Graphics_drawVerticalLineOnDisplay                
+00003af3  Graphics_fillRectangleOnDisplay                   
+00003b11  Graphics_translateColorOnDisplay                  
+00003b27  Graphics_flushOnDisplay                           
+00003b39  Graphics_clearDisplayOnDisplay                    
+00003b51  _ZN5ServoC1Eibii                                  
+00003b51  _ZN5ServoC2Eibii                                  
+00003bc5  _ZN5Servo3runEv                                   
+00003bd1  _ZN5Servo14ProcessMessageE3MSG                    
+00003c35  _ZN5Servo19ADCtoServoValueConvEi                  
+00003c81  HAL_LCD_PortInit                                  
+00003cb1  HAL_LCD_SpiInit                                   
+00003ce7  HAL_LCD_writeCommand                              
+00003d0f  HAL_LCD_writeData                                 
+00003d3d  _ZSt21__gen_dummy_typeinfosv                      
+00003d45  _ZNSt9type_infoD1Ev                               
+00003d45  _ZNSt9type_infoD2Ev                               
+00003d47  _ZNSt9type_infoD0Ev                               
+00003d4f  _ZNKSt9type_info4nameEv                           
+00003d53  _ZNKSt9type_infoneERKS_                           
+00003d69  _ZNKSt9type_infoeqERKS_                           
+00003d7f  _ZNKSt9type_info6beforeERKS_                      
+00003d8d  _ZN10__cxxabiv129__pointer_to_member_type_infoD1Ev
+00003d8d  _ZN10__cxxabiv129__pointer_to_member_type_infoD2Ev
+00003d8f  _ZN10__cxxabiv129__pointer_to_member_type_infoD0Ev
+00003d97  _ZN10__cxxabiv123__fundamental_type_infoD1Ev      
+00003d97  _ZN10__cxxabiv123__fundamental_type_infoD2Ev      
+00003d99  _ZN10__cxxabiv123__fundamental_type_infoD0Ev      
+00003da1  _ZN10__cxxabiv121__vmi_class_type_infoD1Ev        
+00003da1  _ZN10__cxxabiv121__vmi_class_type_infoD2Ev        
+00003da3  _ZN10__cxxabiv121__vmi_class_type_infoD0Ev        
+00003dab  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
+00003dab  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
+00003dad  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
+00003db5  _ZN10__cxxabiv120__function_type_infoD1Ev         
+00003db5  _ZN10__cxxabiv120__function_type_infoD2Ev         
+00003db7  _ZN10__cxxabiv120__function_type_infoD0Ev         
+00003dbf  _ZN10__cxxabiv119__pointer_type_infoD1Ev          
+00003dbf  _ZN10__cxxabiv119__pointer_type_infoD2Ev          
+00003dc1  _ZN10__cxxabiv119__pointer_type_infoD0Ev          
+00003dc9  _ZN10__cxxabiv117__pbase_type_infoD1Ev            
+00003dc9  _ZN10__cxxabiv117__pbase_type_infoD2Ev            
+00003dcb  _ZN10__cxxabiv117__pbase_type_infoD0Ev            
+00003dd3  _ZN10__cxxabiv117__class_type_infoD1Ev            
+00003dd3  _ZN10__cxxabiv117__class_type_infoD2Ev            
+00003dd5  _ZN10__cxxabiv117__class_type_infoD0Ev            
+00003ddd  _ZN10__cxxabiv117__array_type_infoD1Ev            
+00003ddd  _ZN10__cxxabiv117__array_type_infoD2Ev            
+00003ddf  _ZN10__cxxabiv117__array_type_infoD0Ev            
+00003de7  _ZN10__cxxabiv116__enum_type_infoD1Ev             
+00003de7  _ZN10__cxxabiv116__enum_type_infoD2Ev             
+00003de9  _ZN10__cxxabiv116__enum_type_infoD0Ev             
+00003df9  __aeabi_memcpy                                    
+00003df9  __aeabi_memcpy4                                   
+00003df9  __aeabi_memcpy8                                   
+00003df9  memcpy                                            
+00003e95  _ZN4TaskC1Ev                                      
+00003e95  _ZN4TaskC2Ev                                      
+00003eb3  _ZN4Task19SetTaskCurrentCountEy                   
+00003ed1  _ZN4Task17SetTaskFinalCountEy                     
+00003eef  _ZN4Task19GetTaskCurrentCountEv                   
+00003eff  _ZN4Task17GetTaskFinalCountEv                     
+00003f15  __aeabi_memclr                                    
+00003f15  __aeabi_memclr4                                   
+00003f15  __aeabi_memclr8                                   
+00003f17  __aeabi_memset                                    
+00003f17  __aeabi_memset4                                   
+00003f17  __aeabi_memset8                                   
+00003f1d  memset                                            
+00003f8f  __mpu_init                                        
+00003f91  __TI_auto_init                                    
+0000406b  _Z21__default_new_handlerv                        
+0000406d  _c_int00                                          
+000040c1  C$$EXIT                                           
+000040c5  abort                                             
+000040cd  exit                                              
+00004115  copy_in                                           
+00004161  __aeabi_d2iz                                      
+000041a9  CPU_cpsid                                         
+000041b5  CPU_primask                                       
+000041bf  CPU_cpsie                                         
+000041cb  CPU_wfi                                           
+000041cf  CPU_basepriSet                                    
+000041dd  CPU_basepriGet                                    
+000041e7  __aeabi_f2d                                       
+0000421f  _system_post_cinit                                
+00004221  _Znwj                                             
+00004251  _ZN4Task11SendMessageEv                           
+00004271  _args_main                                        
+00004289  _register_unlock                                  
+0000428f  _register_lock                                    
+00004297  _nop                                              
+0000429d  __TI_decompress_none                              
+000042ab  Reset_Handler                                     
+000042b7  AES256_IRQHandler                                 
+000042b7  BusFault_Handler                                  
+000042b7  COMP_E0_IRQHandler                                
+000042b7  COMP_E1_IRQHandler                                
+000042b7  CS_IRQHandler                                     
+000042b7  DMA_ERR_IRQHandler                                
+000042b7  DMA_INT0_IRQHandler                               
+000042b7  DMA_INT1_IRQHandler                               
+000042b7  DMA_INT2_IRQHandler                               
+000042b7  DMA_INT3_IRQHandler                               
+000042b7  DebugMon_Handler                                  
+000042b7  Default_Handler                                   
+000042b7  EUSCIA0_IRQHandler                                
+000042b7  EUSCIA1_IRQHandler                                
+000042b7  EUSCIA2_IRQHandler                                
+000042b7  EUSCIA3_IRQHandler                                
+000042b7  EUSCIB0_IRQHandler                                
+000042b7  EUSCIB1_IRQHandler                                
+000042b7  EUSCIB2_IRQHandler                                
+000042b7  EUSCIB3_IRQHandler                                
+000042b7  FLCTL_IRQHandler                                  
+000042b7  FPU_IRQHandler                                    
+000042b7  HardFault_Handler                                 
+000042b7  MemManage_Handler                                 
+000042b7  NMI_Handler                                       
+000042b7  PCM_IRQHandler                                    
+000042b7  PORT1_IRQHandler                                  
+000042b7  PORT2_IRQHandler                                  
+000042b7  PORT3_IRQHandler                                  
+000042b7  PORT4_IRQHandler                                  
+000042b7  PORT5_IRQHandler                                  
+000042b7  PORT6_IRQHandler                                  
+000042b7  PSS_IRQHandler                                    
+000042b7  PendSV_Handler                                    
+000042b7  RTC_C_IRQHandler                                  
+000042b7  SVC_Handler                                       
+000042b7  SysTick_Handler                                   
+000042b7  T32_INT2_IRQHandler                               
+000042b7  T32_INTC_IRQHandler                               
+000042b7  TA0_0_IRQHandler                                  
+000042b7  TA0_N_IRQHandler                                  
+000042b7  TA1_0_IRQHandler                                  
+000042b7  TA1_N_IRQHandler                                  
+000042b7  TA2_0_IRQHandler                                  
+000042b7  TA2_N_IRQHandler                                  
+000042b7  TA3_0_IRQHandler                                  
+000042b7  TA3_N_IRQHandler                                  
+000042b7  UsageFault_Handler                                
+000042b7  WDT_A_IRQHandler                                  
+000042b9  _ZN4Task14ProcessMessageE3MSG                     
+000042c5  _ZN4Task3runEv                                    
+000042d1  _ZdlPv                                            
+000042d9  __TI_decompress_rle24                             
+000042df  _system_pre_init                                  
+000045dc  g_sFontFixed6x8                                   
+00004774  g_sCrystalfontz128x128                            
+000047a0  _ZTSN10__cxxabiv123__fundamental_type_infoE       
+000047c8  _ZTSN10__cxxabiv120__si_class_type_infoE          
+000047ed  _ZTSN10__cxxabiv119__pointer_type_infoE           
+00004811  _ZTSN10__cxxabiv117__class_type_infoE             
+00004833  _ZTSN10__cxxabiv117__pbase_type_infoE             
+00004855  _ZTSe                                             
+000048b0  _ZTV6Screen                                       
+000048cc  _ZTV4Task                                         
+000048e0  _ZTV5Servo                                        
+000048f4  _ZTIPKe                                           
+00004904  _ZTVN10__cxxabiv117__class_type_infoE             
+00004914  _ZTVN10__cxxabiv119__pointer_type_infoE           
+00004924  _ZTVN10__cxxabiv120__si_class_type_infoE          
+00004934  _ZTVN10__cxxabiv123__fundamental_type_infoE       
+00004944  _ZTSSt9type_info                                  
+00004984  _ZTI5Servo                                        
+00004990  _ZTI6Screen                                       
+0000499c  _ZTIN10__cxxabiv117__class_type_infoE             
+000049a8  _ZTIN10__cxxabiv117__pbase_type_infoE             
+000049b4  _ZTIN10__cxxabiv119__pointer_type_infoE           
+000049c0  _ZTIN10__cxxabiv120__si_class_type_infoE          
+000049cc  _ZTIN10__cxxabiv123__fundamental_type_infoE       
+000049e0  _ZTI4Task                                         
+000049e8  _ZTISt9type_info                                  
+000049f0  _ZTIe                                             
+000049f8  _ZTS6Screen                                       
+00004a20  _ZTS5Servo                                        
+00004a27  _ZTS4Task                                         
+00004a2d  _ZTSPKe                                           
+00004a34  SHT$$INIT_ARRAY$$Base                             
+00004a38  SHT$$INIT_ARRAY$$Limit                            
+00004ac4  __TI_Handler_Table_Base                           
+00004acc  __TI_CINIT_Base                                   
+00004acc  __TI_Handler_Table_Limit                          
+00004ae4  __TI_CINIT_Limit                                  
 20000000  g_pfnRAMVectors                                   
 200000e8  MainScheduler                                     
 200018e0  g_sContext                                        
