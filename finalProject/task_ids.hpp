@@ -5,3 +5,5 @@
 #define SERVO_ID 5
 #define SCREEN_ID 6
 #define ADC_ISR_ID 7
+#define BUTTON_DOWN_ISR_ID 8
+#define BUTTON_UP_ISR_ID 9

@@ -4,6 +4,9 @@
 #include <driverlib.h>
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+#define BUTTON_DOWN_PORT GPIO_PORT_P3
+#define BUTTON_DOWN_PIN GPIO_PIN5
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 Scheduler::Scheduler()
@@ -17,6 +20,15 @@ Scheduler::Scheduler()
     {
         Schedule[index] = (uintptr_t) 0;
     }
+
+    MSG nullMSG = {-1,-1,0,0,1};
+
+    for (int i = 0; i < NUMBER_OF_SLOTS; i++) {
+
+    	MessageQueue[i] = nullMSG;
+
+    }
+
     return;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,20 +147,34 @@ void Scheduler::clearNextScheduler() {
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Scheduler::ProcessMessageQueue() {
 
+	bool clearButtonDown = false;
+
+
 	for (int i = 0; i < mMessageIndex; i++) {
 
 		MSG newMSG = MessageQueue[i];
 
 		if (newMSG.source != -1 && newMSG.destination != -1) {
-			if (newMSG.destination != SCHEDULER_ID) {
-				Task* newTask = ID_LUT[newMSG.destination];
-				newTask->ProcessMessage(newMSG);
-			}
 
-			else {
+			newMSG.currentCount++;
 
-				processMessage(newMSG);
+			if (newMSG.currentCount >= newMSG.finalCount) {
 
+				if (newMSG.destination != SCHEDULER_ID) {
+					Task* newTask = ID_LUT[newMSG.destination];
+					newTask->ProcessMessage(newMSG);
+				}
+
+				else {
+
+					processMessage(newMSG);
+
+				}
+
+
+				if(newMSG.source == BUTTON_DOWN_ISR_ID) {
+					clearButtonDown = true;
+				}
 			}
 		}
 	}
@@ -157,8 +183,13 @@ void Scheduler::ProcessMessageQueue() {
 	clearMessageQueue();
 
 	// Se limpia la bandera de interrupción del ADC.
-	uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-	MAP_ADC14_clearInterruptFlag(g_u64Status);
+	MAP_ADC14_enableInterrupt(ADC_INT2);
+
+
+	if(clearButtonDown) {
+		GPIO_enableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+		clearButtonDown = false;
+	}
 
 	return;
 
@@ -173,7 +204,7 @@ void Scheduler::attachMessage(MSG i_messageToAttach) {
 
 	MessageQueue[mMessageIndex] = i_messageToAttach;
 
-	if (mMessageIndex == 255) {
+	if (mMessageIndex == NUMBER_OF_SLOTS) {
 
 		mMessageIndex = 0;
 
@@ -194,14 +225,42 @@ void Scheduler::attachMessage(MSG i_messageToAttach) {
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Scheduler::clearMessageQueue() {
 
+
+	int newIndex = 0;
+	MSG messageToClear;
+	MSG newMessageQueue[NUMBER_OF_SLOTS];
+	MSG nullMSG = {-1,-1,0,0,1};
+
 	for (int i = 0; i < mMessageIndex; i++) {
 
-		MSG nullMSG = {-1,-1,0};
-		MessageQueue[i] = nullMSG;
+		messageToClear = MessageQueue[i];
+
+		if (messageToClear.currentCount < messageToClear.finalCount){
+
+			newMessageQueue[newIndex] = messageToClear;
+			newIndex++;
+
+			MessageQueue[i] = nullMSG;
+
+		}
+
+		else {
+
+			MessageQueue[i] = nullMSG;
+
+		}
+
 
 	}
 
 	mMessageIndex = 0;
+
+	for (int i=0; i < newIndex; i++) {
+
+		MessageQueue[i] = newMessageQueue[i];
+		mMessageIndex++;
+	}
+
 
 	return;
 

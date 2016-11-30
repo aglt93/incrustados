@@ -19,6 +19,8 @@ struct MSG {
 	int source;
 	int destination;
 	void* data;
+	int currentCount;
+	int finalCount;
 };
 
 
@@ -104,7 +106,7 @@ class Task
 		uint64_t			GetTaskCurrentCount();
 		uint64_t			GetTaskFinalCount();
 		virtual void		ProcessMessage(MSG i_message){return;};
-		virtual MSG			SendMessage(){MSG nullMsg = {-1,-1,0}; return nullMsg;};
+		virtual MSG			SendMessage(){MSG nullMsg = {-1,-1,0,0,1}; return nullMsg;};
 		bool				m_bPeriodicTask;
 
 	private:

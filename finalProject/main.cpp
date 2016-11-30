@@ -108,8 +108,10 @@ void BUTTON_DOWN_ISR(void) {
 	if(GPIO_getInterruptStatus(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 
-		GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
+		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,300};
+		MainScheduler.attachMessage(message);
 
 	}
 
@@ -164,13 +166,19 @@ void ADC14_IRQHandler(void) {
 	aDataFromADC[1] = ADC14_getResult(ADC_MEM2);
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen};
+	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
 	MainScheduler.attachMessage(changeScreen);
 
 	// Envíe el msj al servo para que refleje el cambio.
 	*DataToServo = aDataFromADC[1];
-	MSG changeServo = {ADC_ISR_ID,SERVO_ID,DataToServo};
+	MSG changeServo = {ADC_ISR_ID,SERVO_ID,DataToServo,0,1};
 	MainScheduler.attachMessage(changeServo);
+
+	uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
+	MAP_ADC14_clearInterruptFlag(g_u64Status);
+
+	MAP_ADC14_disableInterrupt(ADC_INT2);
+
 }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
