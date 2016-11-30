@@ -5,7 +5,9 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../Button.cpp \
+../GamePiece.cpp \
 ../LED.cpp \
+../Racket.cpp \
 ../Scheduler.cpp \
 ../Screen.cpp \
 ../Servo.cpp \
@@ -24,7 +26,9 @@ C_SRCS += \
 
 OBJS += \
 ./Button.obj \
+./GamePiece.obj \
 ./LED.obj \
+./Racket.obj \
 ./Scheduler.obj \
 ./Screen.obj \
 ./Servo.obj \
@@ -35,7 +39,9 @@ OBJS += \
 
 CPP_DEPS += \
 ./Button.d \
+./GamePiece.d \
 ./LED.d \
+./Racket.d \
 ./Scheduler.d \
 ./Screen.d \
 ./Servo.d \
@@ -48,7 +54,9 @@ C_DEPS += \
 
 CPP_DEPS__QUOTED += \
 "Button.d" \
+"GamePiece.d" \
 "LED.d" \
+"Racket.d" \
 "Scheduler.d" \
 "Screen.d" \
 "Servo.d" \
@@ -61,7 +69,9 @@ C_DEPS__QUOTED += \
 
 OBJS__QUOTED += \
 "Button.obj" \
+"GamePiece.obj" \
 "LED.obj" \
+"Racket.obj" \
 "Scheduler.obj" \
 "Screen.obj" \
 "Servo.obj" \
@@ -72,7 +82,9 @@ OBJS__QUOTED += \
 
 CPP_SRCS__QUOTED += \
 "../Button.cpp" \
+"../GamePiece.cpp" \
 "../LED.cpp" \
+"../Racket.cpp" \
 "../Scheduler.cpp" \
 "../Screen.cpp" \
 "../Servo.cpp" \
