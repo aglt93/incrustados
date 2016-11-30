@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker Unix v15.12.3                  
 ******************************************************************************
->> Linked Tue Nov 29 17:50:32 2016
+>> Linked Tue Nov 29 20:57:42 2016
 
 OUTPUT FILE NAME:   <finalProject.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 000041d5
@@ -80,7 +80,7 @@ section   page    origin      length       input sections
                   0000434e    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.obj (.text)
                   00004386    00000002                                   : startup.obj (.text)
                   00004388    00000030                                   : new_.obj (.text)
-                  000043b8    00000020     LED.obj (.text:_ZN4Task11SendMessageEv)
+                  000043b8    00000020     Ball.obj (.text:_ZN4Task11SendMessageEv)
                   000043d8    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
                   000043f0    00000014                                   : _lock.obj (.text)
                   00004404    0000000e                                   : copy_decompress_none.obj (.text:decompress:none)
@@ -118,7 +118,7 @@ section   page    origin      length       input sections
                   00004ab0    00000010                                   : typeinfo_.obj (.const:_ZTVN10__cxxabiv123__fundamental_type_infoE)
                   00004ac0    0000000d                                   : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
                   00004acd    00000003     --HOLE-- [fill = 0]
-                  00004ad0    0000000c     LED.obj (.const:$P$T40$1)
+                  00004ad0    0000000c     Ball.obj (.const:$P$T40$1)
                   00004adc    0000000c     Scheduler.obj (.const:$P$T40$1)
                   00004ae8    0000000c     main.obj (.const:$P$T40$1)
                   00004af4    0000000c     main.obj (.const:$P$T41$2)
@@ -207,7 +207,8 @@ MODULE SUMMARY
        Button.obj                                           176     66        0      
        startup_msp432p401r_ccs.obj                          14      228       0      
        Task.obj                                             140     20        0      
-       LED.obj                                              44      12        0      
+       Ball.obj                                             32      12        0      
+       LED.obj                                              12      0         0      
     +--+----------------------------------------------------+-------+---------+---------+
        Total:                                               4130    453       12432  
                                                                                      

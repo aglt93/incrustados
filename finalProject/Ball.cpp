@@ -1,7 +1,7 @@
-#include "Racket.hpp"
+#include "Ball.hpp"
 #include <driverlib.h>
 
-Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
+Ball::Ball (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 		int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
 		int* i_iLimitsX, int* i_iLimitsY)
 {
@@ -33,13 +33,13 @@ Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 	}
 }
 
-uint8_t Racket::run() {
+uint8_t Ball::run() {
 
 	return NO_ERR;
 }
 
 
 
-void Racket::ProcessMessage(MSG i_Message){
+void Ball::ProcessMessage(MSG i_Message){
 
 }
