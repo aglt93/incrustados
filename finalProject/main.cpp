@@ -71,6 +71,8 @@ void main(void) {
     // Se agregan los punteros de los tasks creados al scheduler.
     MainScheduler.attach(&PrintScreen);
     MainScheduler.attach(&Servo1);
+    MainScheduler.attach(&ButtonDown);
+    MainScheduler.attach(&ButtonUp);
 
     // Ciclo principal. Cada 1ms entra a ejecutar los procesos necesarios para el correcto
     // funcionamiento del RTOS.
@@ -107,10 +109,10 @@ void BUTTON_DOWN_ISR(void) {
 	// ISR for PIN5
 	if(GPIO_getInterruptStatus(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
-		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 
-		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,300};
+		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 
 	}
@@ -160,14 +162,16 @@ void T32_INT1_IRQHandler() {
 //////////////////////////////////////////////////////////////////////////////////////////////
 void ADC14_IRQHandler(void) {
 
+	//GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
+
     // Si la conversión fue completada
 	// Extraiga los datos de la memoria del ADC.
 	aDataFromADC[0] = ADC14_getResult(ADC_MEM1);
 	aDataFromADC[1] = ADC14_getResult(ADC_MEM2);
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
-	MainScheduler.attachMessage(changeScreen);
+	//MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
+	//MainScheduler.attachMessage(changeScreen);
 
 	// Envíe el msj al servo para que refleje el cambio.
 	*DataToServo = aDataFromADC[1];

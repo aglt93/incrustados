@@ -7,7 +7,8 @@
 #define BUTTON_DOWN_PORT GPIO_PORT_P3
 #define BUTTON_DOWN_PIN GPIO_PIN5
 
-
+#define RGB_BLUE_PORT GPIO_PORT_P5
+#define RGB_BLUE_PIN GPIO_PIN6
 //////////////////////////////////////////////////////////////////////////////////////////////
 Scheduler::Scheduler()
 {
@@ -149,6 +150,7 @@ void Scheduler::ProcessMessageQueue() {
 
 	bool clearButtonDown = false;
 
+	//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
 	for (int i = 0; i < mMessageIndex; i++) {
 
@@ -156,6 +158,7 @@ void Scheduler::ProcessMessageQueue() {
 
 		if (newMSG.source != -1 && newMSG.destination != -1) {
 
+			MessageQueue[i].currentCount = MessageQueue[i].currentCount +1;
 			newMSG.currentCount++;
 
 			if (newMSG.currentCount >= newMSG.finalCount) {
@@ -175,6 +178,7 @@ void Scheduler::ProcessMessageQueue() {
 				if(newMSG.source == BUTTON_DOWN_ISR_ID) {
 					clearButtonDown = true;
 				}
+
 			}
 		}
 	}
@@ -187,6 +191,7 @@ void Scheduler::ProcessMessageQueue() {
 
 
 	if(clearButtonDown) {
+		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_enableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		clearButtonDown = false;
 	}
@@ -260,10 +265,6 @@ void Scheduler::clearMessageQueue() {
 		MessageQueue[i] = newMessageQueue[i];
 		mMessageIndex++;
 	}
-
-
-	return;
-
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 

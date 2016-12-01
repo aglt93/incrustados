@@ -2,7 +2,7 @@
 #include <driverlib.h>
 
 #define LED_RED_PORT GPIO_PORT_P2
-#define LED_RED_PIN GPIO_PIN6
+#define LED_RED_PIN GPIO_PIN4
 
 Button::Button(int i_iTaskID,bool i_bPeriodicTask,int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount)
 {
@@ -45,7 +45,7 @@ LED::LED(int LED_PORT,int LED_PIN, uint64_t i_u64FinalCount)
 
 uint8_t Button::run(void)
 {
-	//GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
 
     return(NO_ERR);
 }

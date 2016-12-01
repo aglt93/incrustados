@@ -45,6 +45,9 @@
 #define SERVO_PIN GPIO_PIN5
 
 
+//
+#define SUPRESSION_TIME 130
+
 void Setup(void);
 
 
