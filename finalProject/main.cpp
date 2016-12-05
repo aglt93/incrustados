@@ -170,8 +170,8 @@ void ADC14_IRQHandler(void) {
 	aDataFromADC[1] = ADC14_getResult(ADC_MEM2);
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-	//MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
-	//MainScheduler.attachMessage(changeScreen);
+	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
+	MainScheduler.attachMessage(changeScreen);
 
 	// Envíe el msj al servo para que refleje el cambio.
 	*DataToServo = aDataFromADC[1];

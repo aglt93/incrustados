@@ -3,11 +3,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 extern "C"
 {
-	#include <driverlib.h>
-	#include <grlib.h>
-	#include "Crystalfontz128x128_ST7735.h"
+//	#include <driverlib.h>
+//	#include <grlib.h>
+//	#include <stdio.h>
+//	#include "Crystalfontz128x128_ST7735.h"
+
+#include "msp.h"
+#include <driverlib.h>
+#include <grlib.h>
+#include "Crystalfontz128x128_ST7735.h"
+#include <stdio.h>
+#include "tu_logo_100_100.h"
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "Screen.hpp"
 #include "Task.hpp"
 #include "task_ids.hpp"
@@ -36,17 +45,25 @@ Screen::Screen(int i_iTaskID, bool i_bPeriodicTask)
 	Crystalfontz128x128_Init();
 
 	/* Set default screen orientation */
-	Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_DOWN);
+	Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
 
 	/* Initializes graphics context */
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
     GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
 
+
 	/* Draw Title, x-axis, gradation & labels */
-	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN);
-	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE);
-	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+
+
 	Graphics_clearDisplay(&g_sContext);
+
+
+    Graphics_drawImage(&g_sContext, &tu_logo8BPP_COMP_RLE8, 14, 20); //Correct
+
+	Graphics_drawStringCentered(&g_sContext, (int8_t *)"PING PONGDDED", AUTO_STRING_LENGTH, 63, 63, OPAQUE_TEXT);
+
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,135 +94,58 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 
 	/* Draw Title, x-axis, gradation & labels */
-	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN);
-	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE);
+	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+
+	Graphics_Rectangle ball, racket1, racket2;
+
+	uint8_t x1, y1, x2, y2;
+
+	x1 = 120 - 4;
+	x2 = 120 + 4;
+	y1 = 63 - 24;
+	y2 = 63 + 24;
+
+	ball.xMin = 63 - 4;
+	ball.xMax = 63 + 4;
+	ball.yMin = 63 - 4;
+	ball.yMax = 63 + 4;
+
+	racket1.xMin = 128 - x1;
+	racket1.xMax = 128 - x2;
+	racket1.yMin = y1;
+	racket1.yMax = y2;
+
+	racket2.xMin = x1;
+	racket2.xMax = x2;
+	racket2.yMin = y1;
+	racket2.yMax = y2;
+
+
+	printFigure(ball);
+	printFigure(racket1);
+	printFigure(racket2);
 
 	/* Se ejecuta la funcion que actualiza las lineas en la pantalla. */
-	printScreen(0,l_iScreenValue,*(l_pDataTask));
+
+//	printFigure(0,l_iScreenValue,*(l_pDataTask));
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*
- * Esta funcion actualiza las lineas de la patanlla conforme el acelerometro detecta cambios.
- * Los datos del acelerometro se traducen a coordenadas en el eje y de la pantalla.
+ * Esta funcion imprime en la pantalla la figura deseada en los puntos especificados por
+ *  x1, y1, x2, y2.
  */
 //////////////////////////////////////////////////////////////////////////////////////////////
-void Screen::printScreen(uint8_t l_u16Initial, uint8_t l_u16Final, uint16_t l_u8UpOrDown)
+void Screen::printFigure(Graphics_Rectangle figure)
 {
 
-	/* 0 0 0 grad All GRAPHICS_COLOR_SANDY_BROWN
-	   0 64 45 grad Half GRAPHICS_COLOR_SANDY_BROWN Half GRAPHICS_COLOR_STEEL_BLUE
-	   0 127 90 grad All GRAPHICS_COLOR_STEEL_BLUE
-	*/
-
-	uint8_t l_u8Ys = 0;
-
-	/* Se utilizan los datos del acelerometro en el eje Y para determinar si
-	 * el dispositivo fue volteado hacia arriba.
-	 */
-
-	if (l_u8UpOrDown > 11300) {
-
-		/* Determina la configuracion actual de la pantalla.
-		 * Se actualiza solo si es diferente de la actualizacion.
-		 */
-
-		if (Lcd_Orientation != LCD_ORIENTATION_UP){
-
-			Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
-
-		}
-		else
-
-			l_u8Ys = 0;
-
-			for ( l_u8Ys=FIRST_PIXEL; l_u8Ys<LAST_PIXEL+1; l_u8Ys++ ){
-
-				if(l_u8Ys<l_u16Final+1){
-
-					/*
-					 * Imprime la tierra del horizonte
-					 */
-					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-					Graphics_drawLineH(&g_sContext, 0, 127, l_u8Ys);
-
-				}
-				else
-
-					/*
-					 * Imprime las lineas pendientes del cielo del horizonte.
-					 */
-					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-					Graphics_drawLineH(&g_sContext, 0, 127, l_u8Ys);
-
-
-			}
-	}
-
-	/* Se utilizan los datos del acelerometro en el eje Y para determinar si
-	 * el dispositivo fue volteado hacia abajo.
-	 */
-
-	else if (l_u8UpOrDown < 11300) {
-
-		if (Lcd_Orientation != LCD_ORIENTATION_DOWN){
-
-			Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_DOWN);
-
-		}
-		else
-
-			l_u8Ys = 0;
-
-			for ( l_u8Ys=FIRST_PIXEL; l_u8Ys<LAST_PIXEL+1; l_u8Ys++ ){
-
-				if(l_u8Ys<l_u16Final+1){
-
-					/*
-					 * Imprime la tierra del horizonte
-					 */
-					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-					Graphics_drawLineH(&g_sContext, 0, 127, l_u8Ys);
-
-				}
-
-				else
-
-					/*
-					 * Imprime las lineas pendientes del cielo del horizonte.
-					 */
-					Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-					Graphics_drawLineH(&g_sContext, 0, 127, l_u8Ys);
-
-			}
-	}
-
-	else
-
-		l_u8Ys = 0;
-
-		for ( l_u8Ys=FIRST_PIXEL; l_u8Ys<LAST_PIXEL+1; l_u8Ys++ ){
-
-			if(l_u8Ys<l_u16Final+1){
-
-				/*
-				 * Imprime la tierra del horizonte
-				 */
-				Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_SANDY_BROWN );
-				Graphics_drawLineH(&g_sContext, 0, 127, l_u8Ys);
-
-			}
-			else
-
-				/*
-				 * Imprime las lineas pendientes del cielo del horizonte.
-				*/
-				Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_STEEL_BLUE );
-				Graphics_drawLineH(&g_sContext, 0, 127, l_u8Ys);
-
-		}
+	Graphics_fillRectangle(&g_sContext, &figure);
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////

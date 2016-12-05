@@ -20,7 +20,7 @@ class Screen : public Task
 	    Screen(int i_iTaskID, bool i_bPeriodicTask);
         virtual uint8_t run(void);
         virtual void ProcessMessage(MSG i_Message);
-        virtual void printScreen(uint8_t x, uint8_t y, uint16_t z);
+        virtual void printFigure(Graphics_Rectangle figure);
         virtual int ADCtoScreenValueConv(int i_iADCvalue);
 
 
