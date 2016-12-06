@@ -57,7 +57,7 @@ Scheduler MainScheduler;
 // en su ciclo principal se dedica a que cada 1ms (definido así por el Timer32) se ejecuten
 // los procesos del scheduler necesarios para el correcto funcionamiento del scheduler.
 //////////////////////////////////////////////////////////////////////////////////////////////
--void main(void) {
+void main(void) {
 
 	Button ButtonDown(BUTTON_DOWN_ID,NOT_PERIODIC_TASK,BUTTON_DOWN_PORT,BUTTON_DOWN_PIN,200);
 	Button ButtonUp(BUTTON_UP_ID,NOT_PERIODIC_TASK,BUTTON_UP_PORT,BUTTON_UP_PIN,200);
