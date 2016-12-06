@@ -57,7 +57,7 @@ Scheduler MainScheduler;
 // en su ciclo principal se dedica a que cada 1ms (definido así por el Timer32) se ejecuten
 // los procesos del scheduler necesarios para el correcto funcionamiento del scheduler.
 //////////////////////////////////////////////////////////////////////////////////////////////
-void main(void) {
+-void main(void) {
 
 	Button ButtonDown(BUTTON_DOWN_ID,NOT_PERIODIC_TASK,BUTTON_DOWN_PORT,BUTTON_DOWN_PIN,200);
 	Button ButtonUp(BUTTON_UP_ID,NOT_PERIODIC_TASK,BUTTON_UP_PORT,BUTTON_UP_PIN,200);
@@ -132,6 +132,8 @@ void BUTTON_DOWN_ISR(void) {
 			counter = 0;
 			* position = counter;
 		}
+		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
+		MainScheduler.attachMessage(message);
 
 		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,position,0,1};
 		MainScheduler.attachMessage(changeScreen);
