@@ -11,7 +11,7 @@
 #include "LED.hpp"
 #include "Button.hpp"
 #include "Screen.hpp"
-#include "Servo.hpp"
+//#include "Servo.hpp"
 #include <driverlib.h>
 #include <stdlib.h>
 #include "task_ids.hpp"
@@ -25,14 +25,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Valor del contador de ms.
 volatile static uint64_t SystemTicks = 0;
-
+int* position = new int();
 // Punteros para enviar como datos en los msjs.
-int* DataToServo = new int();
+//int* DataToServo = new int();
 
 // Arreglo y puntero al arreglo para la conversión ADC.
 int aDataFromADC[2];
 int *pDataToScreen = aDataFromADC;
-
+int counter = 0;
+int aDataFromButton[1] = {0};
+int *pDataToScreenB = aDataFromButton;
 // Una instancia global del Scheduler para que los msjs puedan ser agregados
 // por las interrupciones.
 Scheduler MainScheduler;
@@ -63,14 +65,14 @@ void main(void) {
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-    Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
+//    Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();
 
     // Se agregan los punteros de los tasks creados al scheduler.
     MainScheduler.attach(&PrintScreen);
-    MainScheduler.attach(&Servo1);
+//    MainScheduler.attach(&Servo1);
     MainScheduler.attach(&ButtonDown);
     MainScheduler.attach(&ButtonUp);
 
@@ -106,16 +108,35 @@ extern "C" {
 
 void BUTTON_DOWN_ISR(void) {
 
-	// ISR for PIN5
+//	// ISR for PIN5
+//	if(GPIO_getInterruptStatus(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN)) {
+//		// Clear interrupt flag and toggle output LEDs.
+//		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+//		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+//		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
+//		MainScheduler.attachMessage(message);
+//
+//	}
+
 	if(GPIO_getInterruptStatus(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+//
+		if (* position <= 5){
+			counter++;
+			* position = counter;
+		}
+		else{
+			counter = 0;
+			* position = counter;
+		}
 
-		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
-		MainScheduler.attachMessage(message);
-
+		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,position,0,1};
+		MainScheduler.attachMessage(changeScreen);
 	}
+
+
 
 }
 
@@ -170,13 +191,13 @@ void ADC14_IRQHandler(void) {
 	aDataFromADC[1] = ADC14_getResult(ADC_MEM2);
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
-	MainScheduler.attachMessage(changeScreen);
+//	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,pDataToScreen,0,1};
+//	MainScheduler.attachMessage(changeScreen);
 
 	// Envíe el msj al servo para que refleje el cambio.
-	*DataToServo = aDataFromADC[1];
-	MSG changeServo = {ADC_ISR_ID,SERVO_ID,DataToServo,0,1};
-	MainScheduler.attachMessage(changeServo);
+//	*DataToServo = aDataFromADC[1];
+//	MSG changeServo = {ADC_ISR_ID,SERVO_ID,DataToServo,0,1};
+//	MainScheduler.attachMessage(changeServo);
 
 	uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
 	MAP_ADC14_clearInterruptFlag(g_u64Status);

@@ -8,7 +8,7 @@ extern "C"
 #include <grlib.h>
 #include "Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
-#include "tu_logo_100_100.h"
+#include "u_logo_100_100.h"
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +82,7 @@ void Screen::ProcessMessage(MSG i_Message) {
 	int* l_pDataTask = (int*) i_Message.data;
 
 	/* Se convierte el valor del acelerometro en lineas para la pantalla. */
-    int l_iScreenValue = ADCtoScreenValueConv(*(l_pDataTask+1));
+//    int l_iScreenValue = ADCtoScreenValueConv(*(l_pDataTask+1));
 
 	/* Initializes graphics context */
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
@@ -102,7 +102,7 @@ void Screen::ProcessMessage(MSG i_Message) {
 	int8_t racket1_move = 0;
 	int8_t racket2_move = 0;
 
-	racket1_move = 5;
+	racket1_move = *(l_pDataTask);
 
 	x1 = 120 - 4;
 	x2 = 120 + 4;
