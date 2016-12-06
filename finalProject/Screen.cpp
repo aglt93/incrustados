@@ -3,11 +3,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 extern "C"
 {
-//	#include <driverlib.h>
-//	#include <grlib.h>
-//	#include <stdio.h>
-//	#include "Crystalfontz128x128_ST7735.h"
-
 #include "msp.h"
 #include <driverlib.h>
 #include <grlib.h>
@@ -101,30 +96,38 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	uint8_t x1, y1, x2, y2;
 
+	int8_t racket1_center = 63;
+	int8_t racket2_center = 63;
+
+	int8_t racket1_move = 0;
+	int8_t racket2_move = 0;
+
+	racket1_move = 5;
+
 	x1 = 120 - 4;
 	x2 = 120 + 4;
-	y1 = 63 - 24;
-	y2 = 63 + 24;
+	y1 = racket1_center + racket1_move*8 - 24;
+	y2 = racket1_center + racket1_move*8 + 24;
 
-	ball.xMin = 63 - 4;
-	ball.xMax = 63 + 4;
-	ball.yMin = 63 - 4;
-	ball.yMax = 63 + 4;
+//	ball.xMin = 63 - 4;
+//	ball.xMax = 63 + 4;
+//	ball.yMin = 63 - 4;
+//	ball.yMax = 63 + 4;
 
 	racket1.xMin = 128 - x1;
 	racket1.xMax = 128 - x2;
 	racket1.yMin = y1;
 	racket1.yMax = y2;
 
-	racket2.xMin = x1;
-	racket2.xMax = x2;
-	racket2.yMin = y1;
-	racket2.yMax = y2;
+//	racket2.xMin = x1;
+//	racket2.xMax = x2;
+//	racket2.yMin = y1;
+//	racket2.yMax = y2;
 
 
-	printFigure(ball);
+//	printFigure(ball);
 	printFigure(racket1);
-	printFigure(racket2);
+//	printFigure(racket2);
 
 	/* Se ejecuta la funcion que actualiza las lineas en la pantalla. */
 
