@@ -122,9 +122,10 @@ void BUTTON_DOWN_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
-//
-		if (* position <= 5){
+		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+		if (counter <= 5){
 			counter++;
+//			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 			* position = counter;
 		}
 		else{
