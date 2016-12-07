@@ -21,6 +21,8 @@ extern "C"
 //////////////////////////////////////////////////////////////////////////////////////////////
 /* Graphic library context */
 Graphics_Context g_sContext;
+int8_t racket1_center = 63;
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,9 +96,9 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	Graphics_Rectangle ball, racket1, racket2;
 
-	uint8_t x1, y1, x2, y2;
+	int8_t x1, y1, x2, y2;
 
-	int8_t racket1_center = 63;
+//	int8_t racket1_center = 63;
 	int8_t racket2_center = 63;
 
 	int8_t racket1_move = 0;
@@ -109,10 +111,12 @@ void Screen::ProcessMessage(MSG i_Message) {
 	y1 = racket1_center + racket1_move*8 - 24;
 	y2 = racket1_center + racket1_move*8 + 24;
 
-//	ball.xMin = 63 - 4;
-//	ball.xMax = 63 + 4;
-//	ball.yMin = 63 - 4;
-//	ball.yMax = 63 + 4;
+
+
+	ball.xMin = 63 - 3;
+	ball.xMax = 63 + 3;
+	ball.yMin = 63 - 3;
+	ball.yMax = 63 + 3;
 
 	racket1.xMin = 128 - x1;
 	racket1.xMax = 128 - x2;
@@ -124,8 +128,9 @@ void Screen::ProcessMessage(MSG i_Message) {
 //	racket2.yMin = y1;
 //	racket2.yMax = y2;
 
+	Graphics_clearDisplay(&g_sContext);
 
-//	printFigure(ball);
+	printFigure(ball);
 	printFigure(racket1);
 //	printFigure(racket2);
 

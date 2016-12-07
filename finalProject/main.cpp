@@ -25,14 +25,18 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Valor del contador de ms.
 volatile static uint64_t SystemTicks = 0;
-int* position = new int();
+int* positionDown = new int();
+int* positionUp = new int();
+
 // Punteros para enviar como datos en los msjs.
 //int* DataToServo = new int();
 
 // Arreglo y puntero al arreglo para la conversión ADC.
 int aDataFromADC[2];
 int *pDataToScreen = aDataFromADC;
-int counter = 0;
+int counterDown = 0;
+int counterUp = 0;
+
 int aDataFromButton[1] = {0};
 int *pDataToScreenB = aDataFromButton;
 // Una instancia global del Scheduler para que los msjs puedan ser agregados
@@ -123,19 +127,16 @@ void BUTTON_DOWN_ISR(void) {
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-		if (counter <= 5){
-			counter++;
+		if (counterDown < 5){
+			counterDown++;
 //			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-			* position = counter;
+			* positionDown = counterDown;
 		}
-		else{
-			counter = 0;
-			* position = counter;
-		}
+
 		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 
-		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,position,0,1};
+		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,positionDown,0,1};
 		MainScheduler.attachMessage(changeScreen);
 	}
 
@@ -154,6 +155,16 @@ void BUTTON_UP_ISR(void) {
 
 		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
+		if (counterUp < 5){
+			counterUp++;
+			* positionUp = -counterUp;
+		}
+
+		MSG message = {BUTTON_UP_ISR_ID,BUTTON_UP_ID,0,0,SUPRESSION_TIME};
+		MainScheduler.attachMessage(message);
+
+		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,positionUp,0,1};
+		MainScheduler.attachMessage(changeScreen);
 	}
 
 }
