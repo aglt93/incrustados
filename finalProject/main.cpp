@@ -129,6 +129,7 @@ void BUTTON_DOWN_ISR(void) {
 		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 		if (counterDown < 5){
 			counterDown++;
+			counterUp = 0;
 //			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 			* positionDown = counterDown;
 		}
@@ -157,6 +158,7 @@ void BUTTON_UP_ISR(void) {
 
 		if (counterUp < 5){
 			counterUp++;
+			counterDown = 0;
 			* positionUp = -counterUp;
 		}
 
