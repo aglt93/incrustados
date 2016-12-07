@@ -56,10 +56,10 @@ Screen::Screen(int i_iTaskID, bool i_bPeriodicTask)
 
 	Graphics_clearDisplay(&g_sContext);
 
-
-    Graphics_drawImage(&g_sContext, &tu_logo8BPP_COMP_RLE8, 14, 20); //Correct
-
-	Graphics_drawStringCentered(&g_sContext, (int8_t *)"PING PONGDDED", AUTO_STRING_LENGTH, 63, 63, OPAQUE_TEXT);
+//
+//    Graphics_drawImage(&g_sContext, &tu_logo8BPP_COMP_RLE8, 14, 20); //Correct
+//
+//	Graphics_drawStringCentered(&g_sContext, (int8_t *)"PING PONGDDED", AUTO_STRING_LENGTH, 63, 63, OPAQUE_TEXT);
 
 
 }
@@ -108,6 +108,8 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	x1 = 120 - 4;
 	x2 = 120 + 4;
+//	y1 = 63 + 4*8 -24 = 71
+//	y2 = 63 + 4*8 +24 = 119
 	y1 = racket1_center + racket1_move*8 - 24;
 	y2 = racket1_center + racket1_move*8 + 24;
 
@@ -163,14 +165,14 @@ void Screen::printFigure(Graphics_Rectangle figure)
  * por medio de una ecuacion lineal con offset.
  */
 //////////////////////////////////////////////////////////////////////////////////////////////
-int Screen::ADCtoScreenValueConv(int i_iADCvalue){
-
-	int l_iServoValue;
-
-	/* Se transforma el valor del ADC a lineas de acuerdo a la ecuacion de una recta */
-	l_iServoValue = (float) (i_iADCvalue-5000)/51.8;
-
-	return l_iServoValue;
-
-}
+//int Screen::ADCtoScreenValueConv(int i_iADCvalue){
+//
+//	int l_iServoValue;
+//
+//	/* Se transforma el valor del ADC a lineas de acuerdo a la ecuacion de una recta */
+//	l_iServoValue = (float) (i_iADCvalue-5000)/51.8;
+//
+//	return l_iServoValue;
+//
+//}
 //////////////////////////////////////////////////////////////////////////////////////////////

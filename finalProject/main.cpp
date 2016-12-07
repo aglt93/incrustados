@@ -126,12 +126,18 @@ void BUTTON_DOWN_ISR(void) {
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-		if (counterDown < 5){
+
+		if (counterDown<5){
 			counterDown++;
-			counterUp = 0;
-//			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-			* positionDown = counterDown;
 		}
+		* positionDown = counterDown;
+
+//		if (counterDown < 5){
+//			counterDown++;
+//			counterUp = 0;
+////			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+//			* positionDown = counterDown;
+//		}
 
 		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
@@ -154,17 +160,17 @@ void BUTTON_UP_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
 
 		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-
-		if (counterUp < 5){
-			counterUp++;
-			counterDown = 0;
-			* positionUp = -counterUp;
+		if (counterDown>-5){
+			counterDown--;
 		}
+
+		* positionDown = counterDown;
+
 
 		MSG message = {BUTTON_UP_ISR_ID,BUTTON_UP_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 
-		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,positionUp,0,1};
+		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,positionDown,0,1};
 		MainScheduler.attachMessage(changeScreen);
 	}
 
@@ -206,9 +212,9 @@ void ADC14_IRQHandler(void) {
 	*aDataFromADC = *aDataFromADC / 3260;
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-
-	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,aDataFromADC,0,200};
-	MainScheduler.attachMessage(changeScreen);
+//
+//	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,aDataFromADC,0,100};
+//	MainScheduler.attachMessage(changeScreen);
 
 	// Envíe el msj al servo para que refleje el cambio.
 //	*DataToServo = aDataFromADC[1];

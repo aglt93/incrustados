@@ -21,7 +21,7 @@ class Screen : public Task
         virtual uint8_t run(void);
         virtual void ProcessMessage(MSG i_Message);
         virtual void printFigure(Graphics_Rectangle figure);
-        virtual int ADCtoScreenValueConv(int i_iADCvalue);
+//        virtual int ADCtoScreenValueConv(int i_iADCvalue);
 
 
     protected:
