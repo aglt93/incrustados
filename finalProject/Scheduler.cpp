@@ -149,6 +149,7 @@ void Scheduler::clearNextScheduler() {
 void Scheduler::ProcessMessageQueue() {
 
 	bool clearButtonDown = false;
+	bool clearADC = false;
 
 	//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
@@ -175,9 +176,19 @@ void Scheduler::ProcessMessageQueue() {
 				}
 
 
-				if(newMSG.source == BUTTON_DOWN_ISR_ID) {
-					clearButtonDown = true;
+				switch (newMSG.source) {
+
+					case BUTTON_DOWN_ISR_ID:
+						clearButtonDown = true;
+						break;
+
+					case ADC_ISR_ID:
+						clearADC = true;
+						break;
+
 				}
+
+
 
 			}
 		}
@@ -186,14 +197,16 @@ void Scheduler::ProcessMessageQueue() {
 	// Se limpia la cola de msjs.
 	clearMessageQueue();
 
-	// Se limpia la bandera de interrupción del ADC.
-	MAP_ADC14_enableInterrupt(ADC_INT0);
-
-
 	if(clearButtonDown) {
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_enableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		clearButtonDown = false;
+	}
+
+	if(clearADC){
+		// Se limpia la bandera de interrupción del ADC.
+		MAP_ADC14_enableInterrupt(ADC_INT0);
+		clearADC = true;
 	}
 
 	return;
