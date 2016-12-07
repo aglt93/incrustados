@@ -187,7 +187,7 @@ void Scheduler::ProcessMessageQueue() {
 	clearMessageQueue();
 
 	// Se limpia la bandera de interrupción del ADC.
-	MAP_ADC14_enableInterrupt(ADC_INT2);
+	MAP_ADC14_enableInterrupt(ADC_INT0);
 
 
 	if(clearButtonDown) {
