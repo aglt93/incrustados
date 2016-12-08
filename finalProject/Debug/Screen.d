@@ -53,6 +53,7 @@ Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdarg.h
 Screen.obj: ../Screen.hpp
 Screen.obj: ../Task.hpp
 Screen.obj: ../task_ids.hpp
+Screen.obj: ../game_env.hpp
 
 ../Screen.cpp: 
 /opt/ti/ccsv6/ccs_base/arm/include/msp.h: 
@@ -107,3 +108,4 @@ Screen.obj: ../task_ids.hpp
 ../Screen.hpp: 
 ../Task.hpp: 
 ../task_ids.hpp: 
+../game_env.hpp: 

@@ -9,3 +9,4 @@
 #define BUTTON_UP_ISR_ID 9
 #define RACKET_LEFT_ID 10
 #define RACKET_RIGHT_ID 11
+#define BALL_ID 12

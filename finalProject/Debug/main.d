@@ -56,8 +56,10 @@ main.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/linkage.h
 main.obj: ../GamePiece.hpp
 main.obj: ../Racket.hpp
 main.obj: ../Ball.hpp
+main.obj: ../task_ids.hpp
 main.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h
 main.obj: ../task_ids.hpp
+main.obj: ../game_env.hpp
 
 ../main.cpp: 
 /opt/ti/ccsv6/ccs_base/arm/include/msp.h: 
@@ -115,5 +117,7 @@ main.obj: ../task_ids.hpp
 ../GamePiece.hpp: 
 ../Racket.hpp: 
 ../Ball.hpp: 
+../task_ids.hpp: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h: 
 ../task_ids.hpp: 
+../game_env.hpp: 

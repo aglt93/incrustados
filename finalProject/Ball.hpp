@@ -10,6 +10,7 @@
 #define __NOP __nop
 #include "msp.h"
 #include "GamePiece.hpp"
+#include "task_ids.hpp"
 
 
 class Ball : public GamePiece

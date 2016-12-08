@@ -17,6 +17,8 @@
 #include <driverlib.h>
 #include <stdlib.h>
 #include "task_ids.hpp"
+#include "game_env.hpp"
+
 /*******************************************************************************************/
 
 
@@ -24,13 +26,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Definición de defines.
 //////////////////////////////////////////////////////////////////////////////////////////////
-#define RACKET_LIMIT_X_LEFT 	119
-#define RACKET_LIMIT_X_RIGHT 	119
-#define RACKET_LIMIT_Y_UP 		103
-#define RACKET_LIMIT_Y_DOWN 	24
-#define RACKET_LEFT_PERIOD 		100
-#define RACKET_RIGHT_PERIOD 	100
-#define BALL_PERIOD				100
+
 /*******************************************************************************************/
 
 
@@ -82,19 +78,35 @@ void main(void) {
 //	Button ButtonUp(BUTTON_UP_ID,NOT_PERIODIC_TASK,BUTTON_UP_PORT,BUTTON_UP_PIN,200);
 
 	//
-	int RacketLimitsX[2] = {RACKET_LIMIT_X_LEFT,RACKET_LIMIT_X_RIGHT};
-	int *pRacketLimitsX = RacketLimitsX;
+	int RacketLeftLimitsX[2] = {RACKET_LEFT_LIMIT_X_LEFT,RACKET_LEFT_LIMIT_X_RIGHT};
+	int *pRacketLeftLimitsX = RacketLeftLimitsX;
 
-	int RacketLimitsY[2] = {RACKET_LIMIT_Y_UP,RACKET_LIMIT_Y_DOWN};
-	int *pRacketLimitsY = RacketLimitsY;
+	int RacketLeftLimitsY[2] = {RACKET_LEFT_LIMIT_Y_UP,RACKET_LEFT_LIMIT_Y_DOWN};
+	int *pRacketLeftLimitsY = RacketLeftLimitsY;
+
+	int RacketRightLimitsX[2] = {RACKET_RIGHT_LIMIT_X_LEFT,RACKET_RIGHT_LIMIT_X_RIGHT};
+	int *pRacketRightLimitsX = RacketRightLimitsX;
+
+	int RacketRightLimitsY[2] = {RACKET_RIGHT_LIMIT_Y_UP,RACKET_RIGHT_LIMIT_Y_DOWN};
+	int *pRacketRightLimitsY = RacketRightLimitsY;
+
+	int BallLimitsX[2] = {BALL_LIMIT_X_LEFT,BALL_LIMIT_X_RIGHT};
+	int *pBallLimitsX = BallLimitsX;
+
+	int BallLimitsY[2] = {BALL_LIMIT_Y_UP,BALL_LIMIT_Y_DOWN};
+	int *pBallLimitsY = BallLimitsY;
 	//
 
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,120,63,8,NO_MOVE,NO_MOVE,
-			pRacketLimitsX,pRacketLimitsY);
+	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,RACKET_LEFT_POS_X,
+			RACKET_LEFT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketLeftLimitsX,pRacketLeftLimitsY);
 
+	Racket RacketRight(RACKET_RIGHT_ID,PERIODIC_TASK,RACKET_RIGHT_PERIOD,RACKET_RIGHT_POS_X,
+			RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketLeftLimitsX,pRacketLeftLimitsY);
+//	Ball MainBall(BALL_ID, PERIODIC_TASK,BALL_PERIOD,BALL_INIT_POS_X,BALL_INIT_POS_Y,3,
+//			MOVE_RIGHT,MOVE_UP,pBallLimitsX,pBallLimitsY);
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();
@@ -104,6 +116,7 @@ void main(void) {
 //    MainScheduler.attach(&ButtonDown);
 //    MainScheduler.attach(&ButtonUp);
     MainScheduler.attach(&RacketLeft);
+//    MainScheduler.attach(&MainBall);
 
 
     // Ciclo principal. Cada 1ms entra a ejecutar los procesos necesarios para el correcto
@@ -141,18 +154,7 @@ extern "C" {
 
 void BUTTON_DOWN_ISR(void) {
 
-//	// ISR for PIN5
-//	if(GPIO_getInterruptStatus(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN)) {
-//		// Clear interrupt flag and toggle output LEDs.
-//		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
-//		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
-//		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
-//		MainScheduler.attachMessage(message);
-//
-//	}
-
 	if(GPIO_getInterruptStatus(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN)) {
-		// Clear interrupt flag and toggle output LEDs.
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
@@ -169,9 +171,7 @@ void BUTTON_DOWN_ISR(void) {
 
 void BUTTON_UP_ISR(void) {
 
-	// ISR for PIN5
 	if(GPIO_getInterruptStatus(BUTTON_UP_PORT, BUTTON_UP_PIN)) {
-		// Clear interrupt flag and toggle output LEDs.
 		GPIO_disableInterrupt(BUTTON_UP_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
 		//GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);

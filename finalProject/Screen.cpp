@@ -15,9 +15,10 @@ extern "C"
 #include "Screen.hpp"
 #include "Task.hpp"
 #include "task_ids.hpp"
+#include "game_env.hpp"
+
 //////////////////////////////////////////////////////////////////////////////////////////////
-#define FIRST_PIXEL 0
-#define LAST_PIXEL 127
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 /* Graphic library context */
 Graphics_Context g_sContext;
@@ -61,8 +62,10 @@ Screen::Screen(int i_iTaskID, bool i_bPeriodicTask)
 //
 //	Graphics_drawStringCentered(&g_sContext, (int8_t *)"PING PONGDDED", AUTO_STRING_LENGTH, 63, 63, OPAQUE_TEXT);
 
+//
+//	RacketLeftPosX = 8;
+//	RacketRightPosX = 120;
 
-	RacketLeftPosX = 120;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,55 +86,62 @@ MSG Screen::run(void)
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Screen::ProcessMessage(MSG i_Message) {
 
-	/* Se extrae la referencia del puntero al vector de datos del acelerometro. */
-	int* l_pMsgData = (int*) i_Message.data;
+	/* Initializes graphics context */
+	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 
 	bool changeScreen = false;
 
-	/* Initializes graphics context */
-	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
-	/* Draw Title, x-axis, gradation & labels */
-	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
-	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-	
+	/* Se extrae la referencia del puntero al vector de datos del acelerometro. */
+	int* l_pMsgData = (int*) i_Message.data;
+
 	int LastRacketLeftPosY = RacketLeftPosY;
 	RacketLeftPosY = *l_pMsgData;
-	RacketLeft.xMin = 128 - 4 - RacketLeftPosX;
-	RacketLeft.xMax = 128 + 4 - RacketLeftPosX;
-	RacketLeft.yMin = RacketLeftPosY - 24;
-	RacketLeft.yMax = RacketLeftPosY + 24;
 
-	//
-	Ball.xMin = 63 - 3;
-	Ball.xMax = 63 + 3;
-	Ball.yMin = 63 - 3;
-	Ball.yMax = 63 + 3;
+	int LastRacketRightPosY = RacketRightPosY;
+	RacketRightPosY = *l_pMsgData;
 
-//	racket2.xMin = x1;
-//	racket2.xMax = x2;
-//	racket2.yMin = y1;
-//	racket2.yMax = y2;
+	/* Draw Title, x-axis, gradation & labels */
+	if (LastRacketLeftPosY != RacketLeftPosY || LastRacketRightPosY != RacketRightPosY) {
 
-	if (LastRacketLeftPosY != RacketLeftPosY) {
 		changeScreen = true;
 	}
 
 	if (changeScreen) {
 
-		/* Initializes graphics context */
-		Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
-
-
-		/* Draw Title, x-axis, gradation & labels */
-		Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
 		Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-
-		Graphics_clearDisplay(&g_sContext);
 
 		printFigure(Ball);
 		printFigure(RacketLeft);
-		//printFigure(RacketRight);
+		printFigure(RacketRight);
+
 	}
+
+	//
+//	RacketLeft.xMin = RACKET_L_X_MIN_POS;
+//	RacketLeft.xMax = RACKET_L_X_MAX_POS;
+	RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
+	RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
+
+	RacketLeft.yMin = RacketLeftPosY - 24;
+	RacketLeft.yMax = RacketLeftPosY + 24;
+	//
+//	RacketRight.xMin = RACKET_R_X_MIN_POS;
+//	RacketRight.xMax = RACKET_R_X_MAX_POS;
+	RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
+	RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
+	RacketRight.yMin = RacketRightPosY - 24;
+	RacketRight.yMax = RacketRightPosY + 24;
+	//
+	Ball.xMin = 63 - 3;
+	Ball.xMax = 63 + 3;
+	Ball.yMin = RacketRightPosY - 3;
+	Ball.yMax = RacketRightPosY + 3;
+
+	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+
+	printFigure(Ball);
+	printFigure(RacketLeft);
+	printFigure(RacketRight);
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
