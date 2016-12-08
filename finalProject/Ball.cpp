@@ -33,9 +33,10 @@ Ball::Ball (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 	}
 }
 
-uint8_t Ball::run() {
+MSG Ball::run() {
 
-	return NO_ERR;
+	MSG nullMSG = {-1,-1,0,0,1};
+	return nullMSG;
 }
 
 

@@ -6,6 +6,9 @@
 
 #define BUTTON_DOWN_PORT GPIO_PORT_P3
 #define BUTTON_DOWN_PIN GPIO_PIN5
+#define BUTTON_UP_PORT GPIO_PORT_P5
+#define BUTTON_UP_PIN GPIO_PIN1
+
 
 #define RGB_BLUE_PORT GPIO_PORT_P5
 #define RGB_BLUE_PIN GPIO_PIN6
@@ -66,14 +69,19 @@ uint8_t Scheduler::run(void)
     while(NextTaskSlot < (NUMBER_OF_SLOTS-1U))
     {
         NextTask = static_cast<Task *> (NextSchedule[NextTaskSlot]);
+
         if(NextTask != ((uintptr_t) 0))
         {
-            NextTask->run();
+        	MSG messageFromTask = NextTask->run();
+        	if (messageFromTask.source != -1 || messageFromTask.destination != -1) {
+				this->attachMessage(messageFromTask);
+			}
+
             NextTaskSlot++;
         }
         else
         {
-            break;//NextTaskSlot++;
+            break;
         }
     }
     return l_u8ReturnCode;
@@ -85,12 +93,31 @@ uint8_t Scheduler::run(void)
 //////////////////////////////////////////////////////////////////////////////////////////////
 uint8_t Scheduler::CalculateNextSchedule(void)
 {
-    uint8_t NextTaskSlot = 0U;
+	int NextTaskSlot = 0;
     Task * NextTask = (uintptr_t) 0;
     uint8_t l_u8ReturnCode = NO_ERR;
     uint64_t l_u64CurrentCount;
     uint64_t l_u64FinalCount;
+/*
+    int CalculateIndex = NextScheduleSlot;
 
+    for (int i = 0; i < CalculateIndex; i++) {
+
+    	NextTask = static_cast<Task *> (Schedule[i]);
+
+		l_u64CurrentCount = NextTask->GetTaskCurrentCount() + 1;
+		l_u64FinalCount = NextTask->GetTaskFinalCount();
+		NextTask->SetTaskCurrentCount(l_u64CurrentCount);
+
+		if ((l_u64CurrentCount >= l_u64FinalCount) && (NextTask->m_bPeriodicTask)) {
+
+			NextTask->SetTaskCurrentCount(0);
+			NextSchedule[NextScheduleSlot] = NextTask;
+			NextScheduleSlot++;
+		}
+
+    }
+*/
 
     while(NextTaskSlot < (NUMBER_OF_SLOTS-1U)) {
 
@@ -119,6 +146,7 @@ uint8_t Scheduler::CalculateNextSchedule(void)
 
 		}
     }
+
     return l_u8ReturnCode;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +156,7 @@ uint8_t Scheduler::CalculateNextSchedule(void)
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Scheduler::clearNextScheduler() {
 
-	for (int i=0; i<=NUMBER_OF_SLOTS;i++) {
+	for (int i=0; i<NextScheduleSlot;i++) {
 
 		if (NextSchedule[i] == NULL) {
 			break;
@@ -150,6 +178,7 @@ void Scheduler::ProcessMessageQueue() {
 
 	bool clearButtonDown = false;
 	bool clearADC = false;
+	bool clearButtonUp = false;
 
 	//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
@@ -165,6 +194,7 @@ void Scheduler::ProcessMessageQueue() {
 			if (newMSG.currentCount >= newMSG.finalCount) {
 
 				if (newMSG.destination != SCHEDULER_ID) {
+
 					Task* newTask = ID_LUT[newMSG.destination];
 					newTask->ProcessMessage(newMSG);
 				}
@@ -180,6 +210,10 @@ void Scheduler::ProcessMessageQueue() {
 
 					case BUTTON_DOWN_ISR_ID:
 						clearButtonDown = true;
+						break;
+
+					case BUTTON_UP_ISR_ID:
+						clearButtonUp = true;
 						break;
 
 					case ADC_ISR_ID:
@@ -202,6 +236,12 @@ void Scheduler::ProcessMessageQueue() {
 		GPIO_enableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		clearButtonDown = false;
 	}
+
+	if(clearButtonUp) {
+			GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
+			GPIO_enableInterrupt(BUTTON_UP_PORT, BUTTON_UP_PIN);
+			clearButtonDown = false;
+		}
 
 	if(clearADC){
 		// Se limpia la bandera de interrupción del ADC.
@@ -299,6 +339,7 @@ void Scheduler::processMessage(MSG i_MSG) {
             NextSchedule[NextScheduleSlot] = TaskToAdd;
             NextScheduleSlot++;
             break;
+
 
 	};
 

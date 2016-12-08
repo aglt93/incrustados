@@ -19,7 +19,7 @@ class Ball : public GamePiece
 				int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
 				int* i_iLimitsX, int* i_iLimitsY);
 
-		virtual uint8_t run(void);
+		virtual MSG run(void);
 		virtual void ProcessMessage(MSG i_message);
 
     protected:

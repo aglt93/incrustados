@@ -53,6 +53,9 @@ main.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/dr
 main.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/GrLib/grlib/grlib.h
 main.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/assert.h
 main.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/linkage.h
+main.obj: ../GamePiece.hpp
+main.obj: ../Racket.hpp
+main.obj: ../Ball.hpp
 main.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h
 main.obj: ../task_ids.hpp
 
@@ -109,5 +112,8 @@ main.obj: ../task_ids.hpp
 /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/GrLib/grlib/grlib.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/assert.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/linkage.h: 
+../GamePiece.hpp: 
+../Racket.hpp: 
+../Ball.hpp: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h: 
 ../task_ids.hpp: 

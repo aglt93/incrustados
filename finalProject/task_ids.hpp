@@ -7,3 +7,5 @@
 #define ADC_ISR_ID 7
 #define BUTTON_DOWN_ISR_ID 8
 #define BUTTON_UP_ISR_ID 9
+#define RACKET_LEFT_ID 10
+#define RACKET_RIGHT_ID 11

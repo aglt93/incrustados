@@ -11,6 +11,8 @@
 #include "msp.h"
 #include "GamePiece.hpp"
 
+#define SCREEN_CENTER 63
+
 
 class Racket : public GamePiece
 {
@@ -19,14 +21,13 @@ class Racket : public GamePiece
 				int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
 				int* i_iLimitsX, int* i_iLimitsY);
 
-		//GamePiece(int i_iTaskID, bool i_bPeriodicTask, int LED_PORT, int LED_PIN, uint64_t i_u64FinalCount);
-
-		virtual uint8_t run(void);
+		virtual MSG run(void);
 		virtual void ProcessMessage(MSG i_message);
 
     protected:
 
     private:
+		void CheckLimitsY();
 
 };
 

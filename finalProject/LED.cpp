@@ -33,13 +33,13 @@ LED::LED(int i_iTaskID, bool i_bPeriodicTask, int LED_PORT,int LED_PIN, uint64_t
 
 }
 
-uint8_t LED::run(void)
+MSG LED::run(void)
 {
     //#########################
     // Blink code
     //#########################
 
 	GPIO_toggleOutputOnPin(m_iLedPort,m_iLedPin);
-
-    return(NO_ERR);
+	MSG nullMSG = {-1,-1,0,0,1};
+	return nullMSG;
 }

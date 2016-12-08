@@ -8,7 +8,7 @@ extern "C"
 #include <grlib.h>
 #include "Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
-#include "u_logo_100_100.h"
+//#include "u_logo_100_100.h"
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,7 @@ extern "C"
 //////////////////////////////////////////////////////////////////////////////////////////////
 /* Graphic library context */
 Graphics_Context g_sContext;
-int8_t racket1_center = 63;
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,13 +62,16 @@ Screen::Screen(int i_iTaskID, bool i_bPeriodicTask)
 //	Graphics_drawStringCentered(&g_sContext, (int8_t *)"PING PONGDDED", AUTO_STRING_LENGTH, 63, 63, OPAQUE_TEXT);
 
 
+	RacketLeftPosX = 120;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-uint8_t Screen::run(void)
+MSG Screen::run(void)
 {
-    return(NO_ERR);
+	MSG nullMSG = {-1,-1,0,0,1};
+	return nullMSG;
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,64 +84,54 @@ uint8_t Screen::run(void)
 void Screen::ProcessMessage(MSG i_Message) {
 
 	/* Se extrae la referencia del puntero al vector de datos del acelerometro. */
-	int* l_pDataTask = (int*) i_Message.data;
+	int* l_pMsgData = (int*) i_Message.data;
 
-	/* Se convierte el valor del acelerometro en lineas para la pantalla. */
-//    int l_iScreenValue = ADCtoScreenValueConv(*(l_pDataTask+1));
+	bool changeScreen = false;
 
 	/* Initializes graphics context */
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
-
-
 	/* Draw Title, x-axis, gradation & labels */
 	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
 	Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+	
+	int LastRacketLeftPosY = RacketLeftPosY;
+	RacketLeftPosY = *l_pMsgData;
+	RacketLeft.xMin = 128 - 4 - RacketLeftPosX;
+	RacketLeft.xMax = 128 + 4 - RacketLeftPosX;
+	RacketLeft.yMin = RacketLeftPosY - 24;
+	RacketLeft.yMax = RacketLeftPosY + 24;
 
-	Graphics_Rectangle ball, racket1, racket2;
-
-	int8_t x1, y1, x2, y2;
-
-//	int8_t racket1_center = 63;
-	int8_t racket2_center = 63;
-
-	int8_t racket1_move = 0;
-	int8_t racket2_move = 0;
-
-	racket1_move = *(l_pDataTask);
-
-	x1 = 120 - 4;
-	x2 = 120 + 4;
-//	y1 = 63 + 4*8 -24 = 71
-//	y2 = 63 + 4*8 +24 = 119
-	y1 = racket1_center + racket1_move*8 - 24;
-	y2 = racket1_center + racket1_move*8 + 24;
-
-
-
-	ball.xMin = 63 - 3;
-	ball.xMax = 63 + 3;
-	ball.yMin = 63 - 3;
-	ball.yMax = 63 + 3;
-
-	racket1.xMin = 128 - x1;
-	racket1.xMax = 128 - x2;
-	racket1.yMin = y1;
-	racket1.yMax = y2;
+	//
+	Ball.xMin = 63 - 3;
+	Ball.xMax = 63 + 3;
+	Ball.yMin = 63 - 3;
+	Ball.yMax = 63 + 3;
 
 //	racket2.xMin = x1;
 //	racket2.xMax = x2;
 //	racket2.yMin = y1;
 //	racket2.yMax = y2;
 
-	Graphics_clearDisplay(&g_sContext);
+	if (LastRacketLeftPosY != RacketLeftPosY) {
+		changeScreen = true;
+	}
 
-	printFigure(ball);
-	printFigure(racket1);
-//	printFigure(racket2);
+	if (changeScreen) {
 
-	/* Se ejecuta la funcion que actualiza las lineas en la pantalla. */
+		/* Initializes graphics context */
+		Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 
-//	printFigure(0,l_iScreenValue,*(l_pDataTask));
+
+		/* Draw Title, x-axis, gradation & labels */
+		Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+		Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+
+		Graphics_clearDisplay(&g_sContext);
+
+		printFigure(Ball);
+		printFigure(RacketLeft);
+		//printFigure(RacketRight);
+	}
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,21 +151,4 @@ void Screen::printFigure(Graphics_Rectangle figure)
 	Graphics_fillRectangle(&g_sContext, &figure);
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-/* Los datos del acelerometro se traducen a coordenadas en el eje y de la pantalla.
- * por medio de una ecuacion lineal con offset.
- */
-//////////////////////////////////////////////////////////////////////////////////////////////
-//int Screen::ADCtoScreenValueConv(int i_iADCvalue){
-//
-//	int l_iServoValue;
-//
-//	/* Se transforma el valor del ADC a lineas de acuerdo a la ecuacion de una recta */
-//	l_iServoValue = (float) (i_iADCvalue-5000)/51.8;
-//
-//	return l_iServoValue;
-//
-//}
 //////////////////////////////////////////////////////////////////////////////////////////////

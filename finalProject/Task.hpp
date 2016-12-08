@@ -97,7 +97,7 @@ class Task
 	public:
 		Task();
 		int m_iTaskID;
-		virtual uint8_t     run(void){return(0);};
+		virtual MSG		    run(void);
 		bool                IsTaskFinished(void){return m_bIsFinished;};
 		uint8_t             GetTaskPriority(void) {return m_u8Priority;};
 		void                SetTaskPriority(uint8_t i_u8NewPriority){m_u8Priority = i_u8NewPriority;};

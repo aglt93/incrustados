@@ -25,8 +25,8 @@ class GamePiece : public Task
     public:
 		GamePiece();
 
-		virtual uint8_t run(void);
-		virtual void ProcessMessage(MSG i_message);
+//		virtual uint8_t run(void);
+//		virtual void ProcessMessage(MSG i_message);
 
         void setPosX(int i_iPosX);
         int getPosX();

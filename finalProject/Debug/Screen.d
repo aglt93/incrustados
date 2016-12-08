@@ -50,8 +50,6 @@ Screen.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/
 Screen.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/GrLib/grlib/grlib.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdio.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdarg.h
-Screen.obj: ../u_logo_100_100.h
-Screen.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/GrLib/grlib/grlib.h
 Screen.obj: ../Screen.hpp
 Screen.obj: ../Task.hpp
 Screen.obj: ../task_ids.hpp
@@ -106,8 +104,6 @@ Screen.obj: ../task_ids.hpp
 /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/GrLib/grlib/grlib.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdio.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdarg.h: 
-../u_logo_100_100.h: 
-/home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/GrLib/grlib/grlib.h: 
 ../Screen.hpp: 
 ../Task.hpp: 
 ../task_ids.hpp: 

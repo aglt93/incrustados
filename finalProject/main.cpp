@@ -11,10 +11,26 @@
 #include "LED.hpp"
 #include "Button.hpp"
 #include "Screen.hpp"
-//#include "Servo.hpp"
+#include "GamePiece.hpp"
+#include "Racket.hpp"
+#include "Ball.hpp"
 #include <driverlib.h>
 #include <stdlib.h>
 #include "task_ids.hpp"
+/*******************************************************************************************/
+
+
+/*******************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Definición de defines.
+//////////////////////////////////////////////////////////////////////////////////////////////
+#define RACKET_LIMIT_X_LEFT 	119
+#define RACKET_LIMIT_X_RIGHT 	119
+#define RACKET_LIMIT_Y_UP 		103
+#define RACKET_LIMIT_Y_DOWN 	24
+#define RACKET_LEFT_PERIOD 		100
+#define RACKET_RIGHT_PERIOD 	100
+#define BALL_PERIOD				100
 /*******************************************************************************************/
 
 
@@ -62,22 +78,33 @@ Scheduler MainScheduler;
 //////////////////////////////////////////////////////////////////////////////////////////////
 void main(void) {
 
-	Button ButtonDown(BUTTON_DOWN_ID,NOT_PERIODIC_TASK,BUTTON_DOWN_PORT,BUTTON_DOWN_PIN,200);
-	Button ButtonUp(BUTTON_UP_ID,NOT_PERIODIC_TASK,BUTTON_UP_PORT,BUTTON_UP_PIN,200);
+//	Button ButtonDown(BUTTON_DOWN_ID,NOT_PERIODIC_TASK,BUTTON_DOWN_PORT,BUTTON_DOWN_PIN,200);
+//	Button ButtonUp(BUTTON_UP_ID,NOT_PERIODIC_TASK,BUTTON_UP_PORT,BUTTON_UP_PIN,200);
+
+	//
+	int RacketLimitsX[2] = {RACKET_LIMIT_X_LEFT,RACKET_LIMIT_X_RIGHT};
+	int *pRacketLimitsX = RacketLimitsX;
+
+	int RacketLimitsY[2] = {RACKET_LIMIT_Y_UP,RACKET_LIMIT_Y_DOWN};
+	int *pRacketLimitsY = RacketLimitsY;
+	//
 
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-//    Servo Servo1(SERVO_ID,NOT_PERIODIC_TASK,SERVO_PORT,SERVO_PIN);
+	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,120,63,8,NO_MOVE,NO_MOVE,
+			pRacketLimitsX,pRacketLimitsY);
+
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();
 
     // Se agregan los punteros de los tasks creados al scheduler.
     MainScheduler.attach(&PrintScreen);
-//    MainScheduler.attach(&Servo1);
-    MainScheduler.attach(&ButtonDown);
-    MainScheduler.attach(&ButtonUp);
+//    MainScheduler.attach(&ButtonDown);
+//    MainScheduler.attach(&ButtonUp);
+    MainScheduler.attach(&RacketLeft);
+
 
     // Ciclo principal. Cada 1ms entra a ejecutar los procesos necesarios para el correcto
     // funcionamiento del RTOS.
@@ -87,6 +114,9 @@ void main(void) {
 
     	if(SystemTicks != MainScheduler.ticks) {
             MainScheduler.ticks = SystemTicks;
+            MainScheduler.CalculateNextSchedule();
+            MainScheduler.run();
+            MainScheduler.clearNextScheduler();
             MainScheduler.ProcessMessageQueue();
         }
 
@@ -125,25 +155,10 @@ void BUTTON_DOWN_ISR(void) {
 		// Clear interrupt flag and toggle output LEDs.
 		GPIO_disableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
-		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
+		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
-		if (counterDown<5){
-			counterDown++;
-		}
-		* positionDown = counterDown;
-
-//		if (counterDown < 5){
-//			counterDown++;
-//			counterUp = 0;
-////			GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-//			* positionDown = counterDown;
-//		}
-
-		MSG message = {BUTTON_DOWN_ISR_ID,BUTTON_DOWN_ID,0,0,SUPRESSION_TIME};
+		MSG message = {BUTTON_DOWN_ISR_ID,RACKET_LEFT_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
-
-		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,positionDown,0,1};
-		MainScheduler.attachMessage(changeScreen);
 	}
 
 
@@ -157,21 +172,12 @@ void BUTTON_UP_ISR(void) {
 	// ISR for PIN5
 	if(GPIO_getInterruptStatus(BUTTON_UP_PORT, BUTTON_UP_PIN)) {
 		// Clear interrupt flag and toggle output LEDs.
+		GPIO_disableInterrupt(BUTTON_UP_PORT, BUTTON_DOWN_PIN);
 		GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
+		//GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
 
-		GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-		if (counterDown>-5){
-			counterDown--;
-		}
-
-		* positionDown = counterDown;
-
-
-		MSG message = {BUTTON_UP_ISR_ID,BUTTON_UP_ID,0,0,SUPRESSION_TIME};
+		MSG message = {BUTTON_UP_ISR_ID,RACKET_LEFT_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
-
-		MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,positionDown,0,1};
-		MainScheduler.attachMessage(changeScreen);
 	}
 
 }
@@ -209,22 +215,14 @@ void ADC14_IRQHandler(void) {
     // Si la conversión fue completada
 	// Extraiga los datos de la memoria del ADC.
 	*aDataFromADC = ADC14_getResult(ADC_MEM0);
-	*aDataFromADC = *aDataFromADC / 3260;
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-//
-//	MSG changeScreen = {ADC_ISR_ID,SCREEN_ID,aDataFromADC,0,100};
-//	MainScheduler.attachMessage(changeScreen);
-
-	// Envíe el msj al servo para que refleje el cambio.
-//	*DataToServo = aDataFromADC[1];
-//	MSG changeServo = {ADC_ISR_ID,SERVO_ID,DataToServo,0,1};
-//	MainScheduler.attachMessage(changeServo);
+	MSG changeLeftRacket = {ADC_ISR_ID,RACKET_LEFT_ID,aDataFromADC,0,SUPRESSION_TIME};
+	MainScheduler.attachMessage(changeLeftRacket);
 
 	uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();
-	MAP_ADC14_clearInterruptFlag(g_u64Status);
-
 	MAP_ADC14_disableInterrupt(ADC_INT0);
+	MAP_ADC14_clearInterruptFlag(g_u64Status);
 
 }
 }
@@ -308,6 +306,54 @@ void setupADC() {
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// SetupButtonUp
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+void setupButtonUp() {
+
+	//////////////////////////////////////////////////////////////////////////
+	GPIO_setAsInputPinWithPullUpResistor(BUTTON_UP_PORT, BUTTON_UP_PIN);
+	// Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition
+	GPIO_interruptEdgeSelect(BUTTON_UP_PORT, BUTTON_UP_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
+	GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
+	GPIO_enableInterrupt(BUTTON_UP_PORT, BUTTON_UP_PIN);
+	GPIO_registerInterrupt(BUTTON_UP_PORT, BUTTON_UP_ISR);
+	//////////////////////////////////////////////////////////////////////////
+
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// SetupButtonDown
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+void setupButtonDown() {
+
+	//////////////////////////////////////////////////////////////////////////
+	GPIO_setAsInputPinWithPullUpResistor(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+	// Configuring and enabling P2.6 interrupt triggered by a HIGH TO LOW transition
+	GPIO_interruptEdgeSelect(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN, GPIO_HIGH_TO_LOW_TRANSITION);
+	GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+	GPIO_enableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
+	GPIO_registerInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_ISR);
+	//////////////////////////////////////////////////////////////////////////
+
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Setup
@@ -331,8 +377,9 @@ void Setup(void)
 	GPIO_setAsOutputPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 	GPIO_setOutputLowOnPin(RGB_GREEN_PORT,RGB_GREEN_PIN);
 
-	GPIO_registerInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_ISR);
-	GPIO_registerInterrupt(BUTTON_UP_PORT, BUTTON_UP_ISR);
+	// Se configuran los botones.
+	setupButtonUp();
+	setupButtonDown();
 
 	// Se configura el ADC.
 	setupADC();
@@ -340,6 +387,7 @@ void Setup(void)
 	// Se configura la interrupción del Timer32 para que interrumpa con un periodo de 1ms.
 	__disable_irq();
 	TIMER32_1->LOAD = 0x0000BB80; //~1ms ---> a 48Mhz
+	//TIMER32_1->LOAD = 0x00005DC0; //~2ms ---> a 48Mhz
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);
