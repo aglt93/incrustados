@@ -47,7 +47,7 @@ MSG Racket::run() {
 //	MSG nullMSG = {-1,-1,0,0,1};
 //	return nullMSG;
 
-	MSG ChangeScreen = {RACKET_LEFT_ID,SCREEN_ID,&m_iPosY,0,1};
+	MSG ChangeScreen = {m_iTaskID,SCREEN_ID,&m_iPosY,0,1};
 	return ChangeScreen;
 }
 
