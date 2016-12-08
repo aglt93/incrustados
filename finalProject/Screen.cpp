@@ -94,6 +94,9 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	int LastRacketLeftPosY  = RacketLeftPosY;
 	int LastRacketRightPosY = RacketRightPosY;
+	int LastBallPosX = BallPosX;
+	int LastBallPosY = BallPosY;
+
 
 	switch (i_Message.source) {
 
@@ -108,10 +111,10 @@ void Screen::ProcessMessage(MSG i_Message) {
 			break;
 
 		case BALL_ID:
-//			int LastBallRightPosY = BallRightPosY;
-//			BallRightPosY = *l_pMsgData;
-//			int LastBallRightPosY = BallRightPosY;
-//			BallRightPosY = *l_pMsgData;
+			LastBallPosX = BallPosX;
+			BallPosX = *(l_pMsgData);
+			LastBallPosY = BallPosY;
+			BallPosY = *(l_pMsgData+1);
 			break;
 
 	}
@@ -119,7 +122,7 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 
 	/* Draw Title, x-axis, gradation & labels */
-	if (LastRacketLeftPosY != RacketLeftPosY || LastRacketRightPosY != RacketRightPosY) {
+	if (LastRacketLeftPosY != RacketLeftPosY || LastRacketRightPosY != RacketRightPosY || LastBallPosX != BallPosX || LastBallPosY != BallPosY) {
 
 		changeScreen = true;
 	}
@@ -138,18 +141,18 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
 	RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
-	RacketLeft.yMin = RacketLeftPosY - 24;
-	RacketLeft.yMax = RacketLeftPosY + 24;
+	RacketLeft.yMin = RacketLeftPosY - RACKET_LENGTH/2;
+	RacketLeft.yMax = RacketLeftPosY + RACKET_LENGTH/2;
 	//
 	RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
 	RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
-	RacketRight.yMin = RacketRightPosY - 24;
-	RacketRight.yMax = RacketRightPosY + 24;
+	RacketRight.yMin = RacketRightPosY - RACKET_LENGTH/2;
+	RacketRight.yMax = RacketRightPosY + RACKET_LENGTH/2;
 	//
-	Ball.xMin = 63 - 3;
-	Ball.xMax = 63 + 3;
-	Ball.yMin = 63 - 3;
-	Ball.yMax = 63 + 3;
+	Ball.xMin = BallPosX - RACKET_THICKNESS/2;
+	Ball.xMax = BallPosX + RACKET_THICKNESS/2;
+	Ball.yMin = BallPosY - RACKET_THICKNESS/2;
+	Ball.yMax = BallPosY + RACKET_THICKNESS/2;
 
 	if (changeScreen) {
 		Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);

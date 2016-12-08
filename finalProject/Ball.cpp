@@ -38,12 +38,56 @@ Ball::Ball (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 
 MSG Ball::run() {
 
-	MSG nullMSG = {-1,-1,0,0,1};
+//	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+
+	///////////////////////////////////////////
+	if(m_iDirectionX == NO_MOVE){
+		m_iPosX = m_iPosX;
+	}
+
+	else if(m_iDirectionX == MOVE_LEFT){
+		m_iPosX--;
+	}
+
+	else if(m_iDirectionX == MOVE_RIGHT){
+		m_iPosX++;
+	}
+	///////////////////////////////////////////
+
+	///////////////////////////////////////////
+	if(m_iDirectionY == NO_MOVE){
+		m_iPosY = m_iPosY;
+	}
+
+	else if(m_iDirectionY == MOVE_UP){
+		m_iPosY--;
+	}
+
+	else if(m_iDirectionY == MOVE_DOWN){
+		m_iPosY++;
+	}
+	///////////////////////////////////////////
+
+	int BallPositions[2] = {m_iPosX,m_iPosY};
+	int* pBallPositions = BallPositions;
+
+	MSG nullMSG = {BALL_ID,SCREEN_ID,pBallPositions,0,1};
 	return nullMSG;
 }
 
 
 
 void Ball::ProcessMessage(MSG i_Message){
+
+	switch(i_Message.source){
+
+		case RACKET_LEFT_ID:
+
+			break;
+
+		case RACKET_RIGHT_ID:
+			break;
+
+	}
 
 }
