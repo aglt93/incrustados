@@ -31,6 +31,11 @@
 #define RACKET_LEFT_PERIOD 		100
 #define RACKET_RIGHT_PERIOD 	100
 #define BALL_PERIOD				100
+#define RACKET_LEFT_POS_X		120
+#define RACKET_LEFT_POS_Y		63
+#define RACKET_THICKNESS		3
+#define BALL_INIT_POS_X			RACKET_LEFT_POS_X-RACKET_THICKNESS
+#define BALL_INIT_POS_Y			63
 /*******************************************************************************************/
 
 
@@ -87,14 +92,20 @@ void main(void) {
 
 	int RacketLimitsY[2] = {RACKET_LIMIT_Y_UP,RACKET_LIMIT_Y_DOWN};
 	int *pRacketLimitsY = RacketLimitsY;
-	//
+/*
+	int BallLimitsX[2] = {};
+	int *pRacketLimitsX = BallLimitsX;
 
+	int BallLimitsY[2] = {};
+	int *pRacketLimitsY = BallLimitsY;
+	//
+*/
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,120,63,8,NO_MOVE,NO_MOVE,
-			pRacketLimitsX,pRacketLimitsY);
-
+	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,RACKET_LEFT_POS_X,
+			RACKET_LEFT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketLimitsX,pRacketLimitsY);
+	//Ball MainBall(BALL_ID, PERIODIC_TASK,BALL_PERIOD,BALL_POS_X,BALL_POS_Y,NO_MOVE,NO_MOVE);
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();
