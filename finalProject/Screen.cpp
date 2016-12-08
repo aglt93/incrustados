@@ -91,14 +91,34 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	bool changeScreen = false;
 
-	/* Se extrae la referencia del puntero al vector de datos del acelerometro. */
+	/* Se extrae la referencia del puntero al del periferico. */
+
 	int* l_pMsgData = (int*) i_Message.data;
 
-	int LastRacketLeftPosY = RacketLeftPosY;
-	RacketLeftPosY = *l_pMsgData;
+	int LastRacketLeftPosY,LastRacketRightPosY;
 
-	int LastRacketRightPosY = RacketRightPosY;
-	RacketRightPosY = *l_pMsgData;
+	switch (i_Message.source) {
+
+		case RACKET_LEFT_ID:
+			LastRacketLeftPosY = RacketLeftPosY;
+			RacketLeftPosY = *l_pMsgData;
+			break;
+
+		case RACKET_RIGHT_ID:
+			LastRacketRightPosY = RacketRightPosY;
+			RacketRightPosY = *l_pMsgData;
+			break;
+
+		case BALL_ID:
+//			int LastBallRightPosY = BallRightPosY;
+//			BallRightPosY = *l_pMsgData;
+//			int LastBallRightPosY = BallRightPosY;
+//			BallRightPosY = *l_pMsgData;
+			break;
+
+	}
+
+
 
 	/* Draw Title, x-axis, gradation & labels */
 	if (LastRacketLeftPosY != RacketLeftPosY || LastRacketRightPosY != RacketRightPosY) {
@@ -116,17 +136,11 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	}
 
-	//
-//	RacketLeft.xMin = RACKET_L_X_MIN_POS;
-//	RacketLeft.xMax = RACKET_L_X_MAX_POS;
 	RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
 	RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
-
 	RacketLeft.yMin = RacketLeftPosY - 24;
 	RacketLeft.yMax = RacketLeftPosY + 24;
 	//
-//	RacketRight.xMin = RACKET_R_X_MIN_POS;
-//	RacketRight.xMax = RACKET_R_X_MAX_POS;
 	RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
 	RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
 	RacketRight.yMin = RacketRightPosY - 24;

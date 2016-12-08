@@ -161,7 +161,7 @@ void BUTTON_DOWN_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
-		MSG message = {BUTTON_DOWN_ISR_ID,RACKET_LEFT_ID,0,0,SUPRESSION_TIME};
+		MSG message = {BUTTON_DOWN_ISR_ID,RACKET_RIGHT_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 	}
 
@@ -178,7 +178,7 @@ void BUTTON_UP_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
 		//GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
 
-		MSG message = {BUTTON_UP_ISR_ID,RACKET_LEFT_ID,0,0,SUPRESSION_TIME};
+		MSG message = {BUTTON_UP_ISR_ID,RACKET_RIGHT_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 	}
 
