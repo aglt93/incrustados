@@ -86,13 +86,16 @@ MSG Screen::run(void)
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Screen::ProcessMessage(MSG i_Message) {
 
-	bool changeScreen = false;
-
 	/* Se extrae la referencia del puntero al del periferico. */
 
 	int* l_pMsgData = (int*) i_Message.data;
 
+	//
+	bool changeRacketLeft = false;
+	bool changeRacketRight = false;
+	bool changeBall = false;
 
+	//
 	int LastRacketLeftPosY  = RacketLeftPosY;
 	int LastRacketRightPosY = RacketRightPosY;
 	int LastBallPosX = BallPosX;
@@ -104,11 +107,13 @@ void Screen::ProcessMessage(MSG i_Message) {
 		case RACKET_LEFT_ID:
 			LastRacketLeftPosY = RacketLeftPosY;
 			RacketLeftPosY = *l_pMsgData;
+			if (LastRacketLeftPosY != RacketLeftPosY) {changeRacketLeft = true;}
 			break;
 
 		case RACKET_RIGHT_ID:
 			LastRacketRightPosY = RacketRightPosY;
 			RacketRightPosY = *l_pMsgData;
+			if (LastRacketRightPosY != RacketRightPosY) {changeRacketRight = true;}
 			break;
 
 		case BALL_ID:
@@ -116,52 +121,74 @@ void Screen::ProcessMessage(MSG i_Message) {
 			BallPosX = *(l_pMsgData);
 			LastBallPosY = BallPosY;
 			BallPosY = *(l_pMsgData+1);
+			if (LastBallPosX != BallPosX || LastBallPosY != BallPosY) {changeBall = true;}
 			break;
 
 	}
 
+	if(changeRacketLeft || changeRacketRight || changeBall) {
 
-
-	/* Draw Title, x-axis, gradation & labels */
-	if (LastRacketLeftPosY != RacketLeftPosY || LastRacketRightPosY != RacketRightPosY ||
-			LastBallPosX != BallPosX || LastBallPosY != BallPosY) {
-
-		changeScreen = true;
-	}
-
-	if (changeScreen) {
 		/* Initializes graphics context */
 		Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 
 		Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
 
-		printFigure(Ball);
-		printFigure(RacketLeft);
-		printFigure(RacketRight);
+		//
+		if (changeRacketLeft) {
 
-	}
+			// Se limpia la figura anterior.
+			printFigure(RacketLeft);
 
-	RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
-	RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
-	RacketLeft.yMin = RacketLeftPosY - RACKET_LENGTH/2;
-	RacketLeft.yMax = RacketLeftPosY + RACKET_LENGTH/2;
-	//
-	RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
-	RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
-	RacketRight.yMin = RacketRightPosY - RACKET_LENGTH/2;
-	RacketRight.yMax = RacketRightPosY + RACKET_LENGTH/2;
-	//
-	Ball.xMin = BallPosX - RACKET_THICKNESS/2;
-	Ball.xMax = BallPosX + RACKET_THICKNESS/2;
-	Ball.yMin = BallPosY - RACKET_THICKNESS/2;
-	Ball.yMax = BallPosY + RACKET_THICKNESS/2;
+			// Se calcula la nueva posición de la figura.
+			RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
+			RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
+			RacketLeft.yMin = RacketLeftPosY - RACKET_LENGTH/2;
+			RacketLeft.yMax = RacketLeftPosY + RACKET_LENGTH/2;
 
-	if (changeScreen) {
-		Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+			// Se dibuja la nueva figura.
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+			printFigure(RacketLeft);
 
-		printFigure(Ball);
-		printFigure(RacketLeft);
-		printFigure(RacketRight);
+
+		}
+
+		//
+		if (changeRacketRight) {
+
+			// Se limpia la figura anterior.
+			printFigure(RacketRight);
+
+			// Se calcula la nueva posición de la figura.
+			RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
+			RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
+			RacketRight.yMin = RacketRightPosY - RACKET_LENGTH/2;
+			RacketRight.yMax = RacketRightPosY + RACKET_LENGTH/2;
+
+			// Se dibuja la nueva figura.
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+			printFigure(RacketRight);
+
+
+		}
+
+		//
+		if (changeBall) {
+
+			// Se limpia la figura anterior.
+			printFigure(Ball);
+
+			// Se calcula la nueva posición de la figura.
+			Ball.xMin = BallPosX - RACKET_THICKNESS/2;
+			Ball.xMax = BallPosX + RACKET_THICKNESS/2;
+			Ball.yMin = BallPosY - RACKET_THICKNESS/2;
+			Ball.yMax = BallPosY + RACKET_THICKNESS/2;
+
+			// Se dibuja la nueva figura.
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
+			printFigure(Ball);
+
+
+		}
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////

@@ -82,13 +82,13 @@ void Racket::ProcessMessage(MSG i_Message){
 void Racket::CheckLimitsY(){
 
 
-	if(m_iPosY > m_iLimitsY[0]) {
+	if(m_iPosY < m_iLimitsY[0]) {// UP
 
 		m_iPosY = m_iLimitsY[0];
 
 	}
 
-	if(m_iPosY < m_iLimitsY[1]){
+	else if(m_iPosY > m_iLimitsY[1]){// DOWN
 
 		m_iPosY = m_iLimitsY[1];
 	}

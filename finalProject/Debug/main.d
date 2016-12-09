@@ -57,6 +57,7 @@ main.obj: ../GamePiece.hpp
 main.obj: ../Racket.hpp
 main.obj: ../Ball.hpp
 main.obj: ../task_ids.hpp
+main.obj: ../game_env.hpp
 main.obj: /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h
 main.obj: ../task_ids.hpp
 main.obj: ../game_env.hpp
@@ -118,6 +119,7 @@ main.obj: ../game_env.hpp
 ../Racket.hpp: 
 ../Ball.hpp: 
 ../task_ids.hpp: 
+../game_env.hpp: 
 /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h: 
 ../task_ids.hpp: 
 ../game_env.hpp: 

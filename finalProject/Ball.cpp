@@ -69,6 +69,9 @@ MSG Ball::run() {
 		m_iPosY++;
 	}
 	///////////////////////////////////////////
+	CheckLimitsX();
+	CheckLimitsY();
+
 	BallPositions[0] = m_iPosX;
 	BallPositions[1] = m_iPosY;
 
@@ -93,5 +96,43 @@ void Ball::ProcessMessage(MSG i_Message){
 			break;
 
 	}
+
+}
+
+
+void Ball::CheckLimitsX() {
+
+	if (m_iPosX < m_iLimitsX[0]) {// LEFT
+
+		m_iPosX = m_iLimitsX[0];
+		m_iDirectionX = MOVE_RIGHT;
+
+	}
+
+	else if (m_iPosX > m_iLimitsX[1]) {// RIGHT
+
+		m_iPosX = m_iLimitsX[1];
+		m_iDirectionX = MOVE_LEFT;
+
+	}
+
+}
+
+void Ball::CheckLimitsY() {
+
+	if (m_iPosY < m_iLimitsY[0]) {// UP
+
+		m_iPosY = m_iLimitsY[0];
+		m_iDirectionY = MOVE_DOWN;
+
+	}
+
+	else if (m_iPosY > m_iLimitsY[1]) {// DOWN
+
+		m_iPosY = m_iLimitsY[1];
+		m_iDirectionY = MOVE_UP;
+
+	}
+
 
 }

@@ -11,6 +11,7 @@
 #include "msp.h"
 #include "GamePiece.hpp"
 #include "task_ids.hpp"
+#include "game_env.hpp"
 
 
 class Ball : public GamePiece
@@ -28,6 +29,8 @@ class Ball : public GamePiece
     private:
 		int BallPositions[2];
 		int* pBallPositions;
+		void CheckLimitsX();
+		void CheckLimitsY();
 
 };
 
