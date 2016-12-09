@@ -14,6 +14,7 @@
 #include "GamePiece.hpp"
 #include "Racket.hpp"
 #include "Ball.hpp"
+#include "GameLogic.hpp"
 #include <driverlib.h>
 #include <stdlib.h>
 #include "task_ids.hpp"
@@ -106,6 +107,7 @@ void main(void) {
 			RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketRightLimitsX,pRacketRightLimitsY);
 	Ball MainBall(BALL_ID, PERIODIC_TASK,BALL_PERIOD,BALL_INIT_POS_X,BALL_INIT_POS_Y,3,
 			MOVE_RIGHT,MOVE_UP,pBallLimitsX,pBallLimitsY);
+	GameLogic MainLogic(LOGIC_ID,NOT_PERIODIC_TASK,LOGIC_PERIOD);
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();

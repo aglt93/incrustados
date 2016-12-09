@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../Ball.cpp \
 ../Button.cpp \
+../GameLogic.cpp \
 ../GamePiece.cpp \
 ../LED.cpp \
 ../Racket.cpp \
@@ -28,6 +29,7 @@ C_SRCS += \
 OBJS += \
 ./Ball.obj \
 ./Button.obj \
+./GameLogic.obj \
 ./GamePiece.obj \
 ./LED.obj \
 ./Racket.obj \
@@ -42,6 +44,7 @@ OBJS += \
 CPP_DEPS += \
 ./Ball.d \
 ./Button.d \
+./GameLogic.d \
 ./GamePiece.d \
 ./LED.d \
 ./Racket.d \
@@ -58,6 +61,7 @@ C_DEPS += \
 CPP_DEPS__QUOTED += \
 "Ball.d" \
 "Button.d" \
+"GameLogic.d" \
 "GamePiece.d" \
 "LED.d" \
 "Racket.d" \
@@ -74,6 +78,7 @@ C_DEPS__QUOTED += \
 OBJS__QUOTED += \
 "Ball.obj" \
 "Button.obj" \
+"GameLogic.obj" \
 "GamePiece.obj" \
 "LED.obj" \
 "Racket.obj" \
@@ -88,6 +93,7 @@ OBJS__QUOTED += \
 CPP_SRCS__QUOTED += \
 "../Ball.cpp" \
 "../Button.cpp" \
+"../GameLogic.cpp" \
 "../GamePiece.cpp" \
 "../LED.cpp" \
 "../Racket.cpp" \
