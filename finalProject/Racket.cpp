@@ -21,6 +21,12 @@ Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 	//
 	m_iPosX = i_iPosX;
 	m_iPosY = i_iPosY;
+
+	// Solo para que sean diferentes inicialmente!
+	m_iLastPosX = m_iPosX-1;
+	m_iLastPosY = m_iPosY-1;
+
+	//
 	m_iSize = i_iSize;
 	m_iDirectionX = i_iDirectionX;
 	m_iDirectionY = i_iDirectionY;
@@ -42,13 +48,16 @@ Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 
 MSG Racket::run() {
 
-	//GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+	if(m_iLastPosY != m_iPosY) {
+		m_iLastPosY = m_iPosY;
+		MSG ChangeScreen = {m_iTaskID,SCREEN_ID,&m_iPosY,0,1};
+		return ChangeScreen;
+	}
 
-//	MSG nullMSG = {-1,-1,0,0,1};
-//	return nullMSG;
-
-	MSG ChangeScreen = {m_iTaskID,SCREEN_ID,&m_iPosY,0,1};
-	return ChangeScreen;
+	else {
+		MSG nullMSG = {-1,-1,0,0,1};
+		return nullMSG;
+	}
 }
 
 

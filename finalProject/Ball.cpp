@@ -18,6 +18,12 @@ Ball::Ball (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 	//
 	m_iPosX = i_iPosX;
 	m_iPosY = i_iPosY;
+
+	// Para que sea diferente!
+	m_iLastPosX = m_iPosX-1;
+	m_iLastPosY = m_iPosY-1;
+
+	//
 	m_iSize = i_iSize;
 	m_iDirectionX = i_iDirectionX;
 	m_iDirectionY = i_iDirectionY;
@@ -72,14 +78,24 @@ MSG Ball::run() {
 	CheckLimitsX();
 	CheckLimitsY();
 
-	BallPositions[0] = m_iPosX;
-	BallPositions[1] = m_iPosY;
 
-	MSG MsgToScreen = {BALL_ID,SCREEN_ID,pBallPositions,0,1};
-	return MsgToScreen;
+	//
+	if (m_iLastPosX != m_iPosX || m_iLastPosY != m_iPosY) {
 
-//	MSG nullMSG = {-1,-1,0,0,1};
-//	return nullMSG;
+		m_iLastPosX = m_iPosX;
+		m_iLastPosY = m_iPosY;
+
+		BallPositions[0] = m_iPosX;
+		BallPositions[1] = m_iPosY;
+
+		MSG MsgToScreen = {BALL_ID,SCREEN_ID,pBallPositions,0,1};
+		return MsgToScreen;
+	}
+
+	else {
+		MSG nullMSG = {-1,-1,0,0,1};
+		return nullMSG;
+	}
 }
 
 

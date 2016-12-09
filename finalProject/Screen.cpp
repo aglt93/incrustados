@@ -96,32 +96,22 @@ void Screen::ProcessMessage(MSG i_Message) {
 	bool changeBall = false;
 
 	//
-	int LastRacketLeftPosY  = RacketLeftPosY;
-	int LastRacketRightPosY = RacketRightPosY;
-	int LastBallPosX = BallPosX;
-	int LastBallPosY = BallPosY;
-
-
 	switch (i_Message.source) {
 
 		case RACKET_LEFT_ID:
-			LastRacketLeftPosY = RacketLeftPosY;
 			RacketLeftPosY = *l_pMsgData;
-			if (LastRacketLeftPosY != RacketLeftPosY) {changeRacketLeft = true;}
+			changeRacketLeft = true;
 			break;
 
 		case RACKET_RIGHT_ID:
-			LastRacketRightPosY = RacketRightPosY;
 			RacketRightPosY = *l_pMsgData;
-			if (LastRacketRightPosY != RacketRightPosY) {changeRacketRight = true;}
+			changeRacketRight = true;
 			break;
 
 		case BALL_ID:
-			LastBallPosX = BallPosX;
 			BallPosX = *(l_pMsgData);
-			LastBallPosY = BallPosY;
 			BallPosY = *(l_pMsgData+1);
-			if (LastBallPosX != BallPosX || LastBallPosY != BallPosY) {changeBall = true;}
+			changeBall = true;
 			break;
 
 	}
@@ -178,10 +168,10 @@ void Screen::ProcessMessage(MSG i_Message) {
 			printFigure(Ball);
 
 			// Se calcula la nueva posición de la figura.
-			Ball.xMin = BallPosX - RACKET_THICKNESS/2;
-			Ball.xMax = BallPosX + RACKET_THICKNESS/2;
-			Ball.yMin = BallPosY - RACKET_THICKNESS/2;
-			Ball.yMax = BallPosY + RACKET_THICKNESS/2;
+			Ball.xMin = BallPosX - BALL_THICKNESS/2;
+			Ball.xMax = BallPosX + BALL_THICKNESS/2;
+			Ball.yMin = BallPosY - BALL_THICKNESS/2;
+			Ball.yMax = BallPosY + BALL_THICKNESS/2;
 
 			// Se dibuja la nueva figura.
 			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);

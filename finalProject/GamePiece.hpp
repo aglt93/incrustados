@@ -46,6 +46,8 @@ class GamePiece : public Task
     protected:
         int m_iPosX;
 		int m_iPosY;
+        int m_iLastPosX;
+		int m_iLastPosY;
 		int m_iSize;
 		int m_iDirectionX;
 		int m_iDirectionY;
