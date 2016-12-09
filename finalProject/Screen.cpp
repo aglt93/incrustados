@@ -101,15 +101,15 @@ void Screen::ProcessMessage(MSG i_Message) {
 
 	switch (i_Message.source) {
 
-//		case RACKET_LEFT_ID:
-//			LastRacketLeftPosY = RacketLeftPosY;
-//			RacketLeftPosY = *l_pMsgData;
-//			break;
-//
-//		case RACKET_RIGHT_ID:
-//			LastRacketRightPosY = RacketRightPosY;
-//			RacketRightPosY = *l_pMsgData;
-//			break;
+		case RACKET_LEFT_ID:
+			LastRacketLeftPosY = RacketLeftPosY;
+			RacketLeftPosY = *l_pMsgData;
+			break;
+
+		case RACKET_RIGHT_ID:
+			LastRacketRightPosY = RacketRightPosY;
+			RacketRightPosY = *l_pMsgData;
+			break;
 
 		case BALL_ID:
 			LastBallPosX = BallPosX;
@@ -136,21 +136,21 @@ void Screen::ProcessMessage(MSG i_Message) {
 		Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
 
 		printFigure(Ball);
-//		printFigure(RacketLeft);
-//		printFigure(RacketRight);
+		printFigure(RacketLeft);
+		printFigure(RacketRight);
 
 	}
-//
-//	RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
-//	RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
-//	RacketLeft.yMin = RacketLeftPosY - RACKET_LENGTH/2;
-//	RacketLeft.yMax = RacketLeftPosY + RACKET_LENGTH/2;
-//	//
-//	RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
-//	RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
-//	RacketRight.yMin = RacketRightPosY - RACKET_LENGTH/2;
-//	RacketRight.yMax = RacketRightPosY + RACKET_LENGTH/2;
-//	//
+
+	RacketLeft.xMin = RACKET_LEFT_LIMIT_X_LEFT;
+	RacketLeft.xMax = RACKET_LEFT_LIMIT_X_RIGHT;
+	RacketLeft.yMin = RacketLeftPosY - RACKET_LENGTH/2;
+	RacketLeft.yMax = RacketLeftPosY + RACKET_LENGTH/2;
+	//
+	RacketRight.xMin = RACKET_RIGHT_LIMIT_X_LEFT;
+	RacketRight.xMax = RACKET_RIGHT_LIMIT_X_RIGHT;
+	RacketRight.yMin = RacketRightPosY - RACKET_LENGTH/2;
+	RacketRight.yMax = RacketRightPosY + RACKET_LENGTH/2;
+	//
 	Ball.xMin = BallPosX - RACKET_THICKNESS/2;
 	Ball.xMax = BallPosX + RACKET_THICKNESS/2;
 	Ball.yMin = BallPosY - RACKET_THICKNESS/2;
@@ -160,8 +160,8 @@ void Screen::ProcessMessage(MSG i_Message) {
 		Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_GREEN);
 
 		printFigure(Ball);
-//		printFigure(RacketLeft);
-//		printFigure(RacketRight);
+		printFigure(RacketLeft);
+		printFigure(RacketRight);
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////

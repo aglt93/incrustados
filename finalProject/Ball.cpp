@@ -34,6 +34,8 @@ Ball::Ball (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 		m_iLimitsY[i] = i_iLimitsY[i];
 
 	}
+
+	pBallPositions = BallPositions;
 }
 
 MSG Ball::run() {
@@ -67,12 +69,14 @@ MSG Ball::run() {
 		m_iPosY++;
 	}
 	///////////////////////////////////////////
+	BallPositions[0] = m_iPosX;
+	BallPositions[1] = m_iPosY;
 
-	int BallPositions[2] = {m_iPosX,m_iPosY};
-	int* pBallPositions = BallPositions;
+	MSG MsgToScreen = {BALL_ID,SCREEN_ID,pBallPositions,0,1};
+	return MsgToScreen;
 
-	MSG nullMSG = {BALL_ID,SCREEN_ID,pBallPositions,0,1};
-	return nullMSG;
+//	MSG nullMSG = {-1,-1,0,0,1};
+//	return nullMSG;
 }
 
 

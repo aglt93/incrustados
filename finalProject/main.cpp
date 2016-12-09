@@ -100,11 +100,11 @@ void main(void) {
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-//	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,RACKET_LEFT_POS_X,
-//			RACKET_LEFT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketLeftLimitsX,pRacketLeftLimitsY);
-//
-//	Racket RacketRight(RACKET_RIGHT_ID,PERIODIC_TASK,RACKET_RIGHT_PERIOD,RACKET_RIGHT_POS_X,
-//			RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketRightLimitsX,pRacketRightLimitsY);
+	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,RACKET_LEFT_POS_X,
+			RACKET_LEFT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketLeftLimitsX,pRacketLeftLimitsY);
+
+	Racket RacketRight(RACKET_RIGHT_ID,PERIODIC_TASK,RACKET_RIGHT_PERIOD,RACKET_RIGHT_POS_X,
+			RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketRightLimitsX,pRacketRightLimitsY);
 	Ball MainBall(BALL_ID, PERIODIC_TASK,BALL_PERIOD,BALL_INIT_POS_X,BALL_INIT_POS_Y,3,
 			MOVE_RIGHT,MOVE_UP,pBallLimitsX,pBallLimitsY);
 
@@ -115,8 +115,8 @@ void main(void) {
     MainScheduler.attach(&PrintScreen);
 //    MainScheduler.attach(&ButtonDown);
 //    MainScheduler.attach(&ButtonUp);
-//    MainScheduler.attach(&RacketLeft);
-//    MainScheduler.attach(&RacketRight);
+    MainScheduler.attach(&RacketLeft);
+    MainScheduler.attach(&RacketRight);
 
     MainScheduler.attach(&MainBall);
 

@@ -26,6 +26,8 @@ class Ball : public GamePiece
     protected:
 
     private:
+		int BallPositions[2];
+		int* pBallPositions;
 
 };
 
