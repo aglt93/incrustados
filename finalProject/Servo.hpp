@@ -58,7 +58,7 @@ class Servo : public Task
     public:
         Servo(int i_iTaskID, bool i_bPeriodicTask, int servo_port, int servo_pin);
         virtual MSG run(void);
-        virtual void ProcessMessage(MSG i_Message);
+        virtual MSG ProcessMessage(MSG i_Message);
         int ADCtoServoValueConv(int i_iADCvalue);
     protected:
     private:

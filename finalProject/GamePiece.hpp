@@ -43,7 +43,7 @@ class GamePiece : public Task
         void setDirectionY(int i_iDirectionY);
         int getDirectionY();
 
-    protected:
+        //
         int m_iPosX;
 		int m_iPosY;
         int m_iLastPosX;
@@ -53,6 +53,9 @@ class GamePiece : public Task
 		int m_iDirectionY;
 		int m_iLimitsX [LIMITSX_SIZE];
 		int m_iLimitsY [LIMITSY_SIZE];
+
+    protected:
+
 
     private:
 

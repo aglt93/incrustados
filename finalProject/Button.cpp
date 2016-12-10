@@ -65,8 +65,11 @@ MSG Button::SendMessage(){
 }
 
 
-void Button::ProcessMessage(MSG i_Message){
+MSG Button::ProcessMessage(MSG i_Message){
 
 	GPIO_toggleOutputOnPin(LED_RED_PORT,LED_RED_PIN);
+
+	MSG nullMsg = {-1,-1,0,0,1};
+	return nullMsg;
 
 }

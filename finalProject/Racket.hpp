@@ -22,7 +22,7 @@ class Racket : public GamePiece
 				int* i_iLimitsX, int* i_iLimitsY);
 
 		virtual MSG run(void);
-		virtual void ProcessMessage(MSG i_message);
+		virtual MSG ProcessMessage(MSG i_message);
 
     protected:
 

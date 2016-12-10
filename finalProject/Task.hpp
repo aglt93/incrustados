@@ -105,7 +105,7 @@ class Task
 		void				SetTaskFinalCount(uint64_t i_u64FinalCount);
 		uint64_t			GetTaskCurrentCount();
 		uint64_t			GetTaskFinalCount();
-		virtual void		ProcessMessage(MSG i_message){return;};
+		virtual MSG			ProcessMessage(MSG i_message){MSG nullMsg = {-1,-1,0,0,1}; return nullMsg;};
 		virtual MSG			SendMessage(){MSG nullMsg = {-1,-1,0,0,1}; return nullMsg;};
 		bool				m_bPeriodicTask;
 

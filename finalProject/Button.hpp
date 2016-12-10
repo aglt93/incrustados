@@ -17,7 +17,7 @@ class Button : public Task
     public:
         Button(int i_iTaskID, bool i_bPeriodicTask, int BUTTON_PORT,int BUTTON_PIN,uint64_t i_u64FinalCount);
         virtual MSG run(void);
-        virtual void ProcessMessage(MSG i_Message);
+        virtual MSG ProcessMessage(MSG i_Message);
     protected:
     private:
         int m_iButtonPort;

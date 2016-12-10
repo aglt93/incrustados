@@ -10,6 +10,8 @@
 #define __NOP __nop
 #include "msp.h"
 #include "Task.hpp"
+#include "Racket.hpp"
+#include "Ball.hpp"
 
 #define NO_MOVE 0
 #define MOVE_UP 1
@@ -26,14 +28,11 @@ class GameLogic : public Task
 		GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount);
 
 		virtual MSG run(void);
-		virtual void ProcessMessage(MSG i_message);
+		virtual MSG ProcessMessage(MSG i_message);
 
     protected:
 
     private:
-		MSG RacketLeftMsg;
-		MSG RacketRightMsg;
-		MSG BallMsg;
 
 };
 

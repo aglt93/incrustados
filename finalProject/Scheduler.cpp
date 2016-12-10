@@ -196,7 +196,11 @@ void Scheduler::ProcessMessageQueue() {
 				if (newMSG.destination != SCHEDULER_ID) {
 
 					Task* newTask = ID_LUT[newMSG.destination];
-					newTask->ProcessMessage(newMSG);
+					MSG messageFromTask = newTask->ProcessMessage(newMSG);
+
+					if (messageFromTask.source != -1 || messageFromTask.destination != -1) {
+						this->attachMessage(messageFromTask);
+					}
 				}
 
 				else {

@@ -50,7 +50,7 @@ MSG Racket::run() {
 
 	if(m_iLastPosY != m_iPosY) {
 		m_iLastPosY = m_iPosY;
-		MSG ChangeScreen = {m_iTaskID,SCREEN_ID,&m_iPosY,0,1};
+		MSG ChangeScreen = {m_iTaskID,LOGIC_ID,this,0,1};
 		return ChangeScreen;
 	}
 
@@ -62,7 +62,7 @@ MSG Racket::run() {
 
 
 
-void Racket::ProcessMessage(MSG i_Message){
+MSG Racket::ProcessMessage(MSG i_Message){
 
 	switch (i_Message.source){
 
@@ -85,6 +85,8 @@ void Racket::ProcessMessage(MSG i_Message){
 
 	CheckLimitsY();
 
+	MSG nullMsg = {-1,-1,0,0,1};
+	return nullMsg;
 
 }
 

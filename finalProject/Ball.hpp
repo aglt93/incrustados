@@ -22,15 +22,16 @@ class Ball : public GamePiece
 				int* i_iLimitsX, int* i_iLimitsY);
 
 		virtual MSG run(void);
-		virtual void ProcessMessage(MSG i_message);
-
-    protected:
-
-    private:
+		virtual MSG ProcessMessage(MSG i_message);
 		int BallPositions[2];
 		int* pBallPositions;
 		void CheckLimitsX();
 		void CheckLimitsY();
+
+    protected:
+
+    private:
+
 
 };
 

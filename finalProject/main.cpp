@@ -120,6 +120,7 @@ void main(void) {
     MainScheduler.attach(&RacketRight);
 
     MainScheduler.attach(&MainBall);
+    MainScheduler.attach(&MainLogic);
 
 
     // Ciclo principal. Cada 1ms entra a ejecutar los procesos necesarios para el correcto

@@ -88,7 +88,7 @@ MSG Ball::run() {
 		BallPositions[0] = m_iPosX;
 		BallPositions[1] = m_iPosY;
 
-		MSG MsgToScreen = {BALL_ID,SCREEN_ID,pBallPositions,0,1};
+		MSG MsgToScreen = {m_iTaskID,LOGIC_ID,this,0,1};
 		return MsgToScreen;
 	}
 
@@ -100,7 +100,7 @@ MSG Ball::run() {
 
 
 
-void Ball::ProcessMessage(MSG i_Message){
+MSG Ball::ProcessMessage(MSG i_Message){
 
 	switch(i_Message.source){
 
@@ -112,6 +112,9 @@ void Ball::ProcessMessage(MSG i_Message){
 			break;
 
 	}
+
+	MSG nullMsg = {-1,-1,0,0,1};
+	return nullMsg;
 
 }
 

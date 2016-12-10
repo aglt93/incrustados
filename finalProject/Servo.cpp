@@ -60,7 +60,7 @@ MSG Servo::run(void) {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-void Servo::ProcessMessage(MSG i_Message) {
+MSG Servo::ProcessMessage(MSG i_Message) {
 
 	int l_iSourceTask = i_Message.source;
 	int* l_pDataTask = (int*) i_Message.data;
@@ -86,6 +86,9 @@ void Servo::ProcessMessage(MSG i_Message) {
             break;
 
 	};
+
+	MSG nullMsg = {-1,-1,0,0,1};
+	return nullMsg;
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
