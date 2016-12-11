@@ -8,9 +8,14 @@ extern "C"
 #include <grlib.h>
 #include "Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
+#include <string.h>
 //#include "u_logo_100_100.h"
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////
+#include <string>     // std::string, std::to_string
+#include <sstream>
+#include <string>
 
 #include "Screen.hpp"
 #include "Task.hpp"
@@ -101,8 +106,8 @@ MSG Screen::ProcessMessage(MSG i_Message) {
 	getFigureChange(i_Message);
 
 	printPongTable();
-	printPongScore();
-	printPongWinner();
+	printPongScore(i_Message);
+//	printPongWinner();
 
 	MSG nullMsg = printFigure();
 
@@ -261,17 +266,27 @@ MSG Screen::printFigure()
  *  x1, y1, x2, y2.
  */
 //////////////////////////////////////////////////////////////////////////////////////////////
-void Screen::printPongScore()
+void Screen::printPongScore(MSG i_Message)
 {
+	GameLogic* MainLogic = (GameLogic*) i_Message.data;
+
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 	//
     GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
 
+    char RacketLeftScore[8];
+    sprintf(RacketLeftScore, "P1:%2i", MainLogic->m_iRacketLeftScore);
 	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
-	Graphics_drawStringCentered(&g_sContext, (int8_t *)"P1:", AUTO_STRING_LENGTH, SCORE_POS_P1_X, SCORE_POS_P1_Y, TRANSPARENT_TEXT);
-	//
+	Graphics_drawStringCentered(&g_sContext,
+			(int8_t *) RacketLeftScore, AUTO_STRING_LENGTH,
+			SCORE_POS_P1_X, SCORE_POS_P1_Y, OPAQUE_TEXT);
+
+	char RacketRightScore[8];
+    sprintf(RacketRightScore, "P1:%2i", MainLogic->m_iRacketRightScore);
 	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLUE);
-	Graphics_drawStringCentered(&g_sContext, (int8_t *)"P2:", AUTO_STRING_LENGTH, SCORE_POS_P2_X, SCORE_POS_P2_Y, OPAQUE_TEXT);
+	Graphics_drawStringCentered(&g_sContext,
+				(int8_t *) RacketRightScore, AUTO_STRING_LENGTH,
+				SCORE_POS_P2_X, SCORE_POS_P2_Y, OPAQUE_TEXT);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////

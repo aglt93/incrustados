@@ -31,9 +31,9 @@ class Screen : public Task
         MSG printFigure();
         void getFigureChange(MSG i_Message);
         void printPongTable();
-        void printPongScore();
-        void printPongWinner();
 
+        void printPongWinner();
+        void printPongScore(MSG i_Message);
     protected:
     private:
         Graphics_Rectangle RacketLeft;

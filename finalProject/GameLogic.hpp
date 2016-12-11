@@ -29,12 +29,17 @@ class GameLogic : public Task
 
 		virtual MSG run(void);
 		virtual MSG ProcessMessage(MSG i_message);
+
 		Racket RacketLeft;
 		Racket RacketRight;
 		Ball   MainBall;
-
-
+		int8_t m_iRacketLeftScore;
+		int8_t m_iRacketRightScore;
+		int m_iGameMode;
+		virtual void scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball);
+		virtual void winnerControl();
     protected:
+
 
     private:
 

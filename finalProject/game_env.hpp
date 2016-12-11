@@ -33,6 +33,9 @@
 #define BALL_INIT_POS_Y				RACKET_LEFT_POS_Y // 63
 //
 
+#define RACKET_Y_RANGE 				RACKET_LENGTH/2 + RACKET_THICKNESS/2
+
+
 #define SCORE_POS_P1_X				SCREEN_CENTER/2
 #define SCORE_POS_P1_Y				2*BALL_THICKNESS
 
@@ -40,6 +43,7 @@
 #define SCORE_POS_P2_Y				2*BALL_THICKNESS
 
 //
-#define WINNER_SCORE				5
+#define WINNER_SCORE				2
+
 
 #define LOGIC_PERIOD				30
