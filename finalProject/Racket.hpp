@@ -17,17 +17,16 @@
 class Racket : public GamePiece
 {
     public:
-		Racket(int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount, int i_iPosX,
-				int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
+		Racket(){};
+		Racket(int i_iPosX,int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
 				int* i_iLimitsX, int* i_iLimitsY);
 
-		virtual MSG run(void);
-		virtual MSG ProcessMessage(MSG i_message);
+		void CheckLimitsY();
+
 
     protected:
 
     private:
-		void CheckLimitsY();
 
 };
 

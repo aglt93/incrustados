@@ -9,7 +9,6 @@
 #define GAMEPIECE_HPP_
 #define __NOP __nop
 #include "msp.h"
-#include "Task.hpp"
 
 #define NO_MOVE 0
 #define MOVE_UP 1
@@ -20,7 +19,7 @@
 #define LIMITSX_SIZE 2
 #define LIMITSY_SIZE 2
 
-class GamePiece : public Task
+class GamePiece
 {
     public:
 		GamePiece();
@@ -46,13 +45,23 @@ class GamePiece : public Task
         //
         int m_iPosX;
 		int m_iPosY;
-        int m_iLastPosX;
+
+		int m_iLastPosX;
 		int m_iLastPosY;
+
 		int m_iSize;
+
 		int m_iDirectionX;
 		int m_iDirectionY;
+
 		int m_iLimitsX [LIMITSX_SIZE];
 		int m_iLimitsY [LIMITSY_SIZE];
+
+		bool m_bChangeY;
+		bool m_bChangeX;
+
+		void CheckChangeX();
+		void CheckChangeY();
 
     protected:
 

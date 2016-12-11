@@ -7,16 +7,8 @@
 #define LED_RED_PIN GPIO_PIN4
 
 
-Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
-		int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
+Racket::Racket (int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
 		int* i_iLimitsX, int* i_iLimitsY) {
-
-    //ctor
-	m_iTaskID = i_iTaskID;
-	m_bPeriodicTask = i_bPeriodicTask;
-
-	m_u64CurrentCount = 0;
-	m_u64FinalCount = i_u64FinalCount;
 
 	//
 	m_iPosX = i_iPosX;
@@ -25,6 +17,10 @@ Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 	// Solo para que sean diferentes inicialmente!
 	m_iLastPosX = m_iPosX-1;
 	m_iLastPosY = m_iPosY-1;
+
+	//
+	m_bChangeY = true;
+	m_bChangeX = true;
 
 	//
 	m_iSize = i_iSize;
@@ -46,49 +42,6 @@ Racket::Racket (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount,
 
 }
 
-MSG Racket::run() {
-
-	if(m_iLastPosY != m_iPosY) {
-		m_iLastPosY = m_iPosY;
-		MSG ChangeScreen = {m_iTaskID,LOGIC_ID,this,0,1};
-		return ChangeScreen;
-	}
-
-	else {
-		MSG nullMSG = {-1,-1,0,0,1};
-		return nullMSG;
-	}
-}
-
-
-
-MSG Racket::ProcessMessage(MSG i_Message){
-
-	switch (i_Message.source){
-
-		case BUTTON_UP_ISR_ID:
-			m_iPosY -= m_iSize;
-			m_iDirectionY = MOVE_UP;
-			break;
-
-		case BUTTON_DOWN_ISR_ID:
-			m_iPosY += m_iSize;
-			m_iDirectionY = MOVE_DOWN;
-			break;
-
-		case ADC_ISR_ID:
-			int* l_iADCvalue = (int*) i_Message.data;
-			m_iPosY = (float) ((-79* (*l_iADCvalue) + 1678900)/16300);
-			break;
-
-	}
-
-	CheckLimitsY();
-
-	MSG nullMsg = {-1,-1,0,0,1};
-	return nullMsg;
-
-}
 
 void Racket::CheckLimitsY(){
 

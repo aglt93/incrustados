@@ -42,4 +42,4 @@
 //
 #define WINNER_SCORE				5
 
-#define LOGIC_PERIOD				100
+#define LOGIC_PERIOD				30

@@ -78,36 +78,11 @@ void main(void) {
 //	Button ButtonDown(BUTTON_DOWN_ID,NOT_PERIODIC_TASK,BUTTON_DOWN_PORT,BUTTON_DOWN_PIN,200);
 //	Button ButtonUp(BUTTON_UP_ID,NOT_PERIODIC_TASK,BUTTON_UP_PORT,BUTTON_UP_PIN,200);
 
-	//
-	int RacketLeftLimitsX[2] = {RACKET_LEFT_LIMIT_X_LEFT,RACKET_LEFT_LIMIT_X_RIGHT};
-	int *pRacketLeftLimitsX = RacketLeftLimitsX;
-
-	int RacketLeftLimitsY[2] = {RACKET_LEFT_LIMIT_Y_UP,RACKET_LEFT_LIMIT_Y_DOWN};
-	int *pRacketLeftLimitsY = RacketLeftLimitsY;
-
-	int RacketRightLimitsX[2] = {RACKET_RIGHT_LIMIT_X_LEFT,RACKET_RIGHT_LIMIT_X_RIGHT};
-	int *pRacketRightLimitsX = RacketRightLimitsX;
-
-	int RacketRightLimitsY[2] = {RACKET_RIGHT_LIMIT_Y_UP,RACKET_RIGHT_LIMIT_Y_DOWN};
-	int *pRacketRightLimitsY = RacketRightLimitsY;
-
-	int BallLimitsX[2] = {BALL_LIMIT_X_LEFT,BALL_LIMIT_X_RIGHT};
-	int *pBallLimitsX = BallLimitsX;
-
-	int BallLimitsY[2] = {BALL_LIMIT_Y_UP,BALL_LIMIT_Y_DOWN};
-	int *pBallLimitsY = BallLimitsY;
-	//
 
 	// Se crean los objetos de pantalla y servo para controlar ambos dispositivos desde el
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
-	Racket RacketLeft(RACKET_LEFT_ID,PERIODIC_TASK,RACKET_LEFT_PERIOD,RACKET_LEFT_POS_X,
-			RACKET_LEFT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketLeftLimitsX,pRacketLeftLimitsY);
-	Racket RacketRight(RACKET_RIGHT_ID,PERIODIC_TASK,RACKET_RIGHT_PERIOD,RACKET_RIGHT_POS_X,
-			RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,pRacketRightLimitsX,pRacketRightLimitsY);
-	Ball MainBall(BALL_ID, PERIODIC_TASK,BALL_PERIOD,BALL_INIT_POS_X,BALL_INIT_POS_Y,3,
-			MOVE_RIGHT,MOVE_UP,pBallLimitsX,pBallLimitsY);
-	GameLogic MainLogic(LOGIC_ID,NOT_PERIODIC_TASK,LOGIC_PERIOD);
+	GameLogic MainLogic(LOGIC_ID,PERIODIC_TASK,LOGIC_PERIOD);
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();
@@ -116,10 +91,6 @@ void main(void) {
     MainScheduler.attach(&PrintScreen);
 //    MainScheduler.attach(&ButtonDown);
 //    MainScheduler.attach(&ButtonUp);
-    MainScheduler.attach(&RacketLeft);
-    MainScheduler.attach(&RacketRight);
-
-    MainScheduler.attach(&MainBall);
     MainScheduler.attach(&MainLogic);
 
 
@@ -163,7 +134,7 @@ void BUTTON_DOWN_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
 
-		MSG message = {BUTTON_DOWN_ISR_ID,RACKET_RIGHT_ID,0,0,SUPRESSION_TIME};
+		MSG message = {BUTTON_DOWN_ISR_ID,LOGIC_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 	}
 
@@ -180,7 +151,7 @@ void BUTTON_UP_ISR(void) {
 		GPIO_clearInterruptFlag(BUTTON_UP_PORT, BUTTON_UP_PIN);
 		//GPIO_toggleOutputOnPin(RGB_RED_PORT,RGB_RED_PIN);
 
-		MSG message = {BUTTON_UP_ISR_ID,RACKET_RIGHT_ID,0,0,SUPRESSION_TIME};
+		MSG message = {BUTTON_UP_ISR_ID,LOGIC_ID,0,0,SUPRESSION_TIME};
 		MainScheduler.attachMessage(message);
 	}
 
@@ -221,7 +192,7 @@ void ADC14_IRQHandler(void) {
 	*aDataFromADC = ADC14_getResult(ADC_MEM0);
 
 	// Envíe el msj a la pantalla para reflejar el cambio.
-	MSG changeLeftRacket = {ADC_ISR_ID,RACKET_LEFT_ID,aDataFromADC,0,SUPRESSION_TIME};
+	MSG changeLeftRacket = {ADC_ISR_ID,LOGIC_ID,aDataFromADC,0,SUPRESSION_TIME};
 	MainScheduler.attachMessage(changeLeftRacket);
 
 	uint64_t g_u64Status = MAP_ADC14_getEnabledInterruptStatus();

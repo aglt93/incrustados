@@ -12,12 +12,12 @@
 #include "Task.hpp"
 #include "Crystalfontz128x128_ST7735.h"
 
-typedef struct Figure_Change
+struct FigureChange
 {
-	bool racket_left_change;  			//!< The minimum X coordinate of the rectangle.
-	bool racket_right_change;  			//!< The minimum X coordinate of the rectangle.
-	bool ball_change;  			//!< The minimum X coordinate of the rectangle.
-} Figure_Change;
+	bool RacketLeftChange;
+	bool RacketRightChange;
+	bool BallChange;
+};
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -28,11 +28,11 @@ class Screen : public Task
 	    Screen(int i_iTaskID, bool i_bPeriodicTask);
         virtual MSG run(void);
         virtual MSG ProcessMessage(MSG i_Message);
-        virtual MSG printFigure(Figure_Change figure_change);
-        virtual Figure_Change getFigureChange(MSG i_Message);
-        virtual void printPongTable();
-        virtual void printPongScore();
-        virtual void printPongWinner();
+        MSG printFigure();
+        void getFigureChange(MSG i_Message);
+        void printPongTable();
+        void printPongScore();
+        void printPongWinner();
 
     protected:
     private:
@@ -48,9 +48,9 @@ class Screen : public Task
     	int BallPosX;
     	int BallPosY;
 
-    	Graphics_Rectangle net;
+    	Graphics_Rectangle Net;
 
-    	Figure_Change figure_change;
+    	FigureChange ScreenFigureChanges;
 
 };
 //////////////////////////////////////////////////////////////////////////////////////////////

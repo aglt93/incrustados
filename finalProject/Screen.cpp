@@ -16,10 +16,20 @@ extern "C"
 #include "Task.hpp"
 #include "task_ids.hpp"
 #include "game_env.hpp"
+#include "GameLogic.hpp"
 #include "Racket.hpp"
 #include "Ball.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#define RGB_RED_PORT GPIO_PORT_P2
+#define RGB_RED_PIN GPIO_PIN6
+#define RGB_BLUE_PORT GPIO_PORT_P5
+#define RGB_BLUE_PIN GPIO_PIN6
+#define RGB_GREEN_PORT GPIO_PORT_P2
+#define RGB_GREEN_PIN GPIO_PIN4
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 /* Graphic library context */
@@ -88,59 +98,53 @@ MSG Screen::run(void)
 //////////////////////////////////////////////////////////////////////////////////////////////
 MSG Screen::ProcessMessage(MSG i_Message) {
 
-	/* Se extrae la referencia del puntero al del periferico. */
+	getFigureChange(i_Message);
 
-	//
-
-	figure_change = getFigureChange(i_Message);
-
-	MSG figure_msg = printFigure(figure_change);
-//
+	printPongTable();
 	printPongScore();
-
 	printPongWinner();
-	return figure_msg;
+
+	MSG nullMsg = printFigure();
+
+	return nullMsg;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
-Figure_Change Screen::getFigureChange(MSG i_Message){
+void Screen::getFigureChange(MSG i_Message){
 
 //
 
-	figure_change.racket_left_change = false;
-	figure_change.racket_right_change = false;
-	figure_change.ball_change = false;
+	ScreenFigureChanges.RacketLeftChange = false;
+	ScreenFigureChanges.RacketRightChange = false;
+	ScreenFigureChanges.BallChange = false;
 
 	
 	switch(i_Message.source) {
-	//switch (TaskFromMsg->m_iTaskID) {
 
 		case LOGIC_ID:
-			break;
 
-		case RACKET_LEFT_ID:
-			Racket* RacketLeft = (Racket*) i_Message.data;
-			RacketLeftPosY = RacketLeft->m_iPosY;
-			figure_change.racket_left_change = true;
-			break;
+			GameLogic* MainLogic = (GameLogic*) i_Message.data;
+			//
+			RacketLeftPosY = MainLogic->RacketLeft.m_iPosY;
+			ScreenFigureChanges.RacketLeftChange = MainLogic->RacketLeft.m_bChangeY;
+			MainLogic->RacketLeft.m_bChangeY = false;
 
-		case RACKET_RIGHT_ID:
-			Racket* RacketRight = (Racket*) i_Message.data;
-			RacketRightPosY = RacketRight->m_iPosY;
-			figure_change.racket_right_change = true;
-			break;
+			//
+			RacketRightPosY = MainLogic->RacketRight.m_iPosY;
+			ScreenFigureChanges.RacketRightChange = MainLogic->RacketRight.m_bChangeY;
+			MainLogic->RacketRight.m_bChangeY = false;
 
-		case BALL_ID:
-			Ball* MainBall = (Ball*) i_Message.data;
-			BallPosX = MainBall->BallPositions[0];
-			BallPosY = MainBall->BallPositions[1];
-			figure_change.ball_change = true;
+			//
+			BallPosX = MainLogic->MainBall.m_iPosX;
+			BallPosY = MainLogic->MainBall.m_iPosY;
+			ScreenFigureChanges.BallChange = (MainLogic->MainBall.m_bChangeX ||
+					MainLogic->MainBall.m_bChangeY);
+			MainLogic->MainBall.m_bChangeX = false;
+			MainLogic->MainBall.m_bChangeY = false;
 			break;
-
 	}
 
-	return figure_change;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,19 +158,19 @@ void Screen::printPongTable()
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_YELLOW);
 
-	net.xMin = SCREEN_CENTER-1;
-	net.xMax = SCREEN_CENTER+1;
-	net.yMin = SCREEN_HEIGHT-SCREEN_HEIGHT;
-	net.yMax = SCREEN_HEIGHT;
+	Net.xMin = SCREEN_CENTER-1;
+	Net.xMax = SCREEN_CENTER+1;
+	Net.yMin = SCREEN_HEIGHT-SCREEN_HEIGHT;
+	Net.yMax = SCREEN_HEIGHT;
 
-	Graphics_fillRectangle(&g_sContext, &net);
+	Graphics_fillRectangle(&g_sContext, &Net);
 
-	net.xMin = SCREEN_WIDTH-SCREEN_WIDTH;
-	net.xMax = SCREEN_WIDTH;
-	net.yMin = SCREEN_HEIGHT-SCREEN_HEIGHT;
-	net.yMax = SCREEN_HEIGHT;
+	Net.xMin = SCREEN_WIDTH-SCREEN_WIDTH;
+	Net.xMax = SCREEN_WIDTH;
+	Net.yMin = SCREEN_HEIGHT-SCREEN_HEIGHT;
+	Net.yMax = SCREEN_HEIGHT;
 
-	Graphics_drawRectangle(&g_sContext, &net);
+	Graphics_drawRectangle(&g_sContext, &Net);
 
 }
 
@@ -176,20 +180,21 @@ void Screen::printPongTable()
  *  x1, y1, x2, y2.
  */
 //////////////////////////////////////////////////////////////////////////////////////////////
-MSG Screen::printFigure(Figure_Change figure_change )
+MSG Screen::printFigure()
 {
 
-	if( figure_change.racket_left_change || figure_change.racket_right_change  || figure_change.ball_change ) {
+	if(ScreenFigureChanges.RacketLeftChange
+			|| ScreenFigureChanges.RacketRightChange
+			|| ScreenFigureChanges.BallChange) {
 
 		/* Initializes graphics context */
 		Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 
-		Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-
 		//
-		if (figure_change.racket_left_change) {
+		if (ScreenFigureChanges.RacketLeftChange) {
 
 			// Se limpia la figura anterior.
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
 			Graphics_fillRectangle(&g_sContext, &RacketLeft);
 
 			// Se calcula la nueva posición de la figura.
@@ -206,9 +211,10 @@ MSG Screen::printFigure(Figure_Change figure_change )
 		}
 
 		//
-		if (figure_change.racket_right_change) {
+		if (ScreenFigureChanges.RacketRightChange) {
 
 			// Se limpia la figura anterior.
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
 			Graphics_fillRectangle(&g_sContext, &RacketRight);
 
 			// Se calcula la nueva posición de la figura.
@@ -225,9 +231,10 @@ MSG Screen::printFigure(Figure_Change figure_change )
 		}
 
 		//
-		if (figure_change.ball_change) {
+		if (ScreenFigureChanges.BallChange) {
 
 			// Se limpia la figura anterior.
+			Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
 			Graphics_fillRectangle(&g_sContext, &ScreenBall);
 
 			// Se calcula la nueva posición de la figura.
@@ -294,7 +301,6 @@ void Screen::printPongWinner()
     	Graphics_drawStringCentered(&g_sContext, (int8_t *)"P2 AK7", AUTO_STRING_LENGTH, SCREEN_CENTER, SCREEN_CENTER, OPAQUE_TEXT);
 
     }
-	printPongTable();
 
 }
 

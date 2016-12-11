@@ -29,6 +29,10 @@ class GameLogic : public Task
 
 		virtual MSG run(void);
 		virtual MSG ProcessMessage(MSG i_message);
+		Racket RacketLeft;
+		Racket RacketRight;
+		Ball   MainBall;
+
 
     protected:
 
