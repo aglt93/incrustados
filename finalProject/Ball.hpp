@@ -23,7 +23,6 @@ class Ball : public GamePiece
 
 		void CheckLimitsX();
 		void CheckLimitsY();
-		int m_iBallStatus;
 
     protected:
 

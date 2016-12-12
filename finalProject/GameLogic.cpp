@@ -22,7 +22,7 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 	m_iRacketRightScore = 0;
 	m_iGameMode = 0;
 
-//	m_iBallStatus = NO_HIT;
+	m_iBallStatus = NO_HIT;
 
 	int RacketLeftLimitsX[2] = {RACKET_LEFT_LIMIT_X_LEFT,RACKET_LEFT_LIMIT_X_RIGHT};
 	int *pRacketLeftLimitsX = RacketLeftLimitsX;
@@ -47,11 +47,11 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 			pRacketLeftLimitsX,pRacketLeftLimitsY);
 	RacketRight = Racket(RACKET_RIGHT_POS_X,RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,
 			pRacketRightLimitsX,pRacketRightLimitsY);
-	MainBall = Ball(BALL_INIT_POS_X,BALL_INIT_POS_Y,3,MOVE_RIGHT,MOVE_UP,pBallLimitsX,pBallLimitsY);
+	MainBall = Ball(BALL_INIT_LEFT_POS_X,BALL_INIT_LEFT_POS_Y,3,NO_MOVE,NO_MOVE,pBallLimitsX,pBallLimitsY);
 
 }
 
-void BallControlX(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
+void BallMoveX(Ball* i_Ball) {
 
 	///////////////////////////////////////////
 	if(i_Ball->m_iDirectionX == NO_MOVE){
@@ -74,7 +74,7 @@ void BallControlX(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 }
 
 
-void BallControlY(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
+void BallMoveY(Ball* i_Ball) {
 
 	///////////////////////////////////////////
 	if(i_Ball->m_iDirectionY == NO_MOVE){
@@ -94,101 +94,206 @@ void BallControlY(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 }
 
 
-void ResetRacketLeft(Racket* i_RacketLeft){
-	i_RacketLeft->m_iPosX = RACKET_LEFT_POS_X;
-	i_RacketLeft->m_iPosY = RACKET_LEFT_POS_Y;
-	i_RacketLeft->CheckChangeX();
-	i_RacketLeft->CheckChangeY();
+void BallControlX(Ball* i_Ball,int m_iBallStatus){
+
+	switch(m_iBallStatus) {
+
+		case HIT_LEFT_RACKET:
+			i_Ball->m_iPosX = i_Ball->m_iLimitsX[0] + 1;
+			i_Ball->m_iDirectionX = MOVE_RIGHT;
+			break;
+
+		case HIT_RIGHT_RACKET:
+			i_Ball->m_iPosX = i_Ball->m_iLimitsX[1] - 1;
+			i_Ball->m_iDirectionX = MOVE_LEFT;
+			break;
+
+		case HIT_LEFT_WALL:
+			i_Ball->m_iPosX = i_Ball->m_iLimitsX[0] + 1;
+			i_Ball->m_iDirectionX = NO_MOVE;
+			break;
+
+		case HIT_RIGHT_WALL:
+			i_Ball->m_iPosX = i_Ball->m_iLimitsX[1] - 1;
+			i_Ball->m_iDirectionX = NO_MOVE;
+			break;
+
+		case NO_HIT:
+			i_Ball->m_iDirectionX = i_Ball->m_iDirectionX;
+			break;
+	}
+
+}
+
+void BallControlY(Ball* i_Ball, int i_iBallStatus){
+
+	switch(i_iBallStatus) {
+
+		case HIT_TOP_WALL:
+			i_Ball->m_iPosY = i_Ball->m_iLimitsY[0];
+			i_Ball->m_iDirectionY = MOVE_DOWN;
+			break;
+
+		case HIT_BOTTOM_WALL:
+			i_Ball->m_iPosY = i_Ball->m_iLimitsY[1];
+			i_Ball->m_iDirectionY = MOVE_UP;
+			break;
+
+		case HIT_LEFT_WALL:
+			i_Ball->m_iPosY = SCREEN_CENTER;
+			i_Ball->m_iDirectionY = NO_MOVE;
+			break;
+
+		case HIT_RIGHT_WALL:
+			i_Ball->m_iPosY = SCREEN_CENTER;
+			i_Ball->m_iDirectionY = NO_MOVE;
+			break;
+
+		case NO_HIT:
+			i_Ball->m_iDirectionY = i_Ball->m_iDirectionY;
+			break;
+	}
+
+
+}
+
+void BallFastnessControl(GameLogic* Game, Ball* i_Ball, int i_iBallStatus){
+
+	if (i_iBallStatus == HIT_LEFT_RACKET || i_iBallStatus == HIT_RIGHT_RACKET){
+
+		if (Game->GetTaskFinalCount() > 1){
+
+			int value = Game->GetTaskFinalCount() - 1;
+			Game->SetTaskFinalCount(value);
+		}
+
+		else {Game->SetTaskFinalCount(1);}
+
+	}
+
+	else if (i_iBallStatus == HIT_LEFT_WALL || i_iBallStatus == HIT_RIGHT_WALL) {
+
+		Game->SetTaskFinalCount(LOGIC_PERIOD);
+
+	}
+
 }
 
 
-void ResetRacketRight(Racket* i_RacketRight) {
+void RacketLeftControl(Racket* i_RacketLeft, int i_iBallStatus){
 
-	i_RacketRight->m_iPosX = RACKET_RIGHT_POS_X;
-	i_RacketRight->m_iPosY = RACKET_RIGHT_POS_Y;
-	i_RacketRight->CheckChangeX();
-	i_RacketRight->CheckChangeY();
+	if(i_iBallStatus == HIT_LEFT_WALL || i_iBallStatus == HIT_RIGHT_WALL) {
+
+		i_RacketLeft->m_iPosX = RACKET_LEFT_POS_X;
+		i_RacketLeft->m_iPosY = RACKET_LEFT_POS_Y;
+
+		i_RacketLeft->CheckChangeX();
+		i_RacketLeft->CheckChangeY();
+
+		i_RacketLeft->m_iDirectionX = NO_MOVE;
+		i_RacketLeft->m_iDirectionY = NO_MOVE;
+	}
+}
+
+
+void RacketRightControl(Racket* i_RacketRight, int i_iBallStatus) {
+
+	if(i_iBallStatus == HIT_LEFT_WALL || i_iBallStatus == HIT_RIGHT_WALL) {
+
+		i_RacketRight->m_iPosX = RACKET_RIGHT_POS_X;
+		i_RacketRight->m_iPosY = RACKET_RIGHT_POS_Y;
+
+		i_RacketRight->CheckChangeX();
+		i_RacketRight->CheckChangeY();
+
+		i_RacketRight->m_iDirectionX = NO_MOVE;
+		i_RacketRight->m_iDirectionY = NO_MOVE;
+	}
 
 }
 
-void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 
-	int RacketLeftLowerRange = i_RacketLeft->m_iPosY - RACKET_LENGTH/2;
-	int RacketLeftUpperRange = i_RacketLeft->m_iPosY + RACKET_LENGTH/2;
+void GameLogic::GameControl() {
 
-	int RacketRightLowerRange = i_RacketRight->m_iPosY - RACKET_LENGTH/2;
-	int RacketRightUpperRange = i_RacketRight->m_iPosY + RACKET_LENGTH/2;
+	int RacketLeftLowerRange = RacketLeft.m_iPosY + RACKET_LENGTH/2 + 3;
+	int RacketLeftUpperRange = RacketLeft.m_iPosY - RACKET_LENGTH/2 - 3;
+
+	int RacketRightLowerRange = RacketRight.m_iPosY + RACKET_LENGTH/2 + 3;
+	int RacketRightUpperRange = RacketRight.m_iPosY - RACKET_LENGTH/2 - 3;
 
 	//	Collision with left racket.
-	if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[0]
-			&& i_Ball->m_iPosY < RacketLeftUpperRange
-			&& i_Ball->m_iPosY > RacketLeftLowerRange){
+	if(MainBall.m_iPosX <= MainBall.m_iLimitsX[0]
+			&& RacketLeftUpperRange <= MainBall.m_iPosY
+			&& RacketLeftLowerRange >= MainBall.m_iPosY){
 
-		i_Ball->m_iPosX++;
-		i_Ball->m_iBallStatus = HIT_LEFT_RACKET;
+		m_iBallStatus = HIT_LEFT_RACKET;
 
 	}
 
 	//	Collision with right racket.
-	else if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[1]
-			&& i_Ball->m_iPosY < RacketRightUpperRange
-			&& i_Ball->m_iPosY > RacketRightLowerRange){
+	else if(MainBall.m_iPosX >= MainBall.m_iLimitsX[1]
+			&& RacketRightUpperRange <= MainBall.m_iPosY
+			&& RacketRightLowerRange >= MainBall.m_iPosY){
 
-		i_Ball->m_iPosX--;
-		i_Ball->m_iBallStatus = HIT_RIGHT_RACKET;
+		m_iBallStatus = HIT_RIGHT_RACKET;
 
 	}
 
 	//	Collision with left wall.
-	else if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[0]
-			&& (i_Ball->m_iPosY > RacketLeftUpperRange
-			|| i_Ball->m_iPosY < RacketLeftLowerRange)){
+	else if(MainBall.m_iPosX <= MainBall.m_iLimitsX[0]
+			&& (RacketLeftUpperRange >= MainBall.m_iPosY
+			||  RacketLeftLowerRange <= MainBall.m_iPosY)){
 
-		i_Ball->m_iBallStatus = HIT_LEFT_WALL;
-
-		ResetRacketLeft(i_RacketLeft);
-		ResetRacketRight(i_RacketRight);
-
-		m_iRacketRightScore++;
+		m_iBallStatus = HIT_LEFT_WALL;
 
 	}
 	//	Collision with right wall.
-	else if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[1]
-			&& (i_Ball->m_iPosY > RacketLeftUpperRange
-			|| i_Ball->m_iPosY < RacketRightLowerRange)){
+	else if(MainBall.m_iPosX >= MainBall.m_iLimitsX[1]
+			&& (RacketRightUpperRange >= MainBall.m_iPosY
+			||  RacketRightLowerRange <= MainBall.m_iPosY)){
 
-		i_Ball->m_iBallStatus = HIT_RIGHT_WALL;
-
-		ResetRacketLeft(i_RacketLeft);
-		ResetRacketRight(i_RacketRight);
-		//ResetBall();
-
-		m_iRacketLeftScore++;
+		m_iBallStatus = HIT_RIGHT_WALL;
 
 	}
 
 	//	Collision with top wall.
-	else if(i_Ball->m_iPosY < i_Ball->m_iLimitsY[0]){
+	else if(MainBall.m_iPosY <= MainBall.m_iLimitsY[0]){
 
-		i_Ball->m_iBallStatus = HIT_TOP_WALL;
+		m_iBallStatus = HIT_TOP_WALL;
 
 	}
 
 	//	Collision with buttom wall.
-	else if(i_Ball->m_iPosY > i_Ball->m_iLimitsY[1]){
+	else if(MainBall.m_iPosY >= MainBall.m_iLimitsY[1]){
 
-		i_Ball->m_iBallStatus = HIT_BOTTOM_WALL;
+		m_iBallStatus = HIT_BOTTOM_WALL;
 
 	}
 
 	//
 	else{
-		i_Ball->m_iBallStatus =	NO_HIT;
+		m_iBallStatus = NO_HIT;
 	}
 
 }
 
-void GameLogic::winnerControl() {
+void GameLogic::ScoreControl() {
+
+	if (m_iBallStatus == HIT_LEFT_WALL){
+
+		m_iRacketRightScore++;
+
+	}
+
+	else if (m_iBallStatus == HIT_RIGHT_WALL) {
+
+		m_iRacketLeftScore++;
+
+	}
+
+}
+
+void GameLogic::WinnerControl() {
 
 	///////////////////////////////////////////
 	if(m_iRacketLeftScore == WINNER_SCORE){
@@ -206,13 +311,55 @@ void GameLogic::winnerControl() {
 
 }
 
+void GameLogic::FirstMoveControl(){
+
+	if(MainBall.m_iDirectionX == NO_MOVE && MainBall.m_iDirectionY == NO_MOVE){
+
+		if(RacketLeft.m_iDirectionY != NO_MOVE
+				&& MainBall.m_iPosX == BALL_INIT_LEFT_POS_X){
+
+			MainBall.m_iDirectionX = MOVE_RIGHT;
+			MainBall.m_iDirectionY = RacketLeft.m_iDirectionY;
+		}
+
+		else if (RacketRight.m_iDirectionY != NO_MOVE
+				&& MainBall.m_iPosX == BALL_INIT_RIGHT_POS_X){
+
+			MainBall.m_iDirectionX = MOVE_LEFT;
+			MainBall.m_iDirectionY = RacketRight.m_iDirectionY;
+		}
+
+	}
+}
+
 MSG GameLogic::run(void) {
 
-	//Ball Control
-	BallControlX(&RacketLeft, &RacketRight, &MainBall);
-	BallControlY(&RacketLeft, &RacketRight, &MainBall);
-	scoreControl (&RacketLeft, &RacketRight, &MainBall);
-	winnerControl();
+	// First Move Control
+	FirstMoveControl();
+
+	//Ball Movement
+	BallMoveX(&MainBall);
+	BallMoveY(&MainBall);
+
+	// Game Control
+	GameControl();
+
+	// Ball Control
+	BallControlX(&MainBall,m_iBallStatus);
+	BallControlY(&MainBall,m_iBallStatus);
+	BallFastnessControl(this,&MainBall,m_iBallStatus);
+
+	// Racket Control
+	RacketLeftControl(&RacketLeft,m_iBallStatus);
+	RacketRightControl(&RacketRight,m_iBallStatus);
+
+
+	// Score control
+	ScoreControl();
+
+	// Winner Control
+	//WinnerControl();
+
 	// Screen Control
 	MSG msgToScreen = {-1,-1,0,0,1};
 
@@ -225,11 +372,6 @@ MSG GameLogic::run(void) {
 		msgToScreen.finalCount = 1;
 	}
 
-	// Score control
-
-
-	// Winner Control
-
 
 	return msgToScreen;
 }
@@ -240,7 +382,19 @@ MSG GameLogic::ProcessMessage(MSG i_Message){
 
 		case ADC_ISR_ID:
 			int* l_iADCvalue = (int*) i_Message.data;
+
+			int LastRacketLeftPosY = RacketLeft.m_iPosY;
 			RacketLeft.m_iPosY = (float) ((-79* (*l_iADCvalue) + 1678900)/16300);
+
+			if(LastRacketLeftPosY > RacketLeft.m_iPosY){
+				RacketLeft.m_iDirectionY = MOVE_UP;
+			}
+
+			else if (LastRacketLeftPosY < RacketLeft.m_iPosY){
+				RacketLeft.m_iDirectionY = MOVE_DOWN;
+
+			}
+
 			RacketLeft.CheckLimitsY();
 			RacketLeft.CheckChangeY();
 			break;
