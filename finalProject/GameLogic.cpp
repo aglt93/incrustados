@@ -21,6 +21,9 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 	m_iRacketLeftScore = 0;
 	m_iRacketRightScore = 0;
 	m_iGameMode = 0;
+
+//	m_iBallStatus = NO_HIT;
+
 	int RacketLeftLimitsX[2] = {RACKET_LEFT_LIMIT_X_LEFT,RACKET_LEFT_LIMIT_X_RIGHT};
 	int *pRacketLeftLimitsX = RacketLeftLimitsX;
 
@@ -48,7 +51,7 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 
 }
 
-void BallControlX(Ball* i_Ball) {
+void BallControlX(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 
 	///////////////////////////////////////////
 	if(i_Ball->m_iDirectionX == NO_MOVE){
@@ -62,13 +65,16 @@ void BallControlX(Ball* i_Ball) {
 	else if(i_Ball->m_iDirectionX == MOVE_RIGHT){
 		i_Ball->m_iPosX++;
 	}
+
+
+
 	///////////////////////////////////////////
 	i_Ball->CheckLimitsX();
 	i_Ball->CheckChangeX();
 }
 
 
-void BallControlY(Ball* i_Ball) {
+void BallControlY(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 
 	///////////////////////////////////////////
 	if(i_Ball->m_iDirectionY == NO_MOVE){
@@ -89,41 +95,67 @@ void BallControlY(Ball* i_Ball) {
 
 void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 
-	int RacketLeftLowerRange = i_RacketLeft->m_iPosY-RACKET_Y_RANGE;
-	int RacketLeftUpperRange = i_RacketLeft->m_iPosY+RACKET_Y_RANGE;
+	int RacketLeftLowerRange = i_RacketLeft->m_iPosY - RACKET_LENGTH/2;
+	int RacketLeftUpperRange = i_RacketLeft->m_iPosY + RACKET_LENGTH/2;
 
-	int RacketRightLowerRange = i_RacketRight->m_iPosY-RACKET_Y_RANGE;
-	int RacketRightUpperRange = i_RacketRight->m_iPosY+RACKET_Y_RANGE;
+	int RacketRightLowerRange = i_RacketRight->m_iPosY - RACKET_LENGTH/2;
+	int RacketRightUpperRange = i_RacketRight->m_iPosY + RACKET_LENGTH/2;
 
-	int BallLowerRange = i_Ball->m_iPosY-RACKET_Y_RANGE;
-	int BallUpperRange = i_Ball->m_iPosY+RACKET_Y_RANGE;
+	//	Collision with left racket.
+	if(i_Ball->m_iPosX < i_Ball->m_iLimitsX[0]
+			&& i_Ball->m_iPosY < RacketLeftUpperRange
+			&& i_Ball->m_iPosY > RacketLeftLowerRange){
 
+		i_Ball->m_iBallStatus = HIT_LEFT_RACKET;
 
-//	Collision with left racket
+	}
 
-	if((i_Ball->m_iPosX == BALL_LIMIT_X_LEFT) && RacketLeftLowerRange != BallLowerRange && RacketLeftUpperRange != BallUpperRange ){
+	//	Collision with right racket.
+	else if(i_Ball->m_iPosX > i_Ball->m_iLimitsX[1]
+			&& i_Ball->m_iPosY < RacketRightUpperRange
+			&& i_Ball->m_iPosY > RacketRightLowerRange){
+
+		i_Ball->m_iBallStatus = HIT_RIGHT_RACKET;
+
+	}
+
+	//	Collision with left wall.
+	else if(i_Ball->m_iPosX < i_Ball->m_iLimitsX[0]
+			&& (i_Ball->m_iPosY > RacketLeftUpperRange
+			|| i_Ball->m_iPosY < RacketLeftLowerRange)){
+
+		i_Ball->m_iBallStatus = HIT_LEFT_WALL;
 		m_iRacketRightScore++;
+
 	}
+	//	Collision with right wall.
+	else if(i_Ball->m_iPosX > i_Ball->m_iLimitsX[1]
+			&& (i_Ball->m_iPosY > RacketLeftUpperRange
+			|| i_Ball->m_iPosY < RacketRightLowerRange)){
 
-	//	Collision with right racket
-	else if((i_Ball->m_iPosX == BALL_LIMIT_X_RIGHT) && RacketRightLowerRange != BallLowerRange && RacketRightUpperRange != BallUpperRange ){
-
+		i_Ball->m_iBallStatus = HIT_RIGHT_WALL;
 		m_iRacketLeftScore++;
+
 	}
 
-	//	Collision with left wall:
-	else if((i_Ball->m_iPosX == BALL_LIMIT_X_RIGHT) && RacketRightLowerRange != BallLowerRange && RacketRightUpperRange != BallUpperRange ){
+	//	Collision with top wall.
+	else if(i_Ball->m_iPosY < i_Ball->m_iLimitsY[0]){
 
-		m_iRacketLeftScore++;
+		i_Ball->m_iBallStatus = HIT_TOP_WALL;
+
 	}
 
-	//	Collision with right wall
-	else if((i_Ball->m_iPosX == BALL_LIMIT_X_RIGHT) && RacketRightLowerRange != BallLowerRange && RacketRightUpperRange != BallUpperRange ){
+	//	Collision with buttom wall.
+	else if(i_Ball->m_iPosY > i_Ball->m_iLimitsY[1]){
 
-		m_iRacketLeftScore++;
+		i_Ball->m_iBallStatus = HIT_BOTTOM_WALL;
+
 	}
 
-
+	//
+	else{
+		i_Ball->m_iBallStatus =	NO_HIT;
+	}
 
 }
 
@@ -146,8 +178,8 @@ void GameLogic::winnerControl() {
 MSG GameLogic::run(void) {
 
 	//Ball Control
-	BallControlX(&MainBall);
-	BallControlY(&MainBall);
+	BallControlX(&RacketLeft, &RacketRight, &MainBall);
+	BallControlY(&RacketLeft, &RacketRight, &MainBall);
 	scoreControl (&RacketLeft, &RacketRight, &MainBall);
 	// Screen Control
 	MSG msgToScreen = {-1,-1,0,0,1};

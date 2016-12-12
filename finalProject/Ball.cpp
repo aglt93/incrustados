@@ -11,6 +11,8 @@ Ball::Ball (int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDir
 	m_iPosX = i_iPosX;
 	m_iPosY = i_iPosY;
 
+	m_iBallStatus = NO_HIT;
+
 	// Para que sea diferente!
 	m_iLastPosX = m_iPosX-1;
 	m_iLastPosY = m_iPosY-1;
@@ -42,36 +44,88 @@ Ball::Ball (int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDir
 
 void Ball::CheckLimitsX() {
 
-	if (m_iPosX < m_iLimitsX[0]) {// LEFT
 
-		m_iPosX = m_iLimitsX[0];
-		m_iDirectionX = MOVE_RIGHT;
+	switch(m_iBallStatus) {
 
-	}
+		case HIT_LEFT_RACKET:
+			// hit by left racket?
+			m_iPosX = m_iLimitsX[0];
+			m_iDirectionX = MOVE_RIGHT;
+			break;
 
-	else if (m_iPosX > m_iLimitsX[1]) {// RIGHT
+		case HIT_RIGHT_RACKET:
+			// hit by right racket?
+			m_iPosX = m_iLimitsX[1];
+			m_iDirectionX = MOVE_LEFT;
+			break;
 
-		m_iPosX = m_iLimitsX[1];
-		m_iDirectionX = MOVE_LEFT;
+		case HIT_LEFT_WALL:
+			// hit by left racket?
+			m_iPosX = m_iLimitsX[0] + RACKET_LENGTH/2 ;
+			m_iDirectionX = MOVE_RIGHT;
+			break;
 
+		case HIT_RIGHT_WALL:
+			// hit by right racket?
+			m_iPosX = m_iLimitsX[1] - RACKET_LENGTH/2 ;
+			m_iDirectionX = MOVE_LEFT;
+			break;
+
+		case NO_HIT:
+			// hit by right racket?
+			m_iBallStatus = NO_HIT;
+			m_iDirectionX = m_iDirectionX;
+			break;
 	}
 
 }
 
 void Ball::CheckLimitsY() {
 
-	if (m_iPosY < m_iLimitsY[0]) {// UP
+//    // hit top wall?
+//	if (m_iPosY < m_iLimitsY[0]) {// UP
+//
+//		m_iPosY = m_iLimitsY[0];
+//		m_iDirectionY = MOVE_DOWN;
+//
+//	}
+//    // hit bottom wall?
+//	else if (m_iPosY > m_iLimitsY[1]) {// DOWN
+//
+//		m_iPosY = m_iLimitsY[1];
+//		m_iDirectionY = MOVE_UP;
+//	}
 
-		m_iPosY = m_iLimitsY[0];
-		m_iDirectionY = MOVE_DOWN;
 
-	}
+	switch(m_iBallStatus) {
 
-	else if (m_iPosY > m_iLimitsY[1]) {// DOWN
+		case HIT_TOP_WALL:
+			// hit by left racket?
+			m_iPosY = m_iLimitsY[0];
+			m_iDirectionY = MOVE_DOWN;
+			break;
 
-		m_iPosY = m_iLimitsY[1];
-		m_iDirectionY = MOVE_UP;
+		case HIT_BOTTOM_WALL:
+			// hit by right racket?
+			m_iPosY = m_iLimitsY[1];
+			m_iDirectionY = MOVE_UP;
+			break;
 
+		case HIT_LEFT_WALL:
+			m_iPosY = SCREEN_CENTER;
+			m_iDirectionY = NO_MOVE;
+			break;
+
+		case HIT_RIGHT_WALL:
+			m_iPosY = SCREEN_CENTER;
+			m_iDirectionY = NO_MOVE;
+			break;
+
+		case NO_HIT:
+			// hit by right racket?
+			m_iBallStatus = NO_HIT;
+			m_iDirectionY = m_iDirectionY;
+			break;
 	}
 }
 

@@ -35,6 +35,10 @@ class GameLogic : public Task
 		Ball   MainBall;
 		int8_t m_iRacketLeftScore;
 		int8_t m_iRacketRightScore;
+
+//		int8_t m_iBallStatus;
+
+
 		int m_iGameMode;
 		virtual void scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball);
 		virtual void winnerControl();

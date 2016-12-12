@@ -282,7 +282,7 @@ void Screen::printPongScore(MSG i_Message)
 			SCORE_POS_P1_X, SCORE_POS_P1_Y, OPAQUE_TEXT);
 
 	char RacketRightScore[8];
-    sprintf(RacketRightScore, "P1:%2i", MainLogic->m_iRacketRightScore);
+    sprintf(RacketRightScore, "P2:%2i", MainLogic->m_iRacketRightScore);
 	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLUE);
 	Graphics_drawStringCentered(&g_sContext,
 				(int8_t *) RacketRightScore, AUTO_STRING_LENGTH,
