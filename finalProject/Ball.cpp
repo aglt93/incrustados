@@ -48,12 +48,12 @@ void Ball::CheckLimitsX() {
 	switch(m_iBallStatus) {
 
 		case HIT_LEFT_RACKET:
-			m_iPosX = m_iLimitsX[0];
+			m_iPosX = m_iLimitsX[0] + 1;
 			m_iDirectionX = MOVE_RIGHT;
 			break;
 
 		case HIT_RIGHT_RACKET:
-			m_iPosX = m_iLimitsX[1];
+			m_iPosX = m_iLimitsX[1] - 1;
 			m_iDirectionX = MOVE_LEFT;
 			break;
 

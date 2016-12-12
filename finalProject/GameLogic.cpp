@@ -102,25 +102,27 @@ void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* 
 	int RacketRightUpperRange = i_RacketRight->m_iPosY + RACKET_LENGTH/2;
 
 	//	Collision with left racket.
-	if(i_Ball->m_iPosX < i_Ball->m_iLimitsX[0]
+	if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[0]
 			&& i_Ball->m_iPosY < RacketLeftUpperRange
 			&& i_Ball->m_iPosY > RacketLeftLowerRange){
 
+		i_Ball->m_iPosX++;
 		i_Ball->m_iBallStatus = HIT_LEFT_RACKET;
 
 	}
 
 	//	Collision with right racket.
-	else if(i_Ball->m_iPosX > i_Ball->m_iLimitsX[1]
+	else if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[1]
 			&& i_Ball->m_iPosY < RacketRightUpperRange
 			&& i_Ball->m_iPosY > RacketRightLowerRange){
 
+		i_Ball->m_iPosX--;
 		i_Ball->m_iBallStatus = HIT_RIGHT_RACKET;
 
 	}
 
 	//	Collision with left wall.
-	else if(i_Ball->m_iPosX < i_Ball->m_iLimitsX[0]
+	else if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[0]
 			&& (i_Ball->m_iPosY > RacketLeftUpperRange
 			|| i_Ball->m_iPosY < RacketLeftLowerRange)){
 
@@ -129,7 +131,7 @@ void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* 
 
 	}
 	//	Collision with right wall.
-	else if(i_Ball->m_iPosX > i_Ball->m_iLimitsX[1]
+	else if(i_Ball->m_iPosX == i_Ball->m_iLimitsX[1]
 			&& (i_Ball->m_iPosY > RacketLeftUpperRange
 			|| i_Ball->m_iPosY < RacketRightLowerRange)){
 
