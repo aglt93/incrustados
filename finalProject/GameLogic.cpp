@@ -93,6 +93,24 @@ void BallControlY(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 	i_Ball->CheckChangeY();
 }
 
+
+void ResetRacketLeft(Racket* i_RacketLeft){
+	i_RacketLeft->m_iPosX = RACKET_LEFT_POS_X;
+	i_RacketLeft->m_iPosY = RACKET_LEFT_POS_Y;
+	i_RacketLeft->CheckChangeX();
+	i_RacketLeft->CheckChangeY();
+}
+
+
+void ResetRacketRight(Racket* i_RacketRight) {
+
+	i_RacketRight->m_iPosX = RACKET_RIGHT_POS_X;
+	i_RacketRight->m_iPosY = RACKET_RIGHT_POS_Y;
+	i_RacketRight->CheckChangeX();
+	i_RacketRight->CheckChangeY();
+
+}
+
 void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* i_Ball) {
 
 	int RacketLeftLowerRange = i_RacketLeft->m_iPosY - RACKET_LENGTH/2;
@@ -127,6 +145,10 @@ void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* 
 			|| i_Ball->m_iPosY < RacketLeftLowerRange)){
 
 		i_Ball->m_iBallStatus = HIT_LEFT_WALL;
+
+		ResetRacketLeft(i_RacketLeft);
+		ResetRacketRight(i_RacketRight);
+
 		m_iRacketRightScore++;
 
 	}
@@ -136,6 +158,11 @@ void GameLogic::scoreControl(Racket* i_RacketLeft, Racket* i_RacketRight, Ball* 
 			|| i_Ball->m_iPosY < RacketRightLowerRange)){
 
 		i_Ball->m_iBallStatus = HIT_RIGHT_WALL;
+
+		ResetRacketLeft(i_RacketLeft);
+		ResetRacketRight(i_RacketRight);
+		//ResetBall();
+
 		m_iRacketLeftScore++;
 
 	}
