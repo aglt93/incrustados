@@ -15,6 +15,7 @@
 #include "Racket.hpp"
 #include "Ball.hpp"
 #include "GameLogic.hpp"
+#include "Buzzer.hpp"
 #include <driverlib.h>
 #include <stdlib.h>
 #include "task_ids.hpp"
@@ -83,6 +84,7 @@ void main(void) {
 	// scheduler.
     Screen PrintScreen(SCREEN_ID,NOT_PERIODIC_TASK);
 	GameLogic MainLogic(LOGIC_ID,PERIODIC_TASK,LOGIC_PERIOD);
+	Buzzer BuzzerTest(SERVO_ID,PERIODIC_TASK,BUZZER_PORT,BUZZER_PIN,BUZZER_PERIOD);
 
     // Se realizan las configuraciones principales del RTOS.
     Setup();
@@ -92,6 +94,7 @@ void main(void) {
 //    MainScheduler.attach(&ButtonDown);
 //    MainScheduler.attach(&ButtonUp);
     MainScheduler.attach(&MainLogic);
+    MainScheduler.attach(&BuzzerTest);
 
 
     // Ciclo principal. Cada 1ms entra a ejecutar los procesos necesarios para el correcto

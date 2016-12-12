@@ -5,11 +5,14 @@
  *      Author: eortiz
  */
 
-#ifndef SERVO_HPP_
-#define SERVO_HPP_
+#ifndef BUZZER_HPP_
+#define BUZZER_HPP_
 #define __NOP __nop
 #include "msp.h"
 #include "Task.hpp"
+#include "MusicEnv.hpp"
+
+#define MELODY_LENGTH 78
 
 
 /* *****************************************************************************************
@@ -53,17 +56,20 @@
  * 						para que genere el ciclo de trabajo entre 0.5ms y 2.5ms.
  * ******************************************************************************************
  */
-class Servo : public Task
+class Buzzer : public Task
 {
     public:
-        Servo(int i_iTaskID, bool i_bPeriodicTask, int servo_port, int servo_pin);
+        Buzzer(int i_iTaskID, bool i_bPeriodicTask, int i_iBuzzerPort, int i_iBuzzerPin, uint64_t i_u64FinalCount);
         virtual MSG run(void);
         virtual MSG ProcessMessage(MSG i_Message);
-        int ADCtoServoValueConv(int i_iADCvalue);
     protected:
     private:
-        int m_iServoPort;
-        int m_iServoPin;
+        int m_iBuzzerPort;
+        int m_iBuzzerPin;
+        int m_iMelodyIndex;
+        int m_iTempoCounter;
+        static const int Melody[MELODY_LENGTH];
+        static const int Tempo[MELODY_LENGTH];
 };
 
 #endif /* LED_HPP_ */

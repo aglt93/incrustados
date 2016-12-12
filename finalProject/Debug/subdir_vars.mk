@@ -6,13 +6,13 @@
 CPP_SRCS += \
 ../Ball.cpp \
 ../Button.cpp \
+../Buzzer.cpp \
 ../GameLogic.cpp \
 ../GamePiece.cpp \
 ../LED.cpp \
 ../Racket.cpp \
 ../Scheduler.cpp \
 ../Screen.cpp \
-../Servo.cpp \
 ../Task.cpp \
 ../main.cpp 
 
@@ -29,13 +29,13 @@ C_SRCS += \
 OBJS += \
 ./Ball.obj \
 ./Button.obj \
+./Buzzer.obj \
 ./GameLogic.obj \
 ./GamePiece.obj \
 ./LED.obj \
 ./Racket.obj \
 ./Scheduler.obj \
 ./Screen.obj \
-./Servo.obj \
 ./Task.obj \
 ./main.obj \
 ./startup_msp432p401r_ccs.obj \
@@ -44,13 +44,13 @@ OBJS += \
 CPP_DEPS += \
 ./Ball.d \
 ./Button.d \
+./Buzzer.d \
 ./GameLogic.d \
 ./GamePiece.d \
 ./LED.d \
 ./Racket.d \
 ./Scheduler.d \
 ./Screen.d \
-./Servo.d \
 ./Task.d \
 ./main.d 
 
@@ -61,13 +61,13 @@ C_DEPS += \
 CPP_DEPS__QUOTED += \
 "Ball.d" \
 "Button.d" \
+"Buzzer.d" \
 "GameLogic.d" \
 "GamePiece.d" \
 "LED.d" \
 "Racket.d" \
 "Scheduler.d" \
 "Screen.d" \
-"Servo.d" \
 "Task.d" \
 "main.d" 
 
@@ -78,13 +78,13 @@ C_DEPS__QUOTED += \
 OBJS__QUOTED += \
 "Ball.obj" \
 "Button.obj" \
+"Buzzer.obj" \
 "GameLogic.obj" \
 "GamePiece.obj" \
 "LED.obj" \
 "Racket.obj" \
 "Scheduler.obj" \
 "Screen.obj" \
-"Servo.obj" \
 "Task.obj" \
 "main.obj" \
 "startup_msp432p401r_ccs.obj" \
@@ -93,13 +93,13 @@ OBJS__QUOTED += \
 CPP_SRCS__QUOTED += \
 "../Ball.cpp" \
 "../Button.cpp" \
+"../Buzzer.cpp" \
 "../GameLogic.cpp" \
 "../GamePiece.cpp" \
 "../LED.cpp" \
 "../Racket.cpp" \
 "../Scheduler.cpp" \
 "../Screen.cpp" \
-"../Servo.cpp" \
 "../Task.cpp" \
 "../main.cpp" 
 
