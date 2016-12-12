@@ -165,13 +165,15 @@ void GameLogic::winnerControl() {
 
 	///////////////////////////////////////////
 	if(m_iRacketLeftScore == WINNER_SCORE){
-		m_iGameMode = 1;
+		m_iGameMode = PLAYER_1_WON_SCREEN;
+		m_iRacketLeftScore = 0;
 	}
 	else if(m_iRacketRightScore == WINNER_SCORE){
-		m_iGameMode = 2;
+		m_iGameMode = PLAYER_2_WON_SCREEN;
+		m_iRacketRightScore = 0;
 	}
 	else{
-		m_iGameMode = 0;
+		m_iGameMode = GAME_RUNNING_SCREEN;
 	}
 
 
@@ -183,6 +185,7 @@ MSG GameLogic::run(void) {
 	BallControlX(&RacketLeft, &RacketRight, &MainBall);
 	BallControlY(&RacketLeft, &RacketRight, &MainBall);
 	scoreControl (&RacketLeft, &RacketRight, &MainBall);
+	winnerControl();
 	// Screen Control
 	MSG msgToScreen = {-1,-1,0,0,1};
 

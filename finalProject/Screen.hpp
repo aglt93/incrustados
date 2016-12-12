@@ -32,7 +32,7 @@ class Screen : public Task
         void getFigureChange(MSG i_Message);
         void printPongTable();
 
-        void printPongWinner();
+        void printPongWinner(MSG i_Message);
         void printPongScore(MSG i_Message);
     protected:
     private:

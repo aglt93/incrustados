@@ -103,15 +103,29 @@ MSG Screen::run(void)
 //////////////////////////////////////////////////////////////////////////////////////////////
 MSG Screen::ProcessMessage(MSG i_Message) {
 
-	getFigureChange(i_Message);
+	GameLogic* MainLogic = (GameLogic*) i_Message.data;
 
-	printPongTable();
-	printPongScore(i_Message);
-//	printPongWinner();
+//	switch(MainLogic->m_iGameMode) {
+//
+//		case GAME_RUNNING_SCREEN:
 
-	MSG nullMsg = printFigure();
+			getFigureChange(i_Message);
+			printPongTable();
+			MSG nullMsg = printFigure();
+			printPongScore(i_Message);
+//			return nullMsg;
 
-	return nullMsg;
+//			break;
+//
+//		case PLAYER_1_WON_SCREEN:
+//		case PLAYER_2_WON_SCREEN:
+//			printPongWinner(i_Message);
+			return nullMsg;
+
+//			break;
+//
+//	}
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -295,22 +309,31 @@ void Screen::printPongScore(MSG i_Message)
  *  x1, y1, x2, y2.
  */
 //////////////////////////////////////////////////////////////////////////////////////////////
-void Screen::printPongWinner()
+void Screen::printPongWinner(MSG i_Message)
 {
-	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
-	//
-    GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
 
-    int p1_score = 1;
-    int p2_score = 5;
 
-    if (p1_score == WINNER_SCORE) {
 
+	GameLogic* MainLogic = (GameLogic*) i_Message.data;
+
+    if (MainLogic->m_iGameMode==PLAYER_1_WON_SCREEN) {
+    	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
+    	//
+    	Graphics_clearDisplay(&g_sContext);
+
+    	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
     	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
+
     	Graphics_drawStringCentered(&g_sContext, (int8_t *)"P1 AK7", AUTO_STRING_LENGTH, SCREEN_CENTER, SCREEN_CENTER, OPAQUE_TEXT);
 
     }
-    if (p2_score == WINNER_SCORE) {
+
+    else if (MainLogic->m_iGameMode==PLAYER_2_WON_SCREEN) {
+    	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
+    	//
+    	Graphics_clearDisplay(&g_sContext);
+
+    	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
 
     	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLUE);
     	Graphics_drawStringCentered(&g_sContext, (int8_t *)"P2 AK7", AUTO_STRING_LENGTH, SCREEN_CENTER, SCREEN_CENTER, OPAQUE_TEXT);

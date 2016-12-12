@@ -61,3 +61,10 @@
 
 #define P2_WON_POS_X				BALL_LIMIT_X_LEFT + RACKET_LENGTH/2 //13
 #define P2_WON_POS_Y				SCREEN_CENTER
+
+
+#define PLAYER_1_WON_SCREEN				1
+#define PLAYER_2_WON_SCREEN				2
+#define GAME_RUNNING_SCREEN				3
+#define WINNER_SCREEN					4
+#define GAME_INIT_SCREEN				5
