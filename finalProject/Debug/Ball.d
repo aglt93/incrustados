@@ -47,6 +47,8 @@ Ball.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/dr
 Ball.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/driverlib/MSP432P4xx/timer_a.h
 Ball.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/driverlib/MSP432P4xx/uart.h
 Ball.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/driverlib/MSP432P4xx/wdt_a.h
+Ball.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h
+Ball.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/linkage.h
 
 ../Ball.cpp: 
 ../Ball.hpp: 
@@ -95,3 +97,5 @@ Ball.obj: /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/dr
 /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/driverlib/MSP432P4xx/timer_a.h: 
 /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/driverlib/MSP432P4xx/uart.h: 
 /home/kvallecillog/Dropbox/incrustados_rep/incrustados/finalProject/driverlib/MSP432P4xx/wdt_a.h: 
+/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdlib.h: 
+/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/linkage.h: 
