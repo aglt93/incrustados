@@ -107,6 +107,7 @@ MSG Screen::ProcessMessage(MSG i_Message) {
 
 		case GAME_INIT_STATE:
 
+			Graphics_clearDisplay(&g_sContext);
 			getFigureChange(i_Message);
 			printPongTable();
 			nullMsg = printFigure();
@@ -121,7 +122,8 @@ MSG Screen::ProcessMessage(MSG i_Message) {
 			printPongScore(i_Message);
 			break;
 
-		case WINNER_STATE:
+		case WINNER_STATE_RACKET_LEFT:
+		case WINNER_STATE_RACKET_RIGHT:
 
 			printPongWinner(i_Message);
 			nullMsg.source = -1;
@@ -296,29 +298,21 @@ void Screen::printPongScore(MSG i_Message)
 	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 	//
     GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-    int l_temp_RacketLeftScore;
-    int l_temp_RacketRightScore;
 
-    if (l_temp_RacketLeftScore != MainLogic->m_iRacketLeftScore){
-    	l_temp_RacketLeftScore =MainLogic->m_iRacketLeftScore;
-        char RacketLeftScore[8];
-        sprintf(RacketLeftScore, "P1:%2i", MainLogic->m_iRacketLeftScore);
-    	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
-    	Graphics_drawStringCentered(&g_sContext,
-    			(int8_t *) RacketLeftScore, AUTO_STRING_LENGTH,
-    			SCORE_POS_P1_X, SCORE_POS_P1_Y, OPAQUE_TEXT);
+	char RacketLeftScore[5];
+	sprintf(RacketLeftScore, "P1:%2i", MainLogic->m_iRacketLeftScore);
+	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
+	Graphics_drawStringCentered(&g_sContext,
+			(int8_t *) RacketLeftScore, AUTO_STRING_LENGTH,
+			SCORE_POS_P1_X, SCORE_POS_P1_Y, OPAQUE_TEXT);
 
-    }
-    if (l_temp_RacketRightScore != MainLogic->m_iRacketRightScore){
 
-    	l_temp_RacketRightScore =MainLogic->m_iRacketRightScore;
-        	char RacketRightScore[8];
-            sprintf(RacketRightScore, "P2:%2i", MainLogic->m_iRacketRightScore);
-        	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLUE);
-        	Graphics_drawStringCentered(&g_sContext,
-        				(int8_t *) RacketRightScore, AUTO_STRING_LENGTH,
-        				SCORE_POS_P2_X, SCORE_POS_P2_Y, OPAQUE_TEXT);
-    }
+	char RacketRightScore[5];
+	sprintf(RacketRightScore, "P2:%2i", MainLogic->m_iRacketRightScore);
+	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLUE);
+	Graphics_drawStringCentered(&g_sContext,
+				(int8_t *) RacketRightScore, AUTO_STRING_LENGTH,
+				SCORE_POS_P2_X, SCORE_POS_P2_Y, OPAQUE_TEXT);
 
 
 
@@ -337,26 +331,28 @@ void Screen::printPongWinner(MSG i_Message)
 
 	GameLogic* MainLogic = (GameLogic*) i_Message.data;
 
-    if (MainLogic->m_iGameMode==PLAYER_1_WON_SCREEN) {
+    if (MainLogic->m_iFsmState==WINNER_STATE_RACKET_LEFT
+    		&& MainLogic->m_iWinnerCounterScreen == 1) {
     	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
     	//
     	Graphics_clearDisplay(&g_sContext);
 
     	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
     	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
-    	char RacketLeftScoreW[8];
+    	char RacketLeftScoreW[13];
     	sprintf(RacketLeftScoreW, "P1 AK7 WON:%2i", MainLogic->m_iRacketLeftScore);
     	Graphics_drawStringCentered(&g_sContext, (int8_t *) RacketLeftScoreW, AUTO_STRING_LENGTH, SCREEN_CENTER, SCREEN_CENTER, OPAQUE_TEXT);
 
     }
 
-    else if (MainLogic->m_iGameMode==PLAYER_2_WON_SCREEN) {
+    else if (MainLogic->m_iFsmState==WINNER_STATE_RACKET_RIGHT
+    			&& MainLogic->m_iWinnerCounterScreen == 1) {
     	Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
     	//
     	Graphics_clearDisplay(&g_sContext);
 
     	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-    	char RacketRightScoreW[8];
+    	char RacketRightScoreW[13];
         sprintf(RacketRightScoreW, "P2 AK7 WON:%2i", MainLogic->m_iRacketRightScore);
     	Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLUE);
     	Graphics_drawStringCentered(&g_sContext, (int8_t *) RacketRightScoreW, AUTO_STRING_LENGTH, SCREEN_CENTER, SCREEN_CENTER, OPAQUE_TEXT);

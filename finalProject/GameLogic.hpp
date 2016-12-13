@@ -33,6 +33,7 @@ class GameLogic : public Task
 		Racket RacketLeft;
 		Racket RacketRight;
 		Ball   MainBall;
+
 		int8_t m_iRacketLeftScore;
 		int8_t m_iRacketRightScore;
 
@@ -40,13 +41,12 @@ class GameLogic : public Task
 
 		int m_iFsmState;
 
-		int m_iGameMode;
 		int m_iWinnerCounterScreen;
 
 		void FirstMoveControl();
 		void ScoreControl();
-		void WinnerControl();
 		void GameControl();
+		void GameState();
 
     protected:
 

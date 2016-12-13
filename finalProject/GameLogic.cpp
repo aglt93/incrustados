@@ -20,7 +20,6 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 
 	m_iRacketLeftScore = 0;
 	m_iRacketRightScore = 0;
-	m_iGameMode = 0;
 
 	m_iBallStatus = NO_HIT;
 	m_iFsmState = GAME_INIT_STATE;
@@ -190,8 +189,8 @@ void RacketLeftControl(Racket* i_RacketLeft, int i_iBallStatus){
 		i_RacketLeft->m_iPosX = RACKET_LEFT_POS_X;
 		i_RacketLeft->m_iPosY = RACKET_LEFT_POS_Y;
 
-		i_RacketLeft->CheckChangeX();
-		i_RacketLeft->CheckChangeY();
+		i_RacketLeft->m_bChangeX = true;
+		i_RacketLeft->m_bChangeY = true;
 
 		i_RacketLeft->m_iDirectionX = NO_MOVE;
 		i_RacketLeft->m_iDirectionY = NO_MOVE;
@@ -206,8 +205,8 @@ void RacketRightControl(Racket* i_RacketRight, int i_iBallStatus) {
 		i_RacketRight->m_iPosX = RACKET_RIGHT_POS_X;
 		i_RacketRight->m_iPosY = RACKET_RIGHT_POS_Y;
 
-		i_RacketRight->CheckChangeX();
-		i_RacketRight->CheckChangeY();
+		i_RacketRight->m_bChangeX = true;
+		i_RacketRight->m_bChangeY = true;
 
 		i_RacketRight->m_iDirectionX = NO_MOVE;
 		i_RacketRight->m_iDirectionY = NO_MOVE;
@@ -282,76 +281,52 @@ void GameLogic::GameControl() {
 
 }
 
+void GameLogic::GameState(){
+
+	switch (m_iBallStatus) {
+
+		//
+		case HIT_LEFT_RACKET:
+		case HIT_RIGHT_RACKET:
+		case HIT_TOP_WALL:
+		case HIT_BOTTOM_WALL:
+		case NO_HIT:
+			m_iFsmState = GAME_RUNNING_STATE;
+			break;
+
+		//
+		case HIT_LEFT_WALL:
+			if(m_iRacketRightScore == WINNER_SCORE){
+				m_iFsmState = WINNER_STATE_RACKET_RIGHT;
+			}
+			break;
+
+		//
+		case HIT_RIGHT_WALL:
+			if(m_iRacketLeftScore == WINNER_SCORE){
+				m_iFsmState = WINNER_STATE_RACKET_LEFT;
+			}
+			break;
+
+		default:
+			m_iFsmState = GAME_RUNNING_STATE;
+			break;
+	}
+}
+
 void GameLogic::ScoreControl() {
 
-	if (m_iBallStatus == HIT_LEFT_RACKET) {
-
-		m_iFsmState = GAME_RUNNING_STATE;
-
-	}
-
-	else if (m_iBallStatus == HIT_RIGHT_RACKET) {
-
-		m_iFsmState = GAME_RUNNING_STATE;
-
-	}
-
-	else if (m_iBallStatus == HIT_TOP_WALL) {
-
-		m_iFsmState = GAME_RUNNING_STATE;
-
-	}
-
-	else if (m_iBallStatus == HIT_BOTTOM_WALL) {
-
-		m_iFsmState = GAME_RUNNING_STATE;
-
-	}
-
-	else if (m_iBallStatus == HIT_LEFT_WALL){
+	if (m_iBallStatus == HIT_LEFT_WALL){
 
 		m_iRacketRightScore++;
-		WinnerControl();
-		if (m_iGameMode == PLAYER_2_WON_SCREEN){
-			m_iFsmState = WINNER_STATE;
-		}
-		else{
-			m_iFsmState = GAME_INIT_STATE;
-		}
 
 	}
 
 	else if (m_iBallStatus == HIT_RIGHT_WALL) {
 
 		m_iRacketLeftScore++;
-		WinnerControl();
-		if (m_iGameMode == PLAYER_1_WON_SCREEN){
-			m_iFsmState = WINNER_STATE;
-		}
-		else{
-			m_iFsmState = GAME_INIT_STATE;
-		}
-	}
 
-	else if (m_iBallStatus == NO_HIT) {
-		m_iFsmState = GAME_RUNNING_STATE;
 	}
-
-}
-
-void GameLogic::WinnerControl() {
-
-	///////////////////////////////////////////
-	if(m_iRacketLeftScore == WINNER_SCORE){
-		m_iGameMode = PLAYER_1_WON_SCREEN;
-	}
-	else if(m_iRacketRightScore == WINNER_SCORE){
-		m_iGameMode = PLAYER_2_WON_SCREEN;
-	}
-	else{
-		m_iGameMode = NO_WINNER_YET;
-	}
-
 
 }
 
@@ -382,6 +357,14 @@ MSG GameLogic::run(void) {
 
 		case GAME_INIT_STATE:
 
+			RacketLeft.m_bChangeX = true;
+			RacketLeft.m_bChangeY = true;
+
+			RacketRight.m_bChangeX = true;
+			RacketRight.m_bChangeY = true;
+
+			m_iRacketLeftScore = 0;
+			m_iRacketRightScore = 0;
 			m_iFsmState = GAME_RUNNING_STATE;
 			FirstMoveControl();
 
@@ -389,34 +372,53 @@ MSG GameLogic::run(void) {
 
 		case GAME_RUNNING_STATE:
 
-			m_iFsmState = GAME_RUNNING_STATE;
 			FirstMoveControl();
+
 			//Ball Movement
 			BallMoveX(&MainBall);
 			BallMoveY(&MainBall);
+
 			// Game Control
 			GameControl();
+
 			// Ball Control
 			BallControlX(&MainBall,m_iBallStatus);
 			BallControlY(&MainBall,m_iBallStatus);
 			BallFastnessControl(this,&MainBall,m_iBallStatus);
+
 			// Racket Control
 			RacketLeftControl(&RacketLeft,m_iBallStatus);
 			RacketRightControl(&RacketRight,m_iBallStatus);
+
 			// Score control
 			ScoreControl();
 
+			// Game State
+			GameState();
+
 			break;
 
-		case WINNER_STATE:
+		case WINNER_STATE_RACKET_LEFT:
 
-			m_iRacketLeftScore = 0;
-			m_iRacketRightScore = 0;
 			m_iWinnerCounterScreen++;
+
 			if (m_iWinnerCounterScreen >= FINAL_WINNER_SCREEN_COUNTER){
 
 				m_iFsmState = GAME_INIT_STATE;
-				m_iWinnerCounterScreen = 0;
+				m_iWinnerCounterScreen = INIT_WINNER_SCREEN_COUNTER;
+
+			}
+
+			break;
+
+		case WINNER_STATE_RACKET_RIGHT:
+
+			m_iWinnerCounterScreen++;
+
+			if (m_iWinnerCounterScreen >= FINAL_WINNER_SCREEN_COUNTER){
+
+				m_iFsmState = GAME_INIT_STATE;
+				m_iWinnerCounterScreen = INIT_WINNER_SCREEN_COUNTER;
 
 			}
 
