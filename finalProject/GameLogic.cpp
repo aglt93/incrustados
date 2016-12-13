@@ -23,6 +23,9 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 	m_iGameMode = 0;
 
 	m_iBallStatus = NO_HIT;
+	m_iFsmState = GAME_INIT_STATE;
+
+	m_iWinnerCounterScreen = INIT_WINNER_SCREEN_COUNTER;
 
 	int RacketLeftLimitsX[2] = {RACKET_LEFT_LIMIT_X_LEFT,RACKET_LEFT_LIMIT_X_RIGHT};
 	int *pRacketLeftLimitsX = RacketLeftLimitsX;
@@ -272,23 +275,66 @@ void GameLogic::GameControl() {
 
 	//
 	else{
+
 		m_iBallStatus = NO_HIT;
+
 	}
 
 }
 
 void GameLogic::ScoreControl() {
 
-	if (m_iBallStatus == HIT_LEFT_WALL){
+	if (m_iBallStatus == HIT_LEFT_RACKET) {
+
+		m_iFsmState = GAME_RUNNING_STATE;
+
+	}
+
+	else if (m_iBallStatus == HIT_RIGHT_RACKET) {
+
+		m_iFsmState = GAME_RUNNING_STATE;
+
+	}
+
+	else if (m_iBallStatus == HIT_TOP_WALL) {
+
+		m_iFsmState = GAME_RUNNING_STATE;
+
+	}
+
+	else if (m_iBallStatus == HIT_BOTTOM_WALL) {
+
+		m_iFsmState = GAME_RUNNING_STATE;
+
+	}
+
+	else if (m_iBallStatus == HIT_LEFT_WALL){
 
 		m_iRacketRightScore++;
+		WinnerControl();
+		if (m_iGameMode == PLAYER_2_WON_SCREEN){
+			m_iFsmState = WINNER_STATE;
+		}
+		else{
+			m_iFsmState = GAME_INIT_STATE;
+		}
 
 	}
 
 	else if (m_iBallStatus == HIT_RIGHT_WALL) {
 
 		m_iRacketLeftScore++;
+		WinnerControl();
+		if (m_iGameMode == PLAYER_1_WON_SCREEN){
+			m_iFsmState = WINNER_STATE;
+		}
+		else{
+			m_iFsmState = GAME_INIT_STATE;
+		}
+	}
 
+	else if (m_iBallStatus == NO_HIT) {
+		m_iFsmState = GAME_RUNNING_STATE;
 	}
 
 }
@@ -298,14 +344,12 @@ void GameLogic::WinnerControl() {
 	///////////////////////////////////////////
 	if(m_iRacketLeftScore == WINNER_SCORE){
 		m_iGameMode = PLAYER_1_WON_SCREEN;
-		m_iRacketLeftScore = 0;
 	}
 	else if(m_iRacketRightScore == WINNER_SCORE){
 		m_iGameMode = PLAYER_2_WON_SCREEN;
-		m_iRacketRightScore = 0;
 	}
 	else{
-		m_iGameMode = GAME_RUNNING_SCREEN;
+		m_iGameMode = NO_WINNER_YET;
 	}
 
 
@@ -334,31 +378,51 @@ void GameLogic::FirstMoveControl(){
 
 MSG GameLogic::run(void) {
 
-	// First Move Control
-	FirstMoveControl();
+	switch(m_iFsmState) {
 
-	//Ball Movement
-	BallMoveX(&MainBall);
-	BallMoveY(&MainBall);
+		case GAME_INIT_STATE:
 
-	// Game Control
-	GameControl();
+			m_iFsmState = GAME_RUNNING_STATE;
+			FirstMoveControl();
 
-	// Ball Control
-	BallControlX(&MainBall,m_iBallStatus);
-	BallControlY(&MainBall,m_iBallStatus);
-	BallFastnessControl(this,&MainBall,m_iBallStatus);
+			break;
 
-	// Racket Control
-	RacketLeftControl(&RacketLeft,m_iBallStatus);
-	RacketRightControl(&RacketRight,m_iBallStatus);
+		case GAME_RUNNING_STATE:
 
+			m_iFsmState = GAME_RUNNING_STATE;
+			FirstMoveControl();
+			//Ball Movement
+			BallMoveX(&MainBall);
+			BallMoveY(&MainBall);
+			// Game Control
+			GameControl();
+			// Ball Control
+			BallControlX(&MainBall,m_iBallStatus);
+			BallControlY(&MainBall,m_iBallStatus);
+			BallFastnessControl(this,&MainBall,m_iBallStatus);
+			// Racket Control
+			RacketLeftControl(&RacketLeft,m_iBallStatus);
+			RacketRightControl(&RacketRight,m_iBallStatus);
+			// Score control
+			ScoreControl();
 
-	// Score control
-	ScoreControl();
+			break;
 
-	// Winner Control
-	//WinnerControl();
+		case WINNER_STATE:
+
+			m_iRacketLeftScore = 0;
+			m_iRacketRightScore = 0;
+			m_iWinnerCounterScreen++;
+			if (m_iWinnerCounterScreen >= FINAL_WINNER_SCREEN_COUNTER){
+
+				m_iFsmState = GAME_INIT_STATE;
+				m_iWinnerCounterScreen = 0;
+
+			}
+
+			break;
+
+	}
 
 	// Screen Control
 	MSG msgToScreen = {-1,-1,0,0,1};
@@ -372,8 +436,8 @@ MSG GameLogic::run(void) {
 		msgToScreen.finalCount = 1;
 	}
 
-
 	return msgToScreen;
+
 }
 
 MSG GameLogic::ProcessMessage(MSG i_Message){

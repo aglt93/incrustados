@@ -67,6 +67,16 @@
 
 #define PLAYER_1_WON_SCREEN				1
 #define PLAYER_2_WON_SCREEN				2
+#define NO_WINNER_YET					3
+
 #define GAME_RUNNING_SCREEN				3
 #define WINNER_SCREEN					4
 #define GAME_INIT_SCREEN				5
+
+
+#define GAME_RUNNING_STATE				1
+#define WINNER_STATE					2
+#define GAME_INIT_STATE					3
+
+#define INIT_WINNER_SCREEN_COUNTER		0
+#define FINAL_WINNER_SCREEN_COUNTER		2

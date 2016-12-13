@@ -38,8 +38,10 @@ class GameLogic : public Task
 
 		int m_iBallStatus;
 
+		int m_iFsmState;
 
 		int m_iGameMode;
+		int m_iWinnerCounterScreen;
 
 		void FirstMoveControl();
 		void ScoreControl();
