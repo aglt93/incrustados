@@ -7,6 +7,8 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 #define PERIOD		0
+
+// Valor para tener 1ms de periodo en el PWM.
 #define NOTE_OFFSET	3000
 //////////////////////////////////////////////////////////////////////////////////////////////
 extern "C" {
@@ -110,6 +112,9 @@ MSG Buzzer::run(void) {
 	////////////////////////////////////////////////////////
 	m_iTempoCounter++;
 
+	// Si ya se debe reproducir una nota nueva se reconfigura
+	// el PWM con los valores nuevos de frecuencia, según el
+	// arreglo Melody.
 	if (m_iTempoCounter >= Tempo[m_iMelodyIndex]) {
 
 		m_iTempoCounter = 0;
@@ -117,12 +122,15 @@ MSG Buzzer::run(void) {
 		MAP_Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
 	}
 
+	// Si ya se terminó de reproducir se vuelve a reproducir de nuevo.
 	if (m_iMelodyIndex >= MELODY_LENGTH) {m_iMelodyIndex = 0;}
 	////////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////////
 	float timerPeriod;
 
+	// Se calcula el valor de cuenta en el timer para que
+	// reproduzca correctamente la nota.
 	if (Melody[m_iMelodyIndex] != 0) {
 		timerPeriod = (float) 1/Melody[m_iMelodyIndex];
 		timerPeriod = timerPeriod*1000;
@@ -130,6 +138,8 @@ MSG Buzzer::run(void) {
 	}
 	else {timerPeriod = 0;}
 
+	// Se configuran los valores de periodo y duty cycle de
+	// 50% para este duty cyclo.
 	pwmConfig.timerPeriod = timerPeriod;
 	pwmConfig.dutyCycle = timerPeriod/2;
 

@@ -3,31 +3,28 @@
 #include "task_ids.hpp"
 
 
-#define LED_RED_PORT GPIO_PORT_P2
-#define LED_RED_PIN GPIO_PIN4
-
-
-Racket::Racket (int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
+Racket::Racket (int i_iPosX, int i_iPosY, int i_iDirectionX, int i_iDirectionY,
 		int* i_iLimitsX, int* i_iLimitsY) {
 
-	//
+	// Se inicializan las posiciones del centro de la raqueta.
 	m_iPosX = i_iPosX;
 	m_iPosY = i_iPosY;
 
-	// Solo para que sean diferentes inicialmente!
+	// Se configura la posición anterior en un valor de las posiciones iniciales - 1
+	// para que sean diferentes inicialmente.
 	m_iLastPosX = m_iPosX-1;
 	m_iLastPosY = m_iPosY-1;
 
-	//
+	// Los valores se acaban de inicializar y por tanto ocurrieron cambios en X y Y.
 	m_bChangeY = true;
 	m_bChangeX = true;
 
-	//
-	m_iSize = i_iSize;
+	// Las direcciones se inicializan.
 	m_iDirectionX = i_iDirectionX;
 	m_iDirectionY = i_iDirectionY;
 
 
+	// Se inicializan los límites.
 	for (int i = 0; i<LIMITSX_SIZE;i++) {
 
 		m_iLimitsX[i] = i_iLimitsX[i];

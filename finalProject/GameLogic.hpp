@@ -33,7 +33,6 @@ class GameLogic : public Task
 		Racket RacketLeft;
 		Racket RacketRight;
 		Ball   MainBall;
-
 		int8_t m_iRacketLeftScore;
 		int8_t m_iRacketRightScore;
 

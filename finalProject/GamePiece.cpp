@@ -38,25 +38,6 @@ int GamePiece::getPosY(){
 
 
 
-
-
-void GamePiece::setSize(int i_iSize){
-
-	m_iSize = i_iSize;
-
-}
-
-int GamePiece::getSize(){
-
-	return m_iSize;
-}
-
-
-
-
-
-
-
 void GamePiece::setDirectionX(int i_iDirectionX){
 
 	m_iDirectionX = i_iDirectionX;

@@ -25,6 +25,10 @@ Scheduler::Scheduler()
         Schedule[index] = (uintptr_t) 0;
     }
 
+
+
+    // Se limpia la cola de msjs inicialmente poniendo en cada
+    // posicion un nullMsg.
     MSG nullMSG = {-1,-1,0,0,1};
 
     for (int i = 0; i < NUMBER_OF_SLOTS; i++) {
@@ -41,6 +45,10 @@ Scheduler::Scheduler()
 //////////////////////////////////////////////////////////////////////////////////////////////
 uint8_t Scheduler::attach(Task * i_ToAttach)
 {
+
+	// Se agrega un task al arreglo Schedule
+	// y al ID_LUT para poder mapear los IDs de los tasks
+	// a sus punteros.
     uint8_t l_ErrorCode = NO_ERR;
     if((mOpenSlots>0) && (mNextSlot < NUMBER_OF_SLOTS))
     {
@@ -66,6 +74,10 @@ uint8_t Scheduler::run(void)
     Task * NextTask = (uintptr_t) 0;
     uint8_t l_u8ReturnCode = NO_ERR;
 
+
+    // Se ejecuta cada uno de los tasks contenidos en NextSchedule
+    // si el valor retornado es un MSG válido se agrega a la cola de msjs
+    // y cuando se llega un Task que es null pointer se sale del ciclo.
     while(NextTaskSlot < (NUMBER_OF_SLOTS-1U))
     {
         NextTask = static_cast<Task *> (NextSchedule[NextTaskSlot]);
@@ -98,26 +110,6 @@ uint8_t Scheduler::CalculateNextSchedule(void)
     uint8_t l_u8ReturnCode = NO_ERR;
     uint64_t l_u64CurrentCount;
     uint64_t l_u64FinalCount;
-/*
-    int CalculateIndex = NextScheduleSlot;
-
-    for (int i = 0; i < CalculateIndex; i++) {
-
-    	NextTask = static_cast<Task *> (Schedule[i]);
-
-		l_u64CurrentCount = NextTask->GetTaskCurrentCount() + 1;
-		l_u64FinalCount = NextTask->GetTaskFinalCount();
-		NextTask->SetTaskCurrentCount(l_u64CurrentCount);
-
-		if ((l_u64CurrentCount >= l_u64FinalCount) && (NextTask->m_bPeriodicTask)) {
-
-			NextTask->SetTaskCurrentCount(0);
-			NextSchedule[NextScheduleSlot] = NextTask;
-			NextScheduleSlot++;
-		}
-
-    }
-*/
 
     while(NextTaskSlot < (NUMBER_OF_SLOTS-1U)) {
 
@@ -180,19 +172,25 @@ void Scheduler::ProcessMessageQueue() {
 	bool clearADC = false;
 	bool clearButtonUp = false;
 
-	//GPIO_toggleOutputOnPin(RGB_BLUE_PORT,RGB_BLUE_PIN);
-
 	for (int i = 0; i < mMessageIndex; i++) {
 
 		MSG newMSG = MessageQueue[i];
 
 		if (newMSG.source != -1 && newMSG.destination != -1) {
 
+			// Se cambia la cuenta actual de proceso del msj.
 			MessageQueue[i].currentCount = MessageQueue[i].currentCount +1;
 			newMSG.currentCount++;
 
+			// Si la cuenta actual es igual o mayor que la cuenta final
+			// implica que el msj debe ser procesado.
 			if (newMSG.currentCount >= newMSG.finalCount) {
 
+				////////////////////////////////////////////////////////////////////////
+				// Si el msj va dirigido al scheduler entonces se procesa con su método
+				// para procesar msjs en caso contrario, se llama al método que procesa
+				// el msj del task correspondiente.
+				////////////////////////////////////////////////////////////////////////
 				if (newMSG.destination != SCHEDULER_ID) {
 
 					Task* newTask = ID_LUT[newMSG.destination];
@@ -208,8 +206,13 @@ void Scheduler::ProcessMessageQueue() {
 					processMessage(newMSG);
 
 				}
+				////////////////////////////////////////////////////////////////////////
 
-
+				////////////////////////////////////////////
+				// Si uno de los msjs provenía de una
+				// interrupción se verifica cual era y se
+				// solicita rehabilitar tal interrupción.
+				////////////////////////////////////////////
 				switch (newMSG.source) {
 
 					case BUTTON_DOWN_ISR_ID:
@@ -225,16 +228,24 @@ void Scheduler::ProcessMessageQueue() {
 						break;
 
 				}
-
+				////////////////////////////////////////////
 
 
 			}
 		}
 	}
 
+
+	////////////////////////////////////////////////////////////////////////
 	// Se limpia la cola de msjs.
 	clearMessageQueue();
+	////////////////////////////////////////////////////////////////////////
 
+
+	////////////////////////////////////////////////////////////////////////
+	// Se rehabilitan las interrupciones si el msj enviado por las mismas
+	// ya fue procesado.
+	////////////////////////////////////////////////////////////////////////
 	if(clearButtonDown) {
 		GPIO_clearInterruptFlag(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
 		GPIO_enableInterrupt(BUTTON_DOWN_PORT, BUTTON_DOWN_PIN);
@@ -248,10 +259,10 @@ void Scheduler::ProcessMessageQueue() {
 		}
 
 	if(clearADC){
-		// Se limpia la bandera de interrupción del ADC.
 		MAP_ADC14_enableInterrupt(ADC_INT0);
 		clearADC = true;
 	}
+	////////////////////////////////////////////////////////////////////////
 
 	return;
 
@@ -293,6 +304,11 @@ void Scheduler::clearMessageQueue() {
 	MSG newMessageQueue[NUMBER_OF_SLOTS];
 	MSG nullMSG = {-1,-1,0,0,1};
 
+	//////////////////////////////////////////////////////////////////////////
+	// Se limpia la cola de msjs poniendo en nullMsg los msjs que ya fueron
+	// procesados. Cuando un msj no ha sido procesado porque todavía debe
+	// esperar cierta cantidad de frames, se guarda en un arreglo temporal.
+	//////////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < mMessageIndex; i++) {
 
 		messageToClear = MessageQueue[i];
@@ -314,14 +330,22 @@ void Scheduler::clearMessageQueue() {
 
 
 	}
+	//////////////////////////////////////////////////////////////////////////
 
+
+	// Se reinicia el indice de msjs.
 	mMessageIndex = 0;
 
+
+	//////////////////////////////////////////////////////////////////////////
+	// Se transfieren los msjs pendientes a la cola de msjs.
+	//////////////////////////////////////////////////////////////////////////
 	for (int i=0; i < newIndex; i++) {
 
 		MessageQueue[i] = newMessageQueue[i];
 		mMessageIndex++;
 	}
+	//////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -329,25 +353,6 @@ void Scheduler::clearMessageQueue() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 void Scheduler::processMessage(MSG i_MSG) {
-
-	int l_iSourceTask = i_MSG.source;
-
-
-	switch(l_iSourceTask) {
-
-        // Caso ADC
-        case ADC_ISR_ID:
-
-            int* TaskID = (int*) i_MSG.data;
-            Task* TaskToAdd = ID_LUT[*TaskID];
-            NextSchedule[NextScheduleSlot] = TaskToAdd;
-            NextScheduleSlot++;
-            break;
-
-
-	};
-
-	return;
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////

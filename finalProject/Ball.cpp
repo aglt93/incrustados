@@ -4,7 +4,7 @@
 #define LED_RED_PORT GPIO_PORT_P2
 #define LED_RED_PIN GPIO_PIN4
 
-Ball::Ball (int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDirectionY,
+Ball::Ball (int i_iPosX, int i_iPosY, int i_iDirectionX, int i_iDirectionY,
 		int* i_iLimitsX, int* i_iLimitsY)
 {
 	//
@@ -20,7 +20,6 @@ Ball::Ball (int i_iPosX, int i_iPosY, int i_iSize, int i_iDirectionX, int i_iDir
 	m_bChangeX = true;
 
 	//
-	m_iSize = i_iSize;
 	m_iDirectionX = i_iDirectionX;
 	m_iDirectionY = i_iDirectionY;
 

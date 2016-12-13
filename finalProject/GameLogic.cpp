@@ -45,11 +45,11 @@ GameLogic::GameLogic (int i_iTaskID, bool i_bPeriodicTask, int i_u64FinalCount) 
 	int *pBallLimitsY = BallLimitsY;
 	//
 
-	RacketLeft = Racket(RACKET_LEFT_POS_X,RACKET_LEFT_POS_Y,8,NO_MOVE,NO_MOVE,
+	RacketLeft = Racket(RACKET_LEFT_POS_X,RACKET_LEFT_POS_Y,NO_MOVE,NO_MOVE,
 			pRacketLeftLimitsX,pRacketLeftLimitsY);
-	RacketRight = Racket(RACKET_RIGHT_POS_X,RACKET_RIGHT_POS_Y,8,NO_MOVE,NO_MOVE,
+	RacketRight = Racket(RACKET_RIGHT_POS_X,RACKET_RIGHT_POS_Y,NO_MOVE,NO_MOVE,
 			pRacketRightLimitsX,pRacketRightLimitsY);
-	MainBall = Ball(BALL_INIT_LEFT_POS_X,BALL_INIT_LEFT_POS_Y,3,NO_MOVE,NO_MOVE,pBallLimitsX,pBallLimitsY);
+	MainBall = Ball(BALL_INIT_LEFT_POS_X,BALL_INIT_LEFT_POS_Y,NO_MOVE,NO_MOVE,pBallLimitsX,pBallLimitsY);
 
 }
 
@@ -274,9 +274,7 @@ void GameLogic::GameControl() {
 
 	//
 	else{
-
 		m_iBallStatus = NO_HIT;
-
 	}
 
 }
@@ -447,6 +445,7 @@ MSG GameLogic::ProcessMessage(MSG i_Message){
 	switch(i_Message.source){
 
 		case ADC_ISR_ID:
+		{
 			int* l_iADCvalue = (int*) i_Message.data;
 
 			int LastRacketLeftPosY = RacketLeft.m_iPosY;
@@ -464,21 +463,25 @@ MSG GameLogic::ProcessMessage(MSG i_Message){
 			RacketLeft.CheckLimitsY();
 			RacketLeft.CheckChangeY();
 			break;
+		}
 
 		case BUTTON_UP_ISR_ID:
-			RacketRight.m_iPosY -= RacketRight.m_iSize;
+		{
+			RacketRight.m_iPosY -= RACKET_CHANGE_STEP;
 			RacketRight.m_iDirectionY = MOVE_UP;
 			RacketRight.CheckLimitsY();
 			RacketRight.CheckChangeY();
 			break;
+		}
 
 		case BUTTON_DOWN_ISR_ID:
-			RacketRight.m_iPosY += RacketRight.m_iSize;
+		{
+			RacketRight.m_iPosY += RACKET_CHANGE_STEP;
 			RacketRight.m_iDirectionY = MOVE_DOWN;
 			RacketRight.CheckLimitsY();
 			RacketRight.CheckChangeY();
 			break;
-
+		}
 
 	}
 

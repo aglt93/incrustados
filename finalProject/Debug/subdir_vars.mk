@@ -5,11 +5,9 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../Ball.cpp \
-../Button.cpp \
 ../Buzzer.cpp \
 ../GameLogic.cpp \
 ../GamePiece.cpp \
-../LED.cpp \
 ../Racket.cpp \
 ../Scheduler.cpp \
 ../Screen.cpp \
@@ -28,11 +26,9 @@ C_SRCS += \
 
 OBJS += \
 ./Ball.obj \
-./Button.obj \
 ./Buzzer.obj \
 ./GameLogic.obj \
 ./GamePiece.obj \
-./LED.obj \
 ./Racket.obj \
 ./Scheduler.obj \
 ./Screen.obj \
@@ -43,11 +39,9 @@ OBJS += \
 
 CPP_DEPS += \
 ./Ball.d \
-./Button.d \
 ./Buzzer.d \
 ./GameLogic.d \
 ./GamePiece.d \
-./LED.d \
 ./Racket.d \
 ./Scheduler.d \
 ./Screen.d \
@@ -60,11 +54,9 @@ C_DEPS += \
 
 CPP_DEPS__QUOTED += \
 "Ball.d" \
-"Button.d" \
 "Buzzer.d" \
 "GameLogic.d" \
 "GamePiece.d" \
-"LED.d" \
 "Racket.d" \
 "Scheduler.d" \
 "Screen.d" \
@@ -77,11 +69,9 @@ C_DEPS__QUOTED += \
 
 OBJS__QUOTED += \
 "Ball.obj" \
-"Button.obj" \
 "Buzzer.obj" \
 "GameLogic.obj" \
 "GamePiece.obj" \
-"LED.obj" \
 "Racket.obj" \
 "Scheduler.obj" \
 "Screen.obj" \
@@ -92,11 +82,9 @@ OBJS__QUOTED += \
 
 CPP_SRCS__QUOTED += \
 "../Ball.cpp" \
-"../Button.cpp" \
 "../Buzzer.cpp" \
 "../GameLogic.cpp" \
 "../GamePiece.cpp" \
-"../LED.cpp" \
 "../Racket.cpp" \
 "../Scheduler.cpp" \
 "../Screen.cpp" \

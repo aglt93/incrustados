@@ -12,48 +12,45 @@
 #include "Task.hpp"
 #include "MusicEnv.hpp"
 
-#define MELODY_LENGTH 78
-
-
 /* *****************************************************************************************
- * Clase Scheduler
+ * Clase Buzzer
  * *****************************************************************************************
  *
  * ***************
  * Descripción
  * ***************
- * La clase hereda de la clase Task y se encarga de configurar el PWM en el puerto 2.5 para que
- * al ser conectado un servo con un período de 20ms y en un ciclo de trabajo entre 0.5ms y 2.5ms
- * gire entre 90 y -90 grados respectivamente. Esto se logra mediante la configuración del
- * Timer A en modo de salida RESET_SET para generar la señal de salida PWM. Hace uso del modo
- * TIMER_A_CAPTURECOMPARE_REGISTER_2, donde este modo se encuentra conectado directamente con
- * el puerto 2.5.
+ * Clase encargada de ejecutar los procedimientos necesarios para sonar melodias en el Piezo
+ * del BoosterPack. Se ejecuta de forma periodica y reproduce la melodía que se encuentra en el
+ * arreglo Melody con un tempo para cada nota en su posición homóloga en el arreglo Tempo.
  *
  * ***************
  * Atributos
  * ***************
- * m_iServoPort: Puerto donde se desea configurar el servo.
- * m_iServoPin: Pin donde se desea configurar el servo.
+ * int m_iBuzzerPort: Puerto del buzzer.
+ *
+ * int m_iBuzzerPin: Pin del buzzer.
+ *
+ * int m_iMelodyIndex: Indice que indica en que nota de la melodía se encuentra la reproducción.
+ *
+ * int m_iTempoCounter: Contador que permite realizar temporización de las notas en negras, corcheas, etc.
+ *
+ * static const int Melody[MELODY_LENGTH]: Arreglo que contiene la melodía de la música. Cada posicion
+ * 										   contiene la frecuencia de la nota, si el valor es 0 corresponde
+ * 										   a un silencio.
+ *
+ * static const int Tempo[MELODY_LENGTH]: Arreglo que contiene la duración de cada nota de la melodía.
  *
  *
  * ***************
  * Métodos
  * ***************
- * Servo: Constructor de la clase, se encarga de realizar la configuración inicial del servo.
- * 		  Este valor corresponde al de 0 grados siendo el valor medio del rango posible.
+ * Buzzer(int i_iTaskID, bool i_bPeriodicTask, int i_iBuzzerPort,
+ * 		  int i_iBuzzerPin, uint64_t i_u64FinalCount): Constructor de la clase, configura los puertos,
+ * 		  y la periocidad de ejecución de la tarea.
  *
- * run:
+ * virtual MSG run(void): Método que se ejecuta cada vez que se ejecuta el task en el scheduler. Reproduce
+ * 						  correctamente la melodía que se encuentra en el arreglo Melody.
  *
- * ProcessMessage: Se encarga de cambiar la configuración del servo con un valor enviado. Este
- * 				   valor es convertido al valor que cambia el ciclo de trabajo del PWM para
- * 				   que el servo se mueve de una posición a otra, según el valor convertido
- * 				   por el ADC.
- *
- * ADCtoServoValueConv: Método que retorna se encarga de convertir el valor enviado por
- * 						el ADC a un valor que refleja el cambio del ADC en el servo, según el
- * 						ciclo de trabajo. El valor de retorno puede variar entre 1600 y 7600.
- * 						Y estos valores corresponden a los valores que son cargados al Timer A
- * 						para que genere el ciclo de trabajo entre 0.5ms y 2.5ms.
  * ******************************************************************************************
  */
 class Buzzer : public Task
