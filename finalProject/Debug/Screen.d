@@ -51,6 +51,8 @@ Screen.obj: /home/kvallecillog/Dropbox/incrustados_rep_2/incrustados/finalProjec
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdio.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdarg.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/string.h
+Screen.obj: ../p1_logo_100_100.h
+Screen.obj: /home/kvallecillog/Dropbox/incrustados_rep_2/incrustados/finalProject/GrLib/grlib/grlib.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/string
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__prolog.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__cprolog.h
@@ -150,14 +152,6 @@ Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__num_get.c
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__string_io.c
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__epilog.h
 Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__config_compat_post.h
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/sstream
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__prolog.h
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__cprolog.h
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__ioserr.h
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__sstream.h
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__sstream.c
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__epilog.h
-Screen.obj: /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__config_compat_post.h
 Screen.obj: ../Screen.hpp
 Screen.obj: ../Task.hpp
 Screen.obj: ../task_ids.hpp
@@ -220,6 +214,8 @@ Screen.obj: ../game_env.hpp
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdio.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/stdarg.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/string.h: 
+../p1_logo_100_100.h: 
+/home/kvallecillog/Dropbox/incrustados_rep_2/incrustados/finalProject/GrLib/grlib/grlib.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/string: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__prolog.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__cprolog.h: 
@@ -317,14 +313,6 @@ Screen.obj: ../game_env.hpp
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__num_get.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__num_get.c: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__string_io.c: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__epilog.h: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__config_compat_post.h: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/sstream: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__prolog.h: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__cprolog.h: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__ioserr.h: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__sstream.h: 
-/opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__sstream.c: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__epilog.h: 
 /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/include/s__config_compat_post.h: 
 ../Screen.hpp: 
