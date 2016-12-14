@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker Unix v15.12.3                  
 ******************************************************************************
->> Linked Tue Dec 13 19:10:07 2016
+>> Linked Tue Dec 13 23:42:04 2016
 
 OUTPUT FILE NAME:   <finalProject.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 00007771
@@ -286,7 +286,7 @@ MODULE SUMMARY
     +--+----------------------------------------------------+-------+---------+---------+
        Total:                                               6706    300       552    
                                                                                      
-    /opt/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
+    /home/aglt93/ti/ccsv6/tools/compiler/arm_15.12.3.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
        _printfi.obj                                         4368    0         0      
        memory.obj                                           988     0         24     
        typeinfo_.obj                                        188     356       8      
